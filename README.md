@@ -31,12 +31,18 @@ Contribution by team members are to be done by forking the repository and the is
 ```
   git clone https://github.com/gitsteveguy/ayurvedic_mrd_system.git
 ```
-4. move to app directory
+4. Move to app directory
+``` 
+  cd ayurvedic_mrd_system
+```
 ``` 
   cd ayurmrd
 ```
-4. run the app
+5. Install the required dependencies
+``` 
+  npm install
+```
+6. Run the app
 ``` 
   npm start
 ```
-
