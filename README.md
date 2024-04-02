@@ -26,7 +26,7 @@ Watching this [video](https://youtu.be/HbSjyU2vf6Y?si=7EdEVJLy_OkPk-60) will giv
 ## Get Started
 ### Steps
 
-  1. Install Git (if you don't have it already)
+  1. Install Git (if you don't have it already) [tutorial](https://youtu.be/cJTXh7g-uCM?si=HH3TqxrJRfUz4EcB)
   2. Open CMD / Terminal and go to the  Destination you want the local repository to be.
   3. Clone the repository
 ```
