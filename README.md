@@ -41,12 +41,12 @@ Watching this [video](https://youtu.be/HbSjyU2vf6Y?si=7EdEVJLy_OkPk-60) will giv
 ```
 5. Install the required dependencies
 ```
-
-## Author
-- [@gitsteveguy](https://github.com/gitsteveguy)
   npm install
 ```
 6. Run the app
 ``` 
   npm start
 ```
+
+## Author
+- [@gitsteveguy](https://github.com/gitsteveguy)
