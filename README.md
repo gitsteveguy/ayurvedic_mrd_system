@@ -1,3 +1,6 @@
+
+![Logo](https://projects.stevesajanjacob.com/assets/mrd_temp_logo.jpeg)
+
 # Ayurvedic mrd system
 A mini project as part of our academics built on react that focuses on managing patient records of an Ayurvedic hospital.
 
@@ -16,4 +19,23 @@ Contribution by team members are to be done by forking the repository and the is
 - [@midhunmadhumanuvel](https://github.com/midhunmadhumanuvel)
 - [@Manushaji45](https://github.com/Manushaji45)
 - Bobby P Varughese
+
+
+## Get Started
+### Steps
+
+  1. Install Git (if you don't have it already)
+  2. Open CMD / Terminal and go to the  Destination you want the local repository to be.
+  3. Clone the repository
+```
+  git clone https://github.com/gitsteveguy/ayurvedic_mrd_system.git
+```
+4. move to app directory
+``` 
+  cd ayurmrd
+```
+4. run the app
+``` 
+  npm start
+```
 
