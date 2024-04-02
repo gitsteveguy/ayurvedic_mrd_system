@@ -1,5 +1,6 @@
-
-<img src="https://projects.stevesajanjacob.com/assets/mrd_temp_logo.jpeg" alt="drawing" width="200"/>
+<p align="center">
+  <img src="https://projects.stevesajanjacob.com/assets/mrd_temp_logo.jpeg" width=300/>
+</p>
 
 # Ayurvedic mrd system
 A mini project as part of our academics built on react that focuses on managing patient records of an Ayurvedic hospital.
