@@ -1,5 +1,4 @@
 import React from 'react'
-import '../global.css';
 import './Container.css';
 import Sidebar from './ui-elements/Sidebar'
 

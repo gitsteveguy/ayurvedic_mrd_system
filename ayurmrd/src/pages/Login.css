@@ -1,0 +1,23 @@
+.login-container{
+    width: 100vw;
+    height: 100vh;
+    display: grid;
+    place-content: center;
+    row-gap: 1rem;
+    background-image: url('../assets/login_bg.jpeg') !important;
+    background-repeat: no-repeat !important;
+    background-size: 100% 100% !important;
+}
+.login-sub-container{
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.app-logo {
+    height: 20vmin;
+    pointer-events: none;
+  }
+  .card{
+    box-shadow: 0 2rem 3rem #363949bf !important;
+  }

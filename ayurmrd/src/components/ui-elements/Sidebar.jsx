@@ -5,8 +5,6 @@ import PeopleRoundedIcon from '@mui/icons-material/PeopleRounded';
 import SickRoundedIcon from '@mui/icons-material/SickRounded';
 import BarChartRoundedIcon from '@mui/icons-material/BarChartRounded';
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
-
-import '../../global.css';
 import './Sidebar.css';
 
 export default function Sidebar() {

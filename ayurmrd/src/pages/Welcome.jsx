@@ -1,7 +1,6 @@
 import React from 'react'
 import './Welcome.css'
 import logo from '../assets/ayurvedic_mrd_system_logo_without_text.svg';
-import '../global.css'
 import { Link } from 'react-router-dom';
 export default function Welcome() {
   return (
