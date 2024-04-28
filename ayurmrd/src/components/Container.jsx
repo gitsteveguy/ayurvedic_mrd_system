@@ -8,7 +8,9 @@ export default function Container(props) {
         <Sidebar />
         <main>
             <h1>{props.page_name}</h1>
+            <div className="child-container">
             {props.child}
+            </div>
         </main>
     </div>
   )

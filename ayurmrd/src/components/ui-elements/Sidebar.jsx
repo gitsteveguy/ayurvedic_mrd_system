@@ -5,10 +5,13 @@ import PeopleRoundedIcon from '@mui/icons-material/PeopleRounded';
 import SickRoundedIcon from '@mui/icons-material/SickRounded';
 import BarChartRoundedIcon from '@mui/icons-material/BarChartRounded';
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
+import TableViewIcon from '@mui/icons-material/TableView';
 import './Sidebar.css';
 
 export default function Sidebar() {
   return (
+    <>
+      <div></div>
 <aside>
       <div className="top">
         <div className="logo">
@@ -52,7 +55,14 @@ export default function Sidebar() {
           </span>
           <h3>Settings</h3>
         </a>
+        <a href="/dashboard/test">
+        <span>
+          <TableViewIcon/>
+          </span>
+          <h3>Sample Form</h3>
+        </a>
       </div>
     </aside>
+    </>
   )
 }

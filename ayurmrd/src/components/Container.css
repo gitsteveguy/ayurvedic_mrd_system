@@ -1,7 +1,24 @@
 .container{
     display: grid;
     width: 99%;
+    height: fit-content;
     margin : 0 auto;
     gap:1.8rem;
     grid-template-columns: 16rem auto;
+    overflow: hidden;
+}
+
+.child-container{
+    display: grid;
+    height: fit-content;
+    place-content: center;
+    padding: 4rem;
+}
+
+main{
+    height: fit-content;
+}
+
+h1{
+    color: var(--color-complementary);
 }

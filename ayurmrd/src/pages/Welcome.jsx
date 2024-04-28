@@ -12,7 +12,7 @@ export default function Welcome() {
         Congrats on setting everything up, we will start from here.
       </p>
       <br/>
-      <Link to='/dashboard' className='complementary-btn'><h3>Go to Dashboard</h3></Link>
+      <Link to='/login' className='complementary-btn'><h3>Go to Login</h3></Link>
     </header>
   </div>
   )
