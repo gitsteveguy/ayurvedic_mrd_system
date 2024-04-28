@@ -1,10 +1,11 @@
 import React from 'react'
+
 import { useEffect } from 'react';
 import './Forms.css'
 
 export default function FormContainer(props) {
   useEffect((e) => {
-    let inputs = document.querySelectorAll('input[type="text"],input[type="email"],input[type="number"],input[type="password"], input[type="tel"]');
+    let inputs = document.querySelectorAll('.animated_inputs');
     inputs.forEach((input)=>{
       input.addEventListener('focusin',(e)=>{
         e.target.nextElementSibling.classList.add('input_has_value')
@@ -73,6 +74,7 @@ export default function FormContainer(props) {
           pwd_visibility_toggle.innerText = (pwd_visibility_toggle.innerText==='visibility')? 'visibility_off' : 'visibility';
          let tooltip = pwd_visibility_toggle.parentElement.attributes['tooltip'];
           tooltip.value = (tooltip.value==='Show Password')? 'Hide Password' : 'Show Password';
+          
         })
       })
 

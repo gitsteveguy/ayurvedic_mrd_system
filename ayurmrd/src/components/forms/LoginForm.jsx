@@ -11,8 +11,8 @@ export default function LoginForm() {
       </div>
       <div className="input_row">
         <div className="input_group">
-              <input id='password' type="password" name='password' />
-              <label htmlFor="password">Password</label>
+          <input id='password' type="password" name='password' />
+          <label htmlFor="password">Password</label>
         </div>
       </div>
       <div className="input_row">
