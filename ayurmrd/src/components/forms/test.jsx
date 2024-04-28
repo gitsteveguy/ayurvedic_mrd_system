@@ -8,8 +8,8 @@ export default function Test() {
         <div className="input_row">
           <div className="inputs-container">
             <div className="input_group">
-              <input id='input' type="text" name='text' />
-              <label htmlFor="text">Input</label>
+              <input id='Text' type="text" name='text' />
+              <label htmlFor="text">Text</label>
             </div>
           </div>
         </div>
@@ -58,7 +58,7 @@ export default function Test() {
         </div>
         <div className="input_row">
           <div className="input_btn_group">
-          <button type='button' className='danger-btn formbtn' tooltip='Cancel'>Cancel</button>
+            <button type='button' className='danger-btn formbtn' tooltip='Cancel'>Cancel</button>
             <button type='submit' form="TestForm" className=' primary-btn formbtn' tooltip='Submit' value="submit">Submit</button>
           </div>
         </div>
