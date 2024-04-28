@@ -78,6 +78,12 @@ export default function FormContainer(props) {
         })
       })
 
+      let addfield_btns = document.querySelectorAll('.add_field');
+      addfield_btns.forEach((addfield_btn)=>{
+        addfield_btn.addEventListener('click',(e)=>{
+          let fieldgroup = addfield_btn.parentElement;
+        })
+      })
       
 
 
