@@ -22,3 +22,25 @@ main{
 h1{
     color: var(--color-complementary);
 }
+
+@media screen and (max-width: 1000px) {
+    #page_title{
+        text-align: center;
+    }
+    .container{
+        grid-template-columns: unset;
+    }
+    .child-container{
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+  }
+
+  @media screen and (max-width: 400px) {
+   
+    .child-container{
+        padding-left: 0rem;
+        padding-right: 0rem;
+        padding-top: 1rem;
+    }
+  }

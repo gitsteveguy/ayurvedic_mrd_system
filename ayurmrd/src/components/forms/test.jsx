@@ -1,6 +1,7 @@
 import React from 'react'
 import Select from 'react-select'
 import makeAnimated from 'react-select/animated';
+import Single_Select from './essentials/form-components/Single_Select';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 
@@ -64,27 +65,20 @@ export default function Test() {
           <h2>Select & Multiselect</h2>
           <div className="inputs-container">
             <div className="input_group">
-              <Select 
-              className="single-select"
-              classNamePrefix="select"
-              options={[
-                { value: 'option 1', label: 'Option 1' },
-                { value: 'option 2', label: 'Option 2' },
-                { value: 'option 3', label: 'Option 3' }
-              ]} />
+              <Single_Select />
               <label htmlFor="select">Select</label>
             </div>
             <div className="input_group">
-            <Select 
-              className="multi-select"
-              classNamePrefix="select"
-              components={makeAnimated()}
-              isMulti
-              options={[
-                { value: 'option 1', label: 'Option 1' },
-                { value: 'option 2', label: 'Option 2' },
-                { value: 'option 3', label: 'Option 3' }
-              ]} />
+              <Select
+                className="multi-select"
+                classNamePrefix="select"
+                components={makeAnimated()}
+                isMulti
+                options={[
+                  { value: 'option 1', label: 'Option 1' },
+                  { value: 'option 2', label: 'Option 2' },
+                  { value: 'option 3', label: 'Option 3' }
+                ]} />
               <label htmlFor="multi-select">Multi Select</label>
             </div>
           </div>
@@ -92,6 +86,7 @@ export default function Test() {
         <div className="repeating-component">
           <h2>Repeating Fields - Title</h2>
           <div className="repeating-fields">
+            <h3>Test</h3>
             <div className="input_row">
               <div className="inputs-container">
                 <div className="input_group">
@@ -107,19 +102,52 @@ export default function Test() {
             <div className="input_row">
               <div className="inputs-container">
                 <div className="input_group">
-                  <input className='animated_inputs' id='text3' type="text" name='text3[]' />
-                  <label htmlFor="text3">Text 3</label>
+                  <textarea name="textarea2[]" id="textarea2" cols="30" rows="10"></textarea>
+                  <label htmlFor="textarea2">Text Area</label>
                 </div>
                 <div className="input_group">
-                  <input className='animated_inputs' id='text4' type="text" name='text4[]' />
-                  <label htmlFor="text4">Text 4</label>
+                  <Select
+                    name='multi-select2[]'
+                    className="multi-select"
+                    classNamePrefix="select"
+                    isMulti
+                    defaultValue={{ value: 'option 1', label: 'Option 1' }}
+                    options={[
+                      { value: 'option 1', label: 'Option 1' },
+                      { value: 'option 2', label: 'Option 2' },
+                      { value: 'option 3', label: 'Option 3' }
+                    ]} />
+                  <label htmlFor="select">Select</label>
                 </div>
               </div>
             </div>
+
+            <div className="input_row">
+              <div className="inputs-container">
+                <div className="input_group">
+                  <input type="checkbox" id="checkbox" name="checkbox[]" value="checkbox" />
+                  <label htmlFor="checkbox"> Checkbox</label>
+                </div>
+                <div className="input_group">
+                  <label>Radio</label>
+                  <input type="radio" name="radio[]" value="option 1" />
+                  <label htmlFor="html">Option 1</label>
+                  <input type="radio" name="radio[]" value="option 2" />
+                  <label htmlFor="css">Option 2</label>
+                  <input type="radio" name="radio[]" value="option 1" />
+                  <label htmlFor="javascript">Option 3</label>
+                </div>
+              </div>
+            </div>
+            <a className='danger-btn  repeating-btn remove_field' tooltip='Delete Field'><span className="material-symbols-rounded">
+              remove
+            </span></a>
           </div>
           <div className="repeating-btn-group">
-            <button className='danger-btn  add_field remove_field' tooltip='Delete Field'><DeleteIcon/></button>
-            <button className='secondary-btn add_field' tooltip='Add Field'><AddIcon/></button>
+
+            <a className='secondary-btn repeating-btn add_field' tooltip='Add Field'><span className="material-symbols-rounded">
+              add
+            </span></a>
           </div>
         </div>
         <div className="input_row">

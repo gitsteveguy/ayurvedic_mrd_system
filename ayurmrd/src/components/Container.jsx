@@ -7,7 +7,7 @@ export default function Container(props) {
     <div className='container'>
         <Sidebar />
         <main>
-            <h1>{props.page_name}</h1>
+            <h1 id='page_title'>{props.page_name}</h1>
             <div className="child-container">
             {props.child}
             </div>

@@ -82,8 +82,14 @@ export default function FormContainer(props) {
       addfield_btns.forEach((addfield_btn)=>{
         addfield_btn.addEventListener('click',(e)=>{
           let fieldgroup = addfield_btn.parentElement;
+          console.log(fieldgroup);
         })
       })
+
+      let repeating_fields_groups = document.querySelectorAll('repeating-fields');
+      repeating_fields_groups.forEach((repeating_fields_group)=>{
+      let delete_button = document.createElement('a');
+      });
       
 
 
