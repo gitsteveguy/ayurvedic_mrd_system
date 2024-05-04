@@ -147,6 +147,7 @@ input[type="text"],input[type="email"],input[type="number"],input[type="date"],i
         position: relative;
         width: 100%;
         align-items: center;
+        height: min-content;
     }
 
     .input_group:has(> input[type='checkbox']){
@@ -231,7 +232,7 @@ input[type="text"],input[type="email"],input[type="number"],input[type="date"],i
 
     .repeating-btn-group{
       display: flex;
-      justify-content: end;
+      justify-content: center;
       gap: 1rem;
 
     }

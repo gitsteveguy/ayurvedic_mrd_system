@@ -1,15 +1,25 @@
 import React from 'react'
-import Select from 'react-select'
-import makeAnimated from 'react-select/animated';
+import RepeatingComponent from './essentials/form-components/RepeatingComponent';
 import Single_Select from './essentials/form-components/Single_Select';
-import DeleteIcon from '@mui/icons-material/Delete';
-import AddIcon from '@mui/icons-material/Add';
+import Multi_Select from './essentials/form-components/Multi_Select';
+import Radio from './essentials/form-components/Radio';
+import Checkbox from './essentials/form-components/Checkbox';
+
 
 export default function Test() {
+
+  /*If you are using repeating field*/
+
+ 
+
+  function handleSubmit(e){
+    
+  }
+
   return (
     <>
       <h1>Form Title</h1>
-      <form name='TestForm' id='TestForm' action="/dashboard" method="get">
+      <form onSubmit={handleSubmit} name='TestForm' id='TestForm' action="http://192.168.1.6:5000/test/post/" method="post" autoComplete='on'>
         <div className="input_row">
           <div className="inputs-container">
             <div className="input_group">
@@ -65,28 +75,15 @@ export default function Test() {
           <h2>Select & Multiselect</h2>
           <div className="inputs-container">
             <div className="input_group">
-              <Single_Select />
-              <label htmlFor="select">Select</label>
+              <Single_Select name='select' api_url='http://192.168.1.6:5000/test/api/select'/>
+              <label htmlFor="select">Select with Dynamic Options from API</label>
             </div>
             <div className="input_group">
-              <Select
-                className="multi-select"
-                classNamePrefix="select"
-                components={makeAnimated()}
-                isMulti
-                options={[
-                  { value: 'option 1', label: 'Option 1' },
-                  { value: 'option 2', label: 'Option 2' },
-                  { value: 'option 3', label: 'Option 3' }
-                ]} />
-              <label htmlFor="multi-select">Multi Select</label>
+            <Multi_Select label='Multi Select' name='multi_select' api_url='http://192.168.1.6:5000/test/api/select'/>
             </div>
           </div>
         </div>
-        <div className="repeating-component">
-          <h2>Repeating Fields - Title</h2>
-          <div className="repeating-fields">
-            <h3>Test</h3>
+        <RepeatingComponent title='Repeating Fields' subtitle_prefix='Test'>
             <div className="input_row">
               <div className="inputs-container">
                 <div className="input_group">
@@ -106,50 +103,22 @@ export default function Test() {
                   <label htmlFor="textarea2">Text Area</label>
                 </div>
                 <div className="input_group">
-                  <Select
-                    name='multi-select2[]'
-                    className="multi-select"
-                    classNamePrefix="select"
-                    isMulti
-                    defaultValue={{ value: 'option 1', label: 'Option 1' }}
-                    options={[
-                      { value: 'option 1', label: 'Option 1' },
-                      { value: 'option 2', label: 'Option 2' },
-                      { value: 'option 3', label: 'Option 3' }
-                    ]} />
-                  <label htmlFor="select">Select</label>
+                <Multi_Select label='Multi Select' name='multi_select2[0][]' api_url='http://192.168.1.6:5000/test/api/select'/>
                 </div>
               </div>
             </div>
-
             <div className="input_row">
               <div className="inputs-container">
                 <div className="input_group">
-                  <input type="checkbox" id="checkbox" name="checkbox[]" value="checkbox" />
-                  <label htmlFor="checkbox"> Checkbox</label>
+                  <Checkbox name='checkbox[]' repeat/>
                 </div>
                 <div className="input_group">
-                  <label>Radio</label>
-                  <input type="radio" name="radio[]" value="option 1" />
-                  <label htmlFor="html">Option 1</label>
-                  <input type="radio" name="radio[]" value="option 2" />
-                  <label htmlFor="css">Option 2</label>
-                  <input type="radio" name="radio[]" value="option 1" />
-                  <label htmlFor="javascript">Option 3</label>
+                <Radio name='Radio[0]' options={['Option 1','Option 2','Option 3','Option 4']}  repeat />
                 </div>
               </div>
             </div>
-            <a className='danger-btn  repeating-btn remove_field' tooltip='Delete Field'><span className="material-symbols-rounded">
-              remove
-            </span></a>
-          </div>
-          <div className="repeating-btn-group">
-
-            <a className='secondary-btn repeating-btn add_field' tooltip='Add Field'><span className="material-symbols-rounded">
-              add
-            </span></a>
-          </div>
-        </div>
+       
+        </RepeatingComponent>
         <div className="input_row">
           <div className="input_btn_group">
             <button type='button' className='danger-btn formbtn' tooltip='Cancel'>Cancel</button>

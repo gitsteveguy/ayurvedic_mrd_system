@@ -17,7 +17,7 @@ export default function FormContainer(props) {
         }
       })
     })
-
+    
     // Handling Pwd Fields
     let password_fields = document.querySelectorAll('input[type=password]');
     password_fields.forEach((password_field)=>{
@@ -77,26 +77,7 @@ export default function FormContainer(props) {
           
         })
       })
-
-      let addfield_btns = document.querySelectorAll('.add_field');
-      addfield_btns.forEach((addfield_btn)=>{
-        addfield_btn.addEventListener('click',(e)=>{
-          let fieldgroup = addfield_btn.parentElement;
-          console.log(fieldgroup);
-        })
-      })
-
-      let repeating_fields_groups = document.querySelectorAll('repeating-fields');
-      repeating_fields_groups.forEach((repeating_fields_group)=>{
-      let delete_button = document.createElement('a');
-      });
-      
-
-
-   
     })
- 
-
 
   }
 );
