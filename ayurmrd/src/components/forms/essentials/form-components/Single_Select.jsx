@@ -1,8 +1,9 @@
-import React from 'react'
+import React,{useEffect, useState} from 'react'
 import AsyncSelect from 'react-select/async';
 
 
 export default function Single_Select(props) {
+  const [value,setValue] = useState({})
   let url = props.api_url;
 
  const colorStyles = {
@@ -26,14 +27,22 @@ export default function Single_Select(props) {
         option.label.toLowerCase().includes(searchValue.toLowerCase())
       )
       callback(filteredOptions)
-
     })
   }
+
+  useEffect((e)=>{
+    if(props.defaultValue){
+      let value ={label : props.defaultValue, value : props.defaultValue}
+      setValue(value)
+    }
+  },[props.defaultValue])
+
   return (
     <AsyncSelect
       name={props.name}
       className='single-select'
       classNamePrefix="select"
+      value = {value}
       loadOptions={loadOptions}
       theme={(theme) => ({
         ...theme,

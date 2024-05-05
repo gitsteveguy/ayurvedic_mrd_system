@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Single_Select from '../essentials/form-components/Single_Select';
-import Multi_Select from '../essentials/form-components/Multi_Select';
+import MultiSelect from '../essentials/form-components/MultiSelect';
 import Radio from '../essentials/form-components/Radio';
 import Checkbox from '../essentials/form-components/Checkbox';
 
@@ -15,10 +15,12 @@ export default function FetchForm() {
     tel: "",
     number: "",
     select: "",
-    multi_select: [],
+    MultiSelect: [],
     checkbox: "",
     Radio: "" 
   });
+
+  const [has_value, updateHasValue] = useState('');
 
   useEffect(() => {
     let jsonData={}
@@ -27,12 +29,12 @@ export default function FetchForm() {
       "textarea": "Textarea 1",
       "date": "2024-05-15",
       "time": "01:00",
-      "tel": "9876543210",
+      "tel": "9876543211",
       "number": "3",
-      "select": "Option 1",
-      "multi_select": [
+      "select": "Option 2",
+      "MultiSelect": [
         "Option 1",
-        "Option 3"
+        "Option 2",
       ],
       "checkbox": "true",
       "Radio": "Option 3"
@@ -40,7 +42,19 @@ export default function FetchForm() {
 
   if (typeof jsonData != {}){
     setFormData(jsonData);
+    updateHasValue('input_has_value');
   }
+
+  let inputs = document.querySelectorAll('.animated_inputs');
+    inputs.forEach((input)=>{
+      console.log(input);
+      if(input.value!=''){
+        input.classList.add('input_has_value')
+      }})
+
+
+
+
 
 },[]);
 
@@ -48,7 +62,6 @@ export default function FetchForm() {
 
   }
   function onChange(e){
-    console.log(e.target);
     const {name,value} = e.target;
     setFormData(()=>({
      ...formData,
@@ -67,7 +80,7 @@ export default function FetchForm() {
         <div className="input_row">
           <div className="inputs-container">
             <div className="input_group">
-              <input className='animated_inputs' id='Text' type="text" name='text' defaultValue={formData.text}/>
+              <input className={'animated_inputs '+ has_value} id='Text' type="text" name='text' defaultValue={formData.text}/>
               <label htmlFor="text">Text</label>
             </div>
           </div>
@@ -97,11 +110,11 @@ export default function FetchForm() {
           <h2>Telephone and Numbers</h2>
           <div className="inputs-container">
             <div className="input_group">
-              <input className='animated_inputs' id='tel' type="tel" name='tel' defaultValue={formData.tel}/>
+              <input className={'animated_inputs '+ has_value} id='tel' type="tel" name='tel' defaultValue={formData.tel}/>
               <label htmlFor="tel">Tel</label>
             </div>
             <div className="input_group">
-              <input className='animated_inputs' id='number' type="number" name='number' defaultValue={formData.number}/>
+              <input className={'animated_inputs '+ has_value} id='number' type="number" name='number' defaultValue={formData.number}/>
               <label htmlFor="number">Number</label>
             </div>
           </div>
@@ -114,7 +127,7 @@ export default function FetchForm() {
               <label htmlFor="select">Select with Dynamic Options from API</label>
             </div>
             <div className="input_group">
-            <Multi_Select label='Multi Select' name='multi_select' api_url='http://192.168.1.6:5000/test/api/select' defaultValue={formData.multi_select} onChange={onChange}/>
+            <MultiSelect label='Multi Select' name='MultiSelect' api_url='http://192.168.1.6:5000/test/api/select' defaultValue={formData.MultiSelect} onChange={onChange}/>
             </div>
           </div>
         </div>

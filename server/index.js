@@ -29,7 +29,7 @@ app.get('/test/api/fetchform',(req,res)=>{
     tel: "9876543210",
     number: "2",
     select: "Option 1",
-    multi_select: [
+    MultiSelect: [
       "Option 1",
       "Option 2"
     ],

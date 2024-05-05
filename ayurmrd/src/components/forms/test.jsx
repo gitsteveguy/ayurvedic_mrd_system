@@ -1,7 +1,7 @@
 import React from 'react'
 import RepeatingComponent from './essentials/form-components/RepeatingComponent';
 import Single_Select from './essentials/form-components/Single_Select';
-import Multi_Select from './essentials/form-components/Multi_Select';
+import MultiSelect from './essentials/form-components/MultiSelect';
 import Radio from './essentials/form-components/Radio';
 import Checkbox from './essentials/form-components/Checkbox';
 
@@ -79,7 +79,7 @@ export default function Test() {
               <label htmlFor="select">Select with Dynamic Options from API</label>
             </div>
             <div className="input_group">
-            <Multi_Select label='Multi Select' name='multi_select' api_url='http://192.168.1.6:5000/test/api/select'/>
+            <MultiSelect label='Multi Select' name='MultiSelect'  api_url='http://192.168.1.6:5000/test/api/select' repeat/>
             </div>
           </div>
         </div>
@@ -103,7 +103,7 @@ export default function Test() {
                   <label htmlFor="textarea2">Text Area</label>
                 </div>
                 <div className="input_group">
-                <Multi_Select label='Multi Select' name='multi_select2[0][]' api_url='http://192.168.1.6:5000/test/api/select'/>
+                <MultiSelect label='Multi Select' name='MultiSelect2[0][]' api_url='http://192.168.1.6:5000/test/api/select' repeat/>
                 </div>
               </div>
             </div>

@@ -3,10 +3,10 @@ import AsyncSelect from 'react-select/async';
 import { useState,useEffect } from 'react';
 import makeAnimated from 'react-select/animated';
 
+const animatedComponents = makeAnimated();
+export default function MultiSelect(props) {
 
-export default function Multi_Select(props) {
-
-  const [options,setOptions] = useState([])
+  const [values,setValues] = useState([])
   
   useEffect((e)=>{
 
@@ -16,14 +16,25 @@ export default function Multi_Select(props) {
         props.defaultValue.forEach((datum)=>{
           newoptions.push({label: datum, value: datum})
           })
-          setOptions(newoptions);
+          setValues(newoptions);
       }
   },[props.defaultValue])
 
  const rep_onChange = (e)=>{
-  setOptions(e.target.value)
+  setValues(e)
  }
-let changefn = props.onChange
+
+ const main_onChange = (e)=>{
+  let opt_array=[];
+  e.forEach((option)=>{
+    opt_array.push(option.label)
+  })
+  let event = {target : {name : new_name, value : opt_array}}
+  props.onChange(event)
+ }
+
+
+let changefn = main_onChange;
  if(props.repeat){
   changefn = rep_onChange;
  }
@@ -87,10 +98,11 @@ new_name = props.name.split('0')[0]+(max_cmp+1)+props.name.split('0')[1];}
     <AsyncSelect
      id={sel_id}
       name={new_name}
-      value={options}
+      value={values}
       onChange={changefn}
       className='multi-select'
       classNamePrefix="select"
+      components={animatedComponents}
       isMulti
       loadOptions={loadOptions}
       theme={(theme) => ({

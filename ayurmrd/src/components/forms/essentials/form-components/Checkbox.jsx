@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 export default function Checkbox(props) {
   const [checkbox, setValue] = useState(false)
 
+
   const rep_onChange = (e)=>{
     if(checkbox)
     setValue(false)
@@ -11,9 +12,18 @@ export default function Checkbox(props) {
   setValue(true)
   }  
 
+  const main_onChange = (e)=>{
+    if(checkbox==true){
+      setValue(false)
+    }
+    else{
+      setValue(true)
+    }
+    let event = {target : {name : props.name, value : checkbox}}
+  props.onChange(event)
+  }
 
-
-  let changefn = props.onChange;
+  let changefn = main_onChange;
   if (props.repeat)
    changefn = rep_onChange
 
@@ -28,10 +38,10 @@ export default function Checkbox(props) {
             })
             
         });
-        if(props.defaultValue=='true')
-          setValue(true)
-        else
-        setValue(false)
+        if(props.defaultValue==='true')
+        setValue(true);
+        else if(props.defaultValue==='false')
+        setValue(false);
     })
   return (
     <>
