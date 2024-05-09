@@ -1,11 +1,11 @@
-import React, {useEffect, useState } from 'react';
+import React, {useEffect, useState, createContext } from 'react';
 
+export const repeaterContext = createContext();
 function RepeatingComponent(props) {
+
   const [components, setComponents] = useState([{ id: 1 }]);
-  let subtitle_prefix= props.subtitle_prefix.replace(':','')
 
   const scripts = () => {
-    console.log('dupe script executed');
     let inputs = document.querySelectorAll('.animated_inputs');
     inputs.forEach((input)=>{
       input.addEventListener('focusin',(e)=>{
@@ -99,14 +99,15 @@ function RepeatingComponent(props) {
     setComponents(updatedComponents);
   };
 
+
   return (
     <div className="repeating-component">
     <h2>{props.title}</h2>
     {components.map((component) => (
     <div key={component.id} className="repeating-fields-container">
+      <repeaterContext.Provider value={component.id}>
     <div className="repeating-fields">
-    <h3 className='repeating-fields-subtitle'>{subtitle_prefix+' : '}
-    <span className='repeating-fields-component-id'>{component.id}</span>
+    <h3 className='repeating-fields-subtitle'>{props.subtitle}
     </h3>
       {props.children}
       
@@ -117,10 +118,11 @@ function RepeatingComponent(props) {
       </span></button>}
       
     </div>
+    </repeaterContext.Provider>
     </div>
     ))}
     <div className="repeating-btn-group">
-      <button onClick={duplicateLastComponent} className='secondary-btn repeating-btn add_field' tooltip='Add Field'><span className="material-symbols-rounded">
+      <button type='button' onClick={duplicateLastComponent} className='secondary-btn repeating-btn add_field' tooltip='Add Field'><span className="material-symbols-rounded">
         add
       </span></button>
     </div>
@@ -133,5 +135,4 @@ function RepeatingComponent(props) {
     
   );
 }
-
 export default RepeatingComponent;

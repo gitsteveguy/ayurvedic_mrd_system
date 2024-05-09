@@ -16,7 +16,7 @@ export default function LoginForm() {
         </div>
       </div>
       <div className="input_row">
-        <div className="input_group">
+        <div className="input_group login">
           <button type='submit' form="LoginForm" className=' primary-btn formbtn' tooltip='Just click here to Login' value="login">Login</button>
         </div>
       </div>

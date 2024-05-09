@@ -60,16 +60,16 @@ export default function Test() {
             <MultiSelect label='Multi Select' name='MultiSelect' api_url='http://localhost:5000/test/api/select' repeat />
           </ICol>
         </IRow>
-        <RepeatingComponent title='Repeating Fields' subtitle_prefix='Test'>
+        <RepeatingComponent title='Repeating Fields' subtitle='Test'>
           <IRow>
             <ICol>
               <input className='animated_inputs' id='text1' type="text" name='text1[]' />
               <label htmlFor="text1">Text 1</label>
             </ICol>
             <ICol>
-              <input className='animated_inputs' id='text2' type="text" name='text2[]' />
-              <label htmlFor="text2">Text 2</label>
-            </ICol>
+            <SingleSelect name='rep_select[]' api_url='http://localhost:5000/test/api/select' />
+            <label htmlFor="select">Select with Dynamic Options from API</label>
+          </ICol>
           </IRow>
           <IRow>
             <ICol>

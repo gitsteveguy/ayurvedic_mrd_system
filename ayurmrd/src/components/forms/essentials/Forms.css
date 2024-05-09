@@ -150,6 +150,10 @@ input[type="text"],input[type="email"],input[type="number"],input[type="date"],i
         height: min-content;
     }
 
+    .input_group.login{
+      justify-content: center;
+    }
+
     .input_group:has(> input[type='checkbox']){
       justify-content: flex-start;
       height: min-content;

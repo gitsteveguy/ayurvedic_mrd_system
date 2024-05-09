@@ -1,12 +1,14 @@
 import React from 'react'
 import AsyncSelect from 'react-select/async';
-import { useState,useEffect } from 'react';
+import { useState,useEffect,useContext } from 'react';
 import makeAnimated from 'react-select/animated';
+import { repeaterContext } from './RepeatingComponent';
 
 const animatedComponents = makeAnimated();
 export default function MultiSelect(props) {
 
   const [values,setValues] = useState([])
+  const multiselectindex = useContext(repeaterContext);
   
   useEffect((e)=>{
 
@@ -41,16 +43,9 @@ let changefn = main_onChange;
 
   let url = props.api_url;
   let sel_id = props.name.split('[', 1)[0]
-  let cmp_nums = document.querySelectorAll('.repeating-fields-component-id');
   let new_name = props.name;
-let max_cmp=0;
-cmp_nums.forEach((cmp_num)=>{
-  let cmp_number = parseInt(cmp_num.innerHTML)
-  console.log(cmp_number);
-  max_cmp = cmp_number>max_cmp? cmp_number : max_cmp;
-})
 if(new_name.includes('[')){
-new_name = props.name.split('0')[0]+(max_cmp+1)+props.name.split('0')[1];}
+new_name = props.name.split('0')[0]+(multiselectindex)+props.name.split('0')[1];}
  const colorStyles = {
   option: (styles, { data, isDisabled, isFocused, isSelected })=>{
     return {...styles, color: isFocused ? 'var(--color-white)': isSelected ? 'var(--color-white)' : 'var(--color-secondary)'}

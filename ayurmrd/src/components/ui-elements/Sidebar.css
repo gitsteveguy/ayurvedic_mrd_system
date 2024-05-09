@@ -2,7 +2,7 @@ aside{
     position: fixed;
     height: 98vh;
     background: var(--color-white);
-    width: 15.5rem;
+    width: 16.5rem;
     border-radius: var(--card-border-radius);
     padding: var(--card-padding);
     text-align: center;

@@ -14,8 +14,8 @@ function App() {
           <Route index element={<Welcome />} />
           <Route path="/dashboard" element={<Dashboard />}/>
           <Route path="/login" element={<Login />} />
-          <Route path="/dashboard/test" element={<Container page_name='Page Title' child={<TestPage/>}/>} />
-          <Route path="/dashboard/demo/fetchform" element={<Container page_name='FetchForm' child={<FetchFormPage/>}/>} />
+          <Route path="/dashboard/test" element={<Container page_name='Page Title' child={<TestPage/>} active_menu='Repeating Form'/>} />
+          <Route path="/dashboard/demo/fetchform" element={<Container page_name='FetchForm' child={<FetchFormPage/>} active_menu='Fetch Form'/>} />
           <Route path="/test/repeat" element={<RepeatingComponent />} />
 
   </Routes>

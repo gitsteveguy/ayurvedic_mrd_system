@@ -1,19 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState,useContext } from 'react'
+import { repeaterContext } from './RepeatingComponent';
 
 export default function Radio(props) {
 
 
   const [radio, setRadio] = useState(props.options[0]);
+  const radioindex = useContext(repeaterContext);
   let radio_name = props.name
   if (radio_name.includes('[')) {
-    let cmp_nums = document.querySelectorAll('.repeating-fields-component-id');
-    let max_cmp = 0;
-    cmp_nums.forEach((cmp_num) => {
-      let cmp_number = parseInt(cmp_num.innerHTML)
-      console.log(cmp_number);
-      max_cmp = cmp_number > max_cmp ? cmp_number : max_cmp;
-    })
-    radio_name = radio_name.split('0')[0] + (max_cmp + 1) + radio_name.split('0')[1];
+    radio_name = radio_name.split('0')[0] + radioindex + radio_name.split('0')[1];
   }
 
   useEffect((e) => {

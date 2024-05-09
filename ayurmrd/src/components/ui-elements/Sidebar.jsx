@@ -8,7 +8,7 @@ import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import TableViewIcon from '@mui/icons-material/TableView';
 import './Sidebar.css';
 
-export default function Sidebar() {
+export default function Sidebar(props) {
   return (
     <>
       <div id='sidebar_base'></div>
@@ -25,43 +25,43 @@ export default function Sidebar() {
         </div>
       </div>
       <div className="sidebar">
-        <a href="/dashboard" className="active">
+        <a href="/dashboard" className={props.active_menu==='Dashboard'?'active':''}>
           <span>
         <DashboardRoundedIcon />
         </span>
           <h3>Dashboard</h3>
         </a>
-        <a href="/dashboard">
+        <a href="/dashboard" className={props.active_menu==='Staff'?'active':''}>
           <span>
           <PeopleRoundedIcon/>
           </span>
           <h3>Staff</h3>
         </a>
-        <a href="/dashboard">
+        <a href="/dashboard" className={props.active_menu==='Patients'?'active':''}>
         <span>
           <SickRoundedIcon/>
           </span>
           <h3>Patients</h3>
         </a>
-        <a href="/dashboard">
+        <a href="/dashboard" className={props.active_menu==='Analytics'?'active':''}>
         <span>
           <BarChartRoundedIcon/>
           </span>
           <h3>Analytics</h3>
         </a>
-        <a href="/dashboard">
+        <a href="/dashboard" className={props.active_menu==='Settings'?'active':''}>
         <span>
           <SettingsRoundedIcon/>
           </span>
           <h3>Settings</h3>
         </a>
-        <a href="/dashboard/test">
+        <a href="/dashboard/test" className={props.active_menu==='Repeating Form'?'active':''}>
         <span>
           <TableViewIcon/>
           </span>
           <h3>Repeating Form</h3>
         </a>
-        <a href="/dashboard/demo/fetchform">
+        <a href="/dashboard/demo/fetchform" className={props.active_menu==='Fetch Form'?'active':''}>
         <span>
           <TableViewIcon/>
           </span>
