@@ -4,7 +4,7 @@ const cors = require("cors");
 const app = express();
 
 const corsOptions = {
-    origin: "http://192.168.1.6:3000",
+    origin: "http://localhost:3000",
   };
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(cors(corsOptions));
@@ -22,7 +22,7 @@ app.post('/test/post/', (req, res) => {
 
 app.get('/test/api/fetchform',(req,res)=>{
   let options = {
-    text : 'Text 1',
+    text : 'Text 2',
     textarea : 'Textarea 1',
     date : '2024-05-15',
     time: "01:00",

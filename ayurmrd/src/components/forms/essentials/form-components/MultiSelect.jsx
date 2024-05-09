@@ -10,15 +10,15 @@ export default function MultiSelect(props) {
   
   useEffect((e)=>{
 
-    if(props.defaultValue)
+    if(props.value)
       {
         let newoptions=[]
-        props.defaultValue.forEach((datum)=>{
+        props.value.forEach((datum)=>{
           newoptions.push({label: datum, value: datum})
           })
           setValues(newoptions);
       }
-  },[props.defaultValue])
+  },[props.value])
 
  const rep_onChange = (e)=>{
   setValues(e)

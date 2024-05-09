@@ -1,152 +1,115 @@
 import React, { useState, useEffect } from 'react'
-import Single_Select from '../essentials/form-components/Single_Select';
+import IRow from '../essentials/form-components/IRow';
+import ICol from '../essentials/form-components/ICol';
+import SingleSelect from '../essentials/form-components/SingleSelect';
 import MultiSelect from '../essentials/form-components/MultiSelect';
 import Radio from '../essentials/form-components/Radio';
 import Checkbox from '../essentials/form-components/Checkbox';
 
 
-export default function FetchForm() {
+export default function FetchForm(props) {
 
   const [formData, setFormData] = useState({
-    text : '',
-    textarea : '',
-    date : '',
+    text: '',
+    textarea: '',
+    date: '',
     time: "",
     tel: "",
     number: "",
     select: "",
     MultiSelect: [],
     checkbox: "",
-    Radio: "" 
+    Radio: ""
   });
 
-  const [has_value, updateHasValue] = useState('');
-
+  let animated_inputs_label_class = 'input_has_value'
   useEffect(() => {
-    let jsonData={}
-   jsonData = {
-      "text": "Text 4",
-      "textarea": "Textarea 1",
-      "date": "2024-05-15",
-      "time": "01:00",
-      "tel": "9876543211",
-      "number": "3",
-      "select": "Option 2",
-      "MultiSelect": [
-        "Option 1",
-        "Option 2",
-      ],
-      "checkbox": "true",
-      "Radio": "Option 3"
-  };
+    fetchData(props.api_url);
+  }, []);
 
-  if (typeof jsonData != {}){
-    setFormData(jsonData);
-    updateHasValue('input_has_value');
+  function fetchData(api_url) {
+    fetch(api_url).then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    }).then((data) => {
+      if (typeof data != {}) {
+        setFormData(data);
+      }
+    })
   }
 
-  let inputs = document.querySelectorAll('.animated_inputs');
-    inputs.forEach((input)=>{
-      console.log(input);
-      if(input.value!=''){
-        input.classList.add('input_has_value')
-      }})
 
-
-
-
-
-},[]);
-
-  function fetchData(api_url){
-
-  }
-  function onChange(e){
-    const {name,value} = e.target;
-    setFormData(()=>({
-     ...formData,
-     [name] : value
+  function onChange(e) {
+    const { name, value } = e.target;
+    setFormData(() => ({
+      ...formData,
+      [name]: value
     }))
   }
 
-  function handleSubmit(e){
-    
-  }
+ 
 
   return (
     <>
       <h1>Fetch Form</h1>
-      <form onSubmit={handleSubmit} name='FetchForm' id='FetchForm' action="http://192.168.1.6:5000/test/post/" method="post" autoComplete='on'>
-        <div className="input_row">
-          <div className="inputs-container">
-            <div className="input_group">
-              <input className={'animated_inputs '+ has_value} id='Text' type="text" name='text' defaultValue={formData.text}/>
-              <label htmlFor="text">Text</label>
-            </div>
-          </div>
-        </div>
-        <div className="input_row">
-          <div className="inputs-container">
-            <div className="input_group">
-              <textarea name="textarea" id="textarea" cols="30" rows="10" defaultValue={formData.textarea} />
-              <label htmlFor="textarea">Text Area</label>
-            </div>
-          </div>
-        </div>
-        <div className="input_row">
-          <h2>Multi Column - Title</h2>
-          <div className="inputs-container">
-            <div className="input_group">
-              <input id='date' type="date" name='date' defaultValue={formData.date}/>
-              <label htmlFor="date">Date</label>
-            </div>
-            <div className="input_group">
-              <input id='time' type="time" name='time' defaultValue={formData.time}/>
-              <label htmlFor="time">Time</label>
-            </div>
-          </div>
-        </div>
-        <div className="input_row">
-          <h2>Telephone and Numbers</h2>
-          <div className="inputs-container">
-            <div className="input_group">
-              <input className={'animated_inputs '+ has_value} id='tel' type="tel" name='tel' defaultValue={formData.tel}/>
-              <label htmlFor="tel">Tel</label>
-            </div>
-            <div className="input_group">
-              <input className={'animated_inputs '+ has_value} id='number' type="number" name='number' defaultValue={formData.number}/>
-              <label htmlFor="number">Number</label>
-            </div>
-          </div>
-        </div>
-        <div className="input_row">
-          <h2>Select & Multiselect</h2>
-          <div className="inputs-container">
-            <div className="input_group">
-              <Single_Select name='select' api_url='http://192.168.1.6:5000/test/api/select'defaultValue={formData.select}/>
-              <label htmlFor="select">Select with Dynamic Options from API</label>
-            </div>
-            <div className="input_group">
-            <MultiSelect label='Multi Select' name='MultiSelect' api_url='http://192.168.1.6:5000/test/api/select' defaultValue={formData.MultiSelect} onChange={onChange}/>
-            </div>
-          </div>
-        </div>
-        <div className="input_row">
-              <div className="inputs-container">
-                <div className="input_group">
-                  <Checkbox name='checkbox'  defaultValue={formData.checkbox} onChange={onChange}/>
-                </div>
-                <div className="input_group">
-                <Radio name='Radio' options={['Option 1','Option 2','Option 3','Option 4',]} defaultValue={formData.Radio} onChange={onChange}/>
-                </div>
-              </div>
-            </div>
-        <div className="input_row">
-          <div className="input_btn_group">
+      <form name='FetchForm' id='FetchForm' action="http://localhost:5000/test/post/" method="post" autoComplete='on'>
+        <IRow>
+          <ICol>
+            <input className='animated_inputs' id='Text' type="text" name='text' value={formData.text} onChange={onChange} />
+            <label className={formData.text == '' ? '' : animated_inputs_label_class} htmlFor="text">Text</label>
+          </ICol>
+        </IRow>
+        <IRow>
+          <ICol>
+            <textarea name="textarea" id="textarea" cols="30" rows="10" value={formData.textarea} onChange={onChange} />
+            <label htmlFor="textarea">Text Area</label>
+          </ICol>
+        </IRow>
+        <IRow title='Multi Column - Title'>
+          <ICol>
+            <input id='date' type="date" name='date' value={formData.date} onChange={onChange} />
+            <label htmlFor="date">Date</label>
+          </ICol>
+          <ICol>
+            <input id='time' type="time" name='time' value={formData.time} onChange={onChange} />
+            <label htmlFor="time">Time</label>
+          </ICol>
+        </IRow>
+        <IRow title='Telephone and Numbers'>
+          <ICol>
+            <input className='animated_inputs' id='tel' type="tel" name='tel' value={formData.tel} onChange={onChange} />
+            <label className={formData.tel == '' ? '' : animated_inputs_label_class} htmlFor="tel">Tel</label>
+          </ICol>
+          <ICol>
+            <input className='animated_inputs' id='number' type="number" name='number' value={formData.number} onChange={onChange} />
+            <label className={formData.number == '' ? '' : animated_inputs_label_class} htmlFor="number">Number</label>
+          </ICol>
+        </IRow>
+        <IRow>
+          <ICol>
+            <SingleSelect name='select' api_url='http://localhost:5000/test/api/select' value={formData.select} onChange={onChange} />
+            <label htmlFor="select">Select with Dynamic Options from API</label>
+          </ICol>
+          <ICol>
+            <MultiSelect label='Multi Select' name='MultiSelect' api_url='http://localhost:5000/test/api/select' value={formData.MultiSelect} onChange={onChange} />
+          </ICol>
+        </IRow>
+        <IRow>
+          <ICol>
+            <Checkbox name='checkbox' defaultValue={formData.checkbox} onChange={onChange} />
+          </ICol>
+          <ICol>
+            <Radio name='Radio' options={['Option 1', 'Option 2', 'Option 3', 'Option 4',]} defaultValue={formData.Radio} onChange={onChange} />
+          </ICol>
+        </IRow>
+        <IRow>
+          <ICol>
             <button type='button' className='danger-btn formbtn' tooltip='Cancel'>Cancel</button>
             <button type='submit' form="FetchForm" className=' primary-btn formbtn' tooltip='Submit' value="submit">Submit</button>
-          </div>
-        </div>
+          </ICol>
+        </IRow>
       </form>
     </>
   )

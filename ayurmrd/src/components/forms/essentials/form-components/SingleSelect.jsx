@@ -2,7 +2,7 @@ import React,{useEffect, useState} from 'react'
 import AsyncSelect from 'react-select/async';
 
 
-export default function Single_Select(props) {
+export default function SingleSelect(props) {
   const [value,setValue] = useState({})
   let url = props.api_url;
 
@@ -30,12 +30,31 @@ export default function Single_Select(props) {
     })
   }
 
+  
+  const rep_onChange = (e)=>{
+    setValue(e)
+   }
+
+   const main_onChange = (e)=>{
+   let  e_name = props.name;
+   let e_value = e.value;
+   let  m_event = {target : {name : e_name, value : e_value}}
+    props.onChange(m_event)
+   }
+   let changefn = rep_onChange;
+   if(props.value){
+    changefn = main_onChange
+   }
+
+   
+
+
   useEffect((e)=>{
-    if(props.defaultValue){
-      let value ={label : props.defaultValue, value : props.defaultValue}
+    if(props.value){
+      let value ={label : props.value, value : props.value}
       setValue(value)
     }
-  },[props.defaultValue])
+  },[props.value])
 
   return (
     <AsyncSelect
@@ -44,6 +63,7 @@ export default function Single_Select(props) {
       classNamePrefix="select"
       value = {value}
       loadOptions={loadOptions}
+      onChange={changefn}
       theme={(theme) => ({
         ...theme,
         colors: {

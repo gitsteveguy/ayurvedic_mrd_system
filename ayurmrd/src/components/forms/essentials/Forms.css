@@ -143,7 +143,7 @@ input[type="text"],input[type="email"],input[type="number"],input[type="date"],i
     .input_group{
         display: flex;
         gap: 1rem;
-        justify-content: start;
+        justify-content: space-between;
         position: relative;
         width: 100%;
         align-items: center;
