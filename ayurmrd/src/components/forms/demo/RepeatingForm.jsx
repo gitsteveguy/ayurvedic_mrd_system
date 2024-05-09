@@ -1,14 +1,14 @@
 import React from 'react'
-import IRow from './essentials/form-components/IRow';
-import ICol from './essentials/form-components/ICol';
-import RepeatingComponent from './essentials/form-components/RepeatingComponent';
-import SingleSelect from './essentials/form-components/SingleSelect';
-import MultiSelect from './essentials/form-components/MultiSelect';
-import Radio from './essentials/form-components/Radio';
-import Checkbox from './essentials/form-components/Checkbox';
+import IRow from '../essentials/form-components/IRow';
+import ICol from '../essentials/form-components/ICol';
+import RepeatingComponent from '../essentials/form-components/RepeatingComponent';
+import SingleSelect from '../essentials/form-components/SingleSelect';
+import MultiSelect from '../essentials/form-components/MultiSelect';
+import Radio from '../essentials/form-components/Radio';
+import Checkbox from '../essentials/form-components/Checkbox';
 
 
-export default function Test() {
+export default function RepeatingForm() {
   return (
     <>
       <h1>Form Title</h1>

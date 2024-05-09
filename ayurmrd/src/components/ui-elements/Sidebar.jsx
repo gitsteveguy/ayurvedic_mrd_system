@@ -55,7 +55,7 @@ export default function Sidebar(props) {
           </span>
           <h3>Settings</h3>
         </a>
-        <a href="/dashboard/test" className={props.active_menu==='Repeating Form'?'active':''}>
+        <a href="/dashboard/demo/repeatingform" className={props.active_menu==='Repeating Form'?'active':''}>
         <span>
           <TableViewIcon/>
           </span>
