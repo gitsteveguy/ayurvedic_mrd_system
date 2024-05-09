@@ -15,7 +15,7 @@ export default function Sidebar() {
 <aside>
       <div className="top">
         <div className="logo">
-          <img src={logo} />
+          <img src={logo} alt='Logo'/>
           <h2>Ayurvedic MRD System</h2>
         </div>
         <div id="close-btn" className="close">
@@ -25,31 +25,31 @@ export default function Sidebar() {
         </div>
       </div>
       <div className="sidebar">
-        <a href="#" className="active">
+        <a href="/dashboard" className="active">
           <span>
         <DashboardRoundedIcon />
         </span>
           <h3>Dashboard</h3>
         </a>
-        <a href="#">
+        <a href="/dashboard">
           <span>
           <PeopleRoundedIcon/>
           </span>
           <h3>Staff</h3>
         </a>
-        <a href="#">
+        <a href="/dashboard">
         <span>
           <SickRoundedIcon/>
           </span>
           <h3>Patients</h3>
         </a>
-        <a href="#">
+        <a href="/dashboard">
         <span>
           <BarChartRoundedIcon/>
           </span>
           <h3>Analytics</h3>
         </a>
-        <a href="#">
+        <a href="/dashboard">
         <span>
           <SettingsRoundedIcon/>
           </span>
@@ -59,7 +59,13 @@ export default function Sidebar() {
         <span>
           <TableViewIcon/>
           </span>
-          <h3>Sample Form</h3>
+          <h3>Repeating Form</h3>
+        </a>
+        <a href="/dashboard/demo/fetchform">
+        <span>
+          <TableViewIcon/>
+          </span>
+          <h3>Fetch Form</h3>
         </a>
       </div>
     </aside>

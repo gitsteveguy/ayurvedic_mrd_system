@@ -27,14 +27,14 @@ app.get('/test/api/fetchform',(req,res)=>{
     date : '2024-05-15',
     time: "01:00",
     tel: "9876543210",
-    number: "2",
+    number: "12",
     select: "Option 1",
     MultiSelect: [
       "Option 1",
       "Option 2"
     ],
-    checkbox: "checked",
-    Radio: "Option 1" 
+    checkbox: "true",
+    Radio: "Option 3" 
   }
   res.json(options);
 })

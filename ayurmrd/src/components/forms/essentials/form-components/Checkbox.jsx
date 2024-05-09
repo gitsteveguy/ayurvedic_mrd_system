@@ -13,7 +13,7 @@ export default function Checkbox(props) {
   }  
 
   const main_onChange = (e)=>{
-    if(checkbox==true){
+    if(checkbox===true){
       setValue(false)
     }
     else{
@@ -31,7 +31,7 @@ export default function Checkbox(props) {
        let  main_checkboxes = document.querySelectorAll('.m-checkbox');
         main_checkboxes.forEach(main_checkbox => {
             main_checkbox.addEventListener('click',(e)=>{
-                if(main_checkbox.checked == true)
+                if(main_checkbox.checked === true)
                     { main_checkbox.previousElementSibling.checked = false; }
                      else
                      { main_checkbox.previousElementSibling.checked = true;}
@@ -42,10 +42,10 @@ export default function Checkbox(props) {
         setValue(true);
         else if(props.defaultValue==='false')
         setValue(false);
-    })
+    },[props.defaultValue])
   return (
     <>
-    <input type="checkbox" style={{display:'none'}}   name={props.name} checked={checkbox==false} value ='false' />
+    <input type="checkbox" style={{display:'none'}}   name={props.name} checked={checkbox===false} value ='false' />
     <input type="checkbox" className='m-checkbox' name={props.name} checked={checkbox} value='true' onChange={changefn}/>
      <label htmlFor="checkbox"> Checkbox</label>
      </>

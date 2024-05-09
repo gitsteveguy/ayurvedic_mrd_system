@@ -20,7 +20,7 @@ export default function Radio(props) {
     if (props.defaultValue) {
       setRadio(props.defaultValue)
     }
-  })
+  },[props.defaultValue])
 
   const rep_onChange = (e) => {
     setRadio(e.target.value);

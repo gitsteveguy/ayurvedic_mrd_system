@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useState } from 'react';
+import React, {useEffect, useState } from 'react';
 
 function RepeatingComponent(props) {
   const [components, setComponents] = useState([{ id: 1 }]);
@@ -112,17 +112,17 @@ function RepeatingComponent(props) {
       
     
 
-      {components.length > 1 && <a onClick={() => removeComponent(component.id)} className='danger-btn  repeating-btn remove_field' tooltip='Delete Field'><span className="material-symbols-rounded">
+      {components.length > 1 && <button onClick={() => removeComponent(component.id)} className='danger-btn  repeating-btn remove_field' tooltip='Delete Field'><span className="material-symbols-rounded">
         remove
-      </span></a>}
+      </span></button>}
       
     </div>
     </div>
     ))}
     <div className="repeating-btn-group">
-      <a onClick={duplicateLastComponent} className='secondary-btn repeating-btn add_field' tooltip='Add Field'><span className="material-symbols-rounded">
+      <button onClick={duplicateLastComponent} className='secondary-btn repeating-btn add_field' tooltip='Add Field'><span className="material-symbols-rounded">
         add
-      </span></a>
+      </span></button>
     </div>
   </div>
 

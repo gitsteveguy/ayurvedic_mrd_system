@@ -25,7 +25,7 @@ export default function FetchForm(props) {
   let animated_inputs_label_class = 'input_has_value'
   useEffect(() => {
     fetchData(props.api_url);
-  }, []);
+  }, [props.api_url]);
 
   function fetchData(api_url) {
     fetch(api_url).then(response => {
@@ -58,7 +58,7 @@ export default function FetchForm(props) {
         <IRow>
           <ICol>
             <input className='animated_inputs' id='Text' type="text" name='text' value={formData.text} onChange={onChange} />
-            <label className={formData.text == '' ? '' : animated_inputs_label_class} htmlFor="text">Text</label>
+            <label className={formData.text === '' ? '' : animated_inputs_label_class} htmlFor="text">Text</label>
           </ICol>
         </IRow>
         <IRow>
@@ -80,11 +80,11 @@ export default function FetchForm(props) {
         <IRow title='Telephone and Numbers'>
           <ICol>
             <input className='animated_inputs' id='tel' type="tel" name='tel' value={formData.tel} onChange={onChange} />
-            <label className={formData.tel == '' ? '' : animated_inputs_label_class} htmlFor="tel">Tel</label>
+            <label className={formData.tel === '' ? '' : animated_inputs_label_class} htmlFor="tel">Tel</label>
           </ICol>
           <ICol>
             <input className='animated_inputs' id='number' type="number" name='number' value={formData.number} onChange={onChange} />
-            <label className={formData.number == '' ? '' : animated_inputs_label_class} htmlFor="number">Number</label>
+            <label className={formData.number === '' ? '' : animated_inputs_label_class} htmlFor="number">Number</label>
           </ICol>
         </IRow>
         <IRow>
