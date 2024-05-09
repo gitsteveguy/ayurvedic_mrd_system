@@ -11,7 +11,7 @@ import './Sidebar.css';
 export default function Sidebar() {
   return (
     <>
-      <div></div>
+      <div id='sidebar_base'></div>
 <aside>
       <div className="top">
         <div className="logo">

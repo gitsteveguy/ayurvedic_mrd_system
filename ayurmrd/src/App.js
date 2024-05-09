@@ -4,6 +4,8 @@ import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
 import TestPage from './pages/TestPage';
 import Container from './components/Container';
+import FetchFormPage from './pages/demo/FetchFormPage';
+import RepeatingComponent from './components/forms/essentials/form-components/RepeatingComponent';
 import './App.css';
 
 function App() {
@@ -13,6 +15,8 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />}/>
           <Route path="/login" element={<Login />} />
           <Route path="/dashboard/test" element={<Container page_name='Page Title' child={<TestPage/>}/>} />
+          <Route path="/dashboard/demo/fetchform" element={<Container page_name='FetchForm' child={<FetchFormPage/>}/>} />
+          <Route path="/test/repeat" element={<RepeatingComponent />} />
 
   </Routes>
 
