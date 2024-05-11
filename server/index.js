@@ -28,7 +28,7 @@ app.get('/test/api/fetchform',(req,res)=>{
     time: "01:00",
     tel: "9876543210",
     number: "12",
-    select: "Option 1",
+    select: "Option 2",
     MultiSelect: [
       "Option 1",
       "Option 2"
