@@ -33,18 +33,22 @@ Watching this [video](https://youtu.be/HbSjyU2vf6Y?si=7EdEVJLy_OkPk-60) will giv
 ```
   git clone https://github.com/gitsteveguy/ayurvedic_mrd_system.git
 ```
-4. Move to app directory
+5. Open the folder ayurvedic_mrd_system in VS code , open a terminal in it and move to the server directory and install the dependencies
 ``` 
-  cd ayurvedic_mrd_system
+  cd server
+  npm i
 ```
+6. Start the server
+``` 
+  node index
+```
+
+7. Open a new terminal, Move to the app directory and Install the required dependencies
 ``` 
   cd ayurmrd
+  npm i
 ```
-5. Install the required dependencies
-```
-  npm install
-```
-6. Run the app
+8. Start the app
 ``` 
   npm start
 ```
