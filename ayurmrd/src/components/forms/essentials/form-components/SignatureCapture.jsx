@@ -79,6 +79,7 @@ export default function SignatureCapture(props) {
     return (
         <ICol down gap='0.5rem'>
                 <h3>{props.label}</h3>
+                {/* Base 64 Input */}
                 <input ref={signuriReference} name={props.name} required={props.required} type="text" style={{opacity:0,width:0,position:'absolute'}}  onInvalid={(e)=>{e.target.setCustomValidity('Please Sign')}} />
                 <canvas width="300" height="300"
                 ref={canvasReference}
