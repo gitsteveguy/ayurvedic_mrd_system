@@ -48,7 +48,16 @@ if(new_name.includes('[')){
 new_name = props.name.split('0')[0]+(multiselectindex)+props.name.split('0')[1];}
  const colorStyles = {
   option: (styles, { data, isDisabled, isFocused, isSelected })=>{
-    return {...styles, color: isFocused ? 'var(--color-white)': isSelected ? 'var(--color-white)' : 'var(--color-secondary)'}
+    return {...styles, color: isFocused ? 'var(--color-white)': isSelected ? 'var(--color-white)' : 'var(--color-secondary)',
+    ':active':{
+      ...styles[':active'],
+      backgroundColor: !isDisabled
+        ? isSelected
+          ? 'var(--color-primary)'
+          : 'var(--color-primary)'
+        : undefined,
+    }
+    }
   },
   multiValue: (styles) => {
     return {
@@ -99,6 +108,7 @@ new_name = props.name.split('0')[0]+(multiselectindex)+props.name.split('0')[1];
       classNamePrefix="select"
       components={animatedComponents}
       isMulti
+      required = {props.required ? true : false}
       loadOptions={loadOptions}
       theme={(theme) => ({
         ...theme,

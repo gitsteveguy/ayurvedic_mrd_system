@@ -261,6 +261,35 @@ input[type="text"],input[type="email"],input[type="number"],input[type="date"],i
       top: 0.5rem;
     }
 
+   .image-capture-input-video{
+    border: 1px solid var(--color-primary);
+    border-radius: var(--card-border-radius);
+   }
+
+   .image-capture-preview-img{
+    border: 1px solid var(--color-primary);
+    border-radius: var(--card-border-radius);
+    color: var(--color-primary);
+    font: 1.5rem poppins;
+    line-height: 300px;
+    text-align: center;
+   }
+
+   .signature-canvas{
+    border: 1px dashed var(--color-secondary);
+    border-radius: var(--card-border-radius);
+    transition: all 300ms ease-in;
+   }
+
+   .signature-canvas.confirmed{
+    border: 1px solid var(--color-primary);
+    border-radius: var(--card-border-radius);
+   }
+
+   .signature-input-btngroup{
+    display: flex;
+    gap: 1rem;
+   }
 
     /*Responsive Mobile*/
     @media screen and (max-width: 700px) {

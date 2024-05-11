@@ -5,7 +5,7 @@ export default function IRow(props) {
     if(props.title)
         title = <h2>{props.title}</h2>
     return (
-        <div className="input_row">
+        <div className="input_row" style={{gap : props.gap}}>
             {title}
             <div className="inputs-container">
                 {props.children}

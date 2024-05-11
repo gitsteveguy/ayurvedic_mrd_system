@@ -16,8 +16,8 @@
     --color-info-dark: hsl(213, 16%, 56%);
     --color-info-light: hsl(220, 27%, 89%);
     --color-dark: hsl(231, 15%, 25%);
-    --color-light: hsla(234, 38%, 65%, 0.18);
-    --color-shadow: #00000029;
+    --color-light: hsla(234, 77%, 26%, 0.18);
+    --color-shadow: hsla(0, 0%, 0%, 0.161);
     
     --color-dark-variant: hsl(212, 12%, 46%);
 
@@ -286,7 +286,11 @@ main{
     box-shadow: none;
 }
 
-
+.disabled{
+    filter: grayscale(90%);
+    opacity: 40%;
+    pointer-events: none;
+}
 
 
 /* Popup */

@@ -8,7 +8,16 @@ export default function SingleSelect(props) {
 
  const colorStyles = {
   option: (styles, { data, isDisabled, isFocused, isSelected })=>{
-    return {...styles, color: isFocused ? 'var(--color-white)': isSelected ? 'var(--color-white)' : 'var(--color-secondary)'}
+    return {...styles, color: isFocused ? 'var(--color-white)': isSelected ? 'var(--color-white)' : 'var(--color-secondary)',
+    ':active':{
+      ...styles[':active'],
+      backgroundColor: !isDisabled
+        ? isSelected
+          ? 'var(--color-primary)'
+          : 'var(--color-primary)'
+        : undefined,
+    }
+    }
   }
  }
 
@@ -27,6 +36,7 @@ export default function SingleSelect(props) {
         option.label.toLowerCase().includes(searchValue.toLowerCase())
       )
       callback(filteredOptions)
+      setValue(filteredOptions[0])
     })
   }
 
@@ -77,4 +87,3 @@ export default function SingleSelect(props) {
     />
   )
 }
-

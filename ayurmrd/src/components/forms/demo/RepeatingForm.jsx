@@ -6,6 +6,8 @@ import SingleSelect from '../essentials/form-components/SingleSelect';
 import MultiSelect from '../essentials/form-components/MultiSelect';
 import Radio from '../essentials/form-components/Radio';
 import Checkbox from '../essentials/form-components/Checkbox';
+import ImageCaptureInput from '../essentials/form-components/ImageCaptureInput';
+import SignatureCapture from '../essentials/form-components/SignatureCapture';
 
 
 export default function RepeatingForm() {
@@ -24,6 +26,10 @@ export default function RepeatingForm() {
             <textarea name="textarea" id="textarea" cols="30" rows="10"></textarea>
             <label htmlFor="textarea">Text Area</label>
           </ICol>
+        </IRow>
+        <ImageCaptureInput title='Image Capture Input' name='imageinput' required />
+        <IRow>
+          <SignatureCapture name='signature' label='Signature' required/>
         </IRow>
         <IRow title='Multi Column - Title'>
           <ICol>
@@ -67,9 +73,9 @@ export default function RepeatingForm() {
               <label htmlFor="text1">Text 1</label>
             </ICol>
             <ICol>
-            <SingleSelect name='rep_select[]' api_url='http://localhost:5000/test/api/select' />
-            <label htmlFor="select">Select with Dynamic Options from API</label>
-          </ICol>
+              <SingleSelect  name='rep_select[]' api_url='http://localhost:5000/test/api/select' />
+              <label htmlFor="select">Select with Dynamic Options from API</label>
+            </ICol>
           </IRow>
           <IRow>
             <ICol>
@@ -77,7 +83,7 @@ export default function RepeatingForm() {
               <label htmlFor="textarea2">Text Area</label>
             </ICol>
             <ICol>
-              <MultiSelect label='Multi Select' name='MultiSelect2[0][]' api_url='http://localhost:5000/test/api/select' repeat />
+              <MultiSelect  label='Multi Select' name='MultiSelect2[0][]' api_url='http://localhost:5000/test/api/select' repeat />
             </ICol>
           </IRow>
           <IRow>
