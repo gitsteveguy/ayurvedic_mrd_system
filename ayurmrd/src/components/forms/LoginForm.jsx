@@ -5,13 +5,13 @@ export default function LoginForm() {
     <form name='LoginForm' id='LoginForm' action="/dashboard" method="get">
       <div className="input_row">
         <div className="input_group">
-          <input id='username' type="text" name='username' />
+          <input id='username' className='animated_inputs' type="text" name='username' />
           <label htmlFor="username">Username</label>
         </div>
       </div>
       <div className="input_row">
         <div className="input_group">
-          <input id='password' type="password" name='password' />
+          <input className='animated_inputs' id='password' type="password" name='password' />
           <label htmlFor="password">Password</label>
         </div>
       </div>

@@ -6,9 +6,10 @@ export default function SignatureCapture(props) {
     const canvasReference = useRef(null);
   const contextReference = useRef(null);
   const signuriReference = useRef(null)
-
+  const[signurifdvalue,setsignurifdvalue] = useState('')
   const [isPressed, setIsPressed] = useState(false);
   const [saved, setSaved] = useState(false);
+  
 
   const clearCanvas = () => {
     const canvas = canvasReference.current;
@@ -49,11 +50,10 @@ export default function SignatureCapture(props) {
   const confirmSignature = () =>{
    
     const canvas = canvasReference.current;
-    const signuri = signuriReference.current;
     var du = canvas.toDataURL('image/jpeg', 0.8);
     var b64du = du.replace(/^data:image\/?[A-z]*;base64,/, "");
     if(blank!==b64du){
-    signuri.value = b64du;
+    setsignurifdvalue(b64du)
     setSaved(true)}
     
   }
@@ -80,7 +80,7 @@ export default function SignatureCapture(props) {
         <ICol down gap='0.5rem'>
                 <h3>{props.label}</h3>
                 {/* Base 64 Input */}
-                <input ref={signuriReference} name={props.name} required={props.required} type="text" style={{opacity:0,width:0,position:'absolute'}}  onInvalid={(e)=>{e.target.setCustomValidity('Please Sign')}} />
+                <input ref={signuriReference} name={props.name} required={props.required} type="text" style={{opacity:0,width:0,position:'absolute'}}  onInvalid={(e)=>{e.target.setCustomValidity('Please Sign')}} value={signurifdvalue} />
                 <canvas width="300" height="300"
                 ref={canvasReference}
                 onMouseDown={beginDraw}

@@ -1,4 +1,4 @@
-import React,{useRef} from 'react'
+import React,{useRef,useState} from 'react'
 import ICol from './ICol';
 import IRow from './IRow';
 import ImageFallback from '../../../../assets/ImageFallback.png'
@@ -7,10 +7,10 @@ export default function ImageCaptureInput(props) {
   const CameraPreviewReference = useRef(null);
   const tmagejsReference = useRef(null);;
   const imagurifdReference = useRef(null);
+  const [imageurifdvalue, setimageurifdvalue] = useState('')
 
   let CameraPreview; 
   let tmagejs;
-  let imagurifd;
 
   const openCamera = (e) => {
     CameraPreview = CameraPreviewReference.current;
@@ -28,8 +28,6 @@ export default function ImageCaptureInput(props) {
   const captureImage = (e) => {
     tmagejs = tmagejsReference.current;
 
-    imagurifd = imagurifdReference.current;
-
     var canvas = document.createElement('canvas');
     canvas.width = CameraPreview.videoWidth;
     canvas.height = CameraPreview.videoHeight;
@@ -39,7 +37,7 @@ export default function ImageCaptureInput(props) {
     var du = canvas.toDataURL('image/jpeg', 0.8);
     tmagejs.src = du;
     var b64du = du.replace(/^data:image\/?[A-z]*;base64,/, "");
-    imagurifd.value = b64du;
+    setimageurifdvalue(b64du)
   }
 
   return (
@@ -50,7 +48,7 @@ export default function ImageCaptureInput(props) {
         <button type="button" className="primary-btn" onClick={openCamera}>Open Camera</button>
       </ICol>
       <ICol down position='relative'>
-        <input ref={imagurifdReference} name={props.name}  onInvalid={(e)=>{e.target.setCustomValidity('Please Capture an Image')}} style={{opacity:0,width:0,position:'absolute'}} required={props.required} type="text"/>
+        <input ref={imagurifdReference} name={props.name}  onInvalid={(e)=>{e.target.setCustomValidity('Please Capture an Image')}} style={{opacity:0,width:0,position:'absolute'}} required={props.required} value={imageurifdvalue} type="text"/>
         <img ref={tmagejsReference} width="300" height="300" src={ImageFallback} alt='Preview' className='image-capture-preview-img' />
         <button type="button" className="primary-btn" onClick={captureImage}>Take Photo</button>
       </ICol>
