@@ -6,6 +6,7 @@ import RepeatingFormPage from './pages/demo/RepeatingFormPage';
 import Container from './components/Container';
 import FetchFormPage from './pages/demo/FetchFormPage';
 import RepeatingComponent from './components/forms/essentials/form-components/RepeatingComponent';
+import DoctorsObsChartPage from './pages/formpages/DoctorsObsChartPage';
 import './App.css';
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
           <Route path="/dashboard/demo/repeatingform" element={<Container page_name='Page Title' child={<RepeatingFormPage/>} active_menu='Repeating Form'/>} />
           <Route path="/dashboard/demo/fetchform" element={<Container page_name='FetchForm' child={<FetchFormPage/>} active_menu='Fetch Form'/>} />
           <Route path="/test/repeat" element={<RepeatingComponent />} />
+          <Route path="/dashboard/patientforms/doctorobschartform" element={<Container page_name="Doctor's Observation Chart" child={<DoctorsObsChartPage/>} /> } />
 
   </Routes>
 
