@@ -14,6 +14,13 @@
     place-content: center;
     padding: 4rem;
 }
+.child-container-flex{
+    display: flex;
+    height: fit-content;
+    padding: 4rem;
+    gap: 1.5rem;
+    flex-direction: column;
+}
 
 main{
     height: fit-content;

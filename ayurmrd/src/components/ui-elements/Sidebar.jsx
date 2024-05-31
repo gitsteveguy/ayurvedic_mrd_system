@@ -31,7 +31,7 @@ export default function Sidebar(props) {
         </span>
           <h3>Dashboard</h3>
         </a>
-        <a href="/dashboard" className={props.active_menu==='Staff'?'active':''}>
+        <a href="/staff" className={props.active_menu==='Staff'?'active':''}>
           <span>
           <PeopleRoundedIcon/>
           </span>
