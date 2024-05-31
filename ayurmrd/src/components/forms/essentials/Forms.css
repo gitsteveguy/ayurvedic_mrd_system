@@ -273,6 +273,7 @@ input[type="text"],input[type="email"],input[type="number"],input[type="date"],i
     font: 1.5rem poppins;
     line-height: 300px;
     text-align: center;
+    height: unset!important;
    }
 
    .signature-canvas{
