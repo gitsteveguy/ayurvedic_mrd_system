@@ -6,6 +6,7 @@ import { useState,useEffect } from 'react'
 
 export default function Staff() {
     const staff_data_api_url = 'http://localhost:5000/test/api/staffdata'
+    const [staff_data,set_staff_data] = useState([])
     useEffect((e) => {
         let inputs = document.querySelectorAll('.animated_inputs');
         inputs.forEach((input)=>{
@@ -18,7 +19,31 @@ export default function Staff() {
               e.target.nextElementSibling.classList.remove('input_has_value')
             }
           })
-        })})
+        })
+        fetchData(staff_data_api_url)
+      },[staff_data_api_url])
+
+        function fetchData(staff_data_api_url){
+          fetch(staff_data_api_url).then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.json();
+          }).then((data) => {
+            if (typeof data != {}) {
+              let user_data = []
+              data.forEach((datum)=>{
+                user_data.push({
+                  name : datum.staff_name,
+                  img : datum.staff_img,
+                  role : datum.role,
+                  btn_url : datum.btn_url
+                })
+              })
+              set_staff_data(user_data)
+            }
+          })}
+
   return (
     <Container page_name='Staff' active_menu='Staff' type='flex'>
       <div className="search-input input_group">
@@ -27,7 +52,7 @@ export default function Staff() {
         <SearchIcon/>
 
       </div>
-      <UserCards  user_data_api_url={staff_data_api_url}/>
+      <UserCards  users_data={staff_data}/>
     </Container>
   )
 }

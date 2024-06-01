@@ -7,6 +7,7 @@
     --color-black : #000000;
     --color-white : #fff;
     --color-background: hsl(240, 24%, 96%);
+    --dark-color-background : #161617;
 
     --color-danger: hsl(355, 91%, 45%);
     --color-success: hsl(145, 95%, 33%);
@@ -123,8 +124,23 @@ button:hover{
     display: flex;
     justify-content: center;
 }
-
-
+.chart-container{
+    width: 100%;
+}
+.map-tooltip{
+    background-color: var(--color-secondary);
+    outline: 10px solid var(--color-secondary);
+    border-radius: 5px;
+    min-height: fit-content;
+    width: fit-content;
+    color: #faf7f7 !important;
+    b{
+        color: #faf7f7 !important;
+    }
+    p{
+        color: #faf7f7 !important;
+    }
+}
 
 a{
     color: var(--color-primary);

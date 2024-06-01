@@ -30,8 +30,11 @@ export default function LineChart(props) {
     maintainAspectRatio:false
   }
   return (
-    <div className="card card-full" style={{height: props.height}}>
-      <Line data={props.chartData} options={loptions}></Line>
+    <div className="card card-full" >
+      <h3>{props.title}</h3>
+      <div className="chart-container" style={{height: props.height}}>
+      <Line data={props.chartData} options={loptions} ></Line>
+      </div>
    </div>
   )
 }
