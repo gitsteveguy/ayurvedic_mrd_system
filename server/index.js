@@ -2,21 +2,37 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import jwt from 'jsonwebtoken';
+import mysql from 'mysql2';
+import dotenv from 'dotenv';
 
 const app = express();
 
 const corsOptions = {
     origin: "http://localhost:3000",
+    method : ["GET","POST"],
+    credentials : true
   };
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(cors(corsOptions));
+
+  dotenv.config({ path: './.env' });
 
 app.get('/test/api/select',(req,res)=>{
     let options = ['Option 1', 'Option 2', 'Option 3', 'Option 4', 'Option 5']
     res.json(options);
 })
 
+const DB = mysql.createPool({
+  host: process.env.MYSQL_HOST,
+user: process.env.MYSQL_USER,
+password: process.env.MYSQL_PASSWORD,
+database: process.env.MYSQL_DATABASE
+}).promise()
 
+const result = await  DB.query('Select  * from users');
+console.log(result);
+
+app.use(express.json())
 
 app.use("/assets", express.static('assets'));
 
@@ -311,7 +327,7 @@ app.get('/test/api/patients',(req,res)=>{
 
 //Analytics
 app.get('/test/api/worldmap/patient_country',(req,res)=>{
-  let patient_country = { SG: 100, US: 500, IN: 20 , GB: 2,RU:10, AU:5}
+  let patient_country = { US: 500, IN: 100 , GB: 2,RU:10, AU:5}
   res.json(patient_country);
 })
 app.get('/test/api/regular_patients',(req,res)=>{
@@ -353,4 +369,6 @@ app.get('/test/api/regular_patients',(req,res)=>{
 
 
 
-app.listen(5000);
+app.listen(5000,()=>{
+  console.log('Server Started on Port:5000');
+});

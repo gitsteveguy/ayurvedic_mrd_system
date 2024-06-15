@@ -18,7 +18,7 @@
     height: 20vmin;
     pointer-events: none;
   }
-  .login-sub-container.card{
+.login-sub-container.card{
     box-shadow: 0 2rem 3rem #363949bf;
     width: 100%;
   }
