@@ -44,7 +44,12 @@ input[type="text"],input[type="email"],input[type="number"],input[type="date"],i
  accent-color: var(--color-primary);
 }
 
-    
+&:-webkit-autofill.animated_inputs{
+  animation-name: onAutoFillStart;
+}
+&:not(:-webkit-autofill).animated_inputs{
+  animation-name: onAutoFillCancel;
+}
 
     
     

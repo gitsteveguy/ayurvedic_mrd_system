@@ -1,4 +1,3 @@
-import React from 'react'
 import logo from '../assets/ayurvedic_mrd_system_logo_with_text.svg'
 import FormContainer from '../components/forms/essentials/FormContainer'
 import LoginForm from '../components/forms/LoginForm'

@@ -2,10 +2,22 @@ import React from "react";
 import RepeatingComponent from "../essentials/form-components/RepeatingComponent";
 import IRow from "../essentials/form-components/IRow";
 import ICol from "../essentials/form-components/ICol";
+import { repeatFormToObject } from "../essentials/FormContainer";
+import MultiSelect from "../essentials/form-components/MultiSelect";
+import axios from "axios";
+
+const post_api_url = 'http://localhost:5000/login'
+const handleSubmit = (e)=>{
+  e.preventDefault();
+  const formData = repeatFormToObject(new FormData(e.target));
+  console.log(formData);
+  axios.post(post_api_url,formData).then(response => console.log(response)).catch(err=>console.log(err))
+}
+
 export default function DoctorsVitalChartForm(){
     return(
         <>
-        <form name='doctorsvitalchartform'id='doctorsvitalchartform'action="http://localhost:5000/test/post/"method="post">
+        <form name='doctorsvitalchartform'id='doctorsvitalchartform' onSubmit={handleSubmit}>
             <RepeatingComponent subtitle='Text'>
                 <IRow>
                 <ICol>
@@ -38,10 +50,6 @@ export default function DoctorsVitalChartForm(){
             <label htmlFor="remarks">Remarks</label>
           </ICol>
           </IRow>
-          <IRow>
-        </IRow>
-<IRow>
-                </IRow>
             </RepeatingComponent>
             <IRow>
           <ICol>

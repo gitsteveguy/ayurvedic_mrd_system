@@ -60,7 +60,6 @@ export default function WorldMap(props) {
             let count = 0;
             if(countries[code])
             count = countries[code];
-            console.log("-----> ", label.html(), event, label, code, props);
             label.html(
               '<div class="map-tooltip"' +
                 "<p>" +

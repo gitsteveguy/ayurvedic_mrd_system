@@ -2,8 +2,9 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import jwt from 'jsonwebtoken';
-import mysql from 'mysql2';
 import dotenv from 'dotenv';
+import bcrypt from 'bcrypt';
+import { getUserbyUsername,getPwdbyUsername,verifyUser } from './database.js';
 
 const app = express();
 
@@ -22,20 +23,27 @@ app.get('/test/api/select',(req,res)=>{
     res.json(options);
 })
 
-const DB = mysql.createPool({
-  host: process.env.MYSQL_HOST,
-user: process.env.MYSQL_USER,
-password: process.env.MYSQL_PASSWORD,
-database: process.env.MYSQL_DATABASE
-}).promise()
 
-const result = await  DB.query('Select  * from users');
-console.log(result);
 
 app.use(express.json())
 
 app.use("/assets", express.static('assets'));
 
+
+app.post('/login',async (req,res)=>{
+  const rusername = req.body.username;
+  const rpassword = req.body.password;
+  const isAuthenticated = await verifyUser(rusername, rpassword);
+  if(isAuthenticated)
+  {
+    const User =  await getUserbyUsername(rusername);
+    const jwt_token = jwt.sign({ User }, process.env.JWT_SECRET, { expiresIn: '1h' });
+res.json({
+  msg:'logged_in',
+  token: jwt_token
+})
+  }
+  })
 
 app.post('/test/post/', (req, res) => {
   const formData = req.body;
