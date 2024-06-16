@@ -33,14 +33,15 @@ app.use("/assets", express.static('assets'));
 app.post('/login',async (req,res)=>{
   const rusername = req.body.username;
   const rpassword = req.body.password;
-  const isAuthenticated = await verifyUser(rusername, rpassword);
+  const isAuthenticated = await verifyUser(rusername, rpassword).catch(err=>res.send({error: err}));
   if(isAuthenticated)
   {
     const User =  await getUserbyUsername(rusername);
     const jwt_token = jwt.sign({ User }, process.env.JWT_SECRET, { expiresIn: '1h' });
 res.json({
-  msg:'logged_in',
-  token: jwt_token
+  success: true,
+  token: jwt_token,
+  user_id: User.user_id
 })
   }
   })
