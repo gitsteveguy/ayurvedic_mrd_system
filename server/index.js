@@ -4,9 +4,15 @@ import cors from 'cors';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
+import fs from 'fs'
 import { getUserbyUsername,getPwdbyUsername,verifyUser } from './database.js';
 
 const app = express();
+let country_codes = JSON.parse(fs.readFileSync('./Jsons/countries.json', 'utf8'));
+let countries = Object.keys(country_codes)
+console.log(countries);
+
+
 
 const corsOptions = {
     origin: "http://localhost:3000",
@@ -17,6 +23,16 @@ const corsOptions = {
   app.use(cors(corsOptions));
 
   dotenv.config({ path: './.env' });
+
+// Select API's
+app.get('/api/select/countries',(req,res)=>{
+    res.json(countries);
+})
+
+app.get('/api/select/blood_group',(req,res)=>{
+  const blood_group = ['Select a Blood Group','A+','A-','AB+','AB-','B+','B-','O+','O-']
+  res.json(blood_group);
+})
 
 app.get('/test/api/select',(req,res)=>{
     let options = ['Option 1', 'Option 2', 'Option 3', 'Option 4', 'Option 5']

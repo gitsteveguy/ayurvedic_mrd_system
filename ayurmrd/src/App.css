@@ -83,6 +83,7 @@ button:hover{
     gap: 0.25rem;
     text-wrap: nowrap;
     width: fit-content;
+    justify-content: center;
     text-align: center; 
     align-items: center;
     padding: 0.5rem;

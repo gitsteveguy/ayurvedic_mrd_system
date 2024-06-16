@@ -12,6 +12,9 @@ import FetchFormPage from "./pages/demo/FetchFormPage";
 import RepeatingComponent from "./components/forms/essentials/form-components/RepeatingComponent";
 import DoctorsObsChartPage from "./pages/formpages/DoctorsObsChartPage";
 import DoctorsVitalChartPage from "./pages/formpages/DoctorsVitalChartPage";
+
+import PatientCreationPage from "./pages/formpages/PatientCreationPage";
+
 import "./App.css";
 
 function App() {
@@ -22,7 +25,10 @@ function App() {
       <Route element={<AuthOutlet fallbackPath="/login" />}>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/staff" element={<Staff />} />
+
         <Route path="/patients" element={<Patients />} />
+        <Route path="/patients/create_patient" element={<Container page_name="Create Patient" child={<PatientCreationPage />} active_menu="Patients"/>} />
+        
         <Route path="/analytics" element={<Analytics />} />
         <Route
           path="/dashboard/demo/repeatingform"
