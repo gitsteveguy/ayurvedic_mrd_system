@@ -24,8 +24,9 @@ export default function FetchForm(props) {
 
   let animated_inputs_label_class = 'input_has_value'
   useEffect(() => {
-    fetchData(props.api_url);
-  }, [props.api_url]);
+    //fetchData(props.api_url);
+    console.log(formData);
+  }, [formData]);
 
   function fetchData(api_url) {
     fetch(api_url).then(response => {

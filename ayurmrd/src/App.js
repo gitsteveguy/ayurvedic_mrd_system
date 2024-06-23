@@ -2,8 +2,12 @@ import { Routes, Route } from "react-router-dom";
 import AuthOutlet from "@auth-kit/react-router/AuthOutlet";
 import Welcome from "./pages/Welcome";
 import Dashboard from "./pages/Dashboard";
+
 import Staff from "./pages/Staff";
 import Patients from "./pages/Patients";
+import ViewPatient from "./pages/patientPages/ViewPatient";
+import AddVisit from "./pages/patientPages/AddVisit";
+
 import Analytics from "./pages/Analytics";
 import Login from "./pages/Login";
 import RepeatingFormPage from "./pages/demo/RepeatingFormPage";
@@ -28,6 +32,8 @@ function App() {
 
         <Route path="/patients" element={<Patients />} />
         <Route path="/patients/create_patient" element={<Container page_name="Create Patient" child={<PatientCreationPage />} active_menu="Patients"/>} />
+        <Route path="/patients/view_patient" element={<ViewPatient/>}/>
+        <Route path="/patients/add_visit" element={<AddVisit/>}/>
         
         <Route path="/analytics" element={<Analytics />} />
         <Route

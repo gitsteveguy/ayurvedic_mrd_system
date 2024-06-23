@@ -1,12 +1,21 @@
 import React from 'react'
 import Container from '../components/Container'
 import UserCards from '../components/card-grids/UserCards'
+import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 import SearchIcon from '@mui/icons-material/Search';
 import { useState,useEffect } from 'react'
 
 export default function Staff() {
     const staff_data_api_url = 'http://localhost:5000/test/api/staffdata'
     const [staff_data,set_staff_data] = useState([])
+    const hBtns = [
+      {
+        href: '/staff/create-staff',
+        text : 'Add Staff',
+        className: 'primary-btn',
+        icon: <PersonAddAltIcon/>
+      }
+    ]
     useEffect((e) => {
         let inputs = document.querySelectorAll('.animated_inputs');
         inputs.forEach((input)=>{
@@ -45,7 +54,7 @@ export default function Staff() {
           })}
 
   return (
-    <Container page_name='Staff' active_menu='Staff' type='flex'>
+    <Container page_name='Staff' active_menu='Staff' type='flex' hBtns={hBtns} >
       <div className="search-input input_group">
         <input type="text" role='search' name='search' className='animated_inputs'/>
         <label htmlFor="search">Search by Name</label>

@@ -135,6 +135,7 @@ export default function FormContainer(props) {
   return (
     <div className="form-container">
     {props.form}
+    {props.children}
     </div>
   )
 }

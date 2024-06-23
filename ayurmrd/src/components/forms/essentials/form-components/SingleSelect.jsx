@@ -25,12 +25,14 @@ export function GenderSelect(props) {
     let e_name = props.name;
     let e_value = e.value;
     let m_event = { target: { name: e_name, value: e_value } }
+    setValue(e_value)
+  
     props.onChange(m_event)
   }
-  let changefn = rep_onChange;
-  if (props.value) {
-    changefn = main_onChange
-  }
+  let changefn = main_onChange;
+  if(props.repeat){
+    changefn = rep_onChange;
+   }
 
   const colorStyles = {
     option: (styles, { data, isDisabled, isFocused, isSelected }) => {
@@ -125,12 +127,13 @@ export default function SingleSelect(props) {
     let e_name = props.name;
     let e_value = e.value;
     let m_event = { target: { name: e_name, value: e_value } }
+    setValue(e_value)
     props.onChange(m_event)
   }
-  let changefn = rep_onChange;
-  if (props.value) {
-    changefn = main_onChange
-  }
+  let changefn = main_onChange;
+  if(props.repeat){
+    changefn = rep_onChange;
+   }
 
 
 

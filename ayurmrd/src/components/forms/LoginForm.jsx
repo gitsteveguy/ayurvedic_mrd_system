@@ -2,6 +2,8 @@ import React from 'react'
 import axios from 'axios'
 import useSignIn from 'react-auth-kit/hooks/useSignIn';
 import { useNavigate } from "react-router-dom";
+import { useState } from 'react';
+import { toast,Bounce } from 'react-toastify';
 
 
 
@@ -9,25 +11,32 @@ export default function LoginForm() {
   const navigate = useNavigate();
   const signIn = useSignIn();
 
+  const [loginMessage,setLoginMessage] = useState('')
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const data = Object.fromEntries(formData)
     const post_api_url = 'http://localhost:5000/login'
     axios.post(post_api_url, data).then(response => {
-      if (response.data.success) {
+      if (response.data.isLoggedIn) {
         if (signIn({
           auth: {
             token: response.data.token,
             type: 'Bearer'
           },
           userState: {
-            uid: response.data.user_id
-          }
-        }))
-          navigate("/dashboard");
-          else
-          console.log('Error Validating');
+            token: response.data.token
+        }
+        })){
+          navigate("/dashboard");}
+          else{
+          setLoginMessage('Error Validating')
+          console.log('Error Validating');}
+      }
+      else{
+        toast.error(response.data.message,{
+          })
       }
     }).catch(err => console.log(err))
   }
@@ -42,6 +51,7 @@ export default function LoginForm() {
   }
 
   return (
+    <>
     <form name='LoginForm' id='LoginForm' onSubmit={handleSubmit}>
       <div className="input_row">
         <div className="input_group">
@@ -61,5 +71,6 @@ export default function LoginForm() {
         </div>
       </div>
     </form>
+    </>
   )
 }

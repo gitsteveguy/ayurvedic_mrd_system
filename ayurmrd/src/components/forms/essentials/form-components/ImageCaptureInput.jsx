@@ -7,7 +7,7 @@ export default function ImageCaptureInput(props) {
   const CameraPreviewReference = useRef(null);
   const tmagejsReference = useRef(null);;
   const imagurifdReference = useRef(null);
-  const [imageurifdvalue, setimageurifdvalue] = useState('')
+  const [imageurifdvalue, setimageurifdvalue] = useState(props.value)
 
   let CameraPreview; 
   let tmagejs;
@@ -38,6 +38,8 @@ export default function ImageCaptureInput(props) {
     tmagejs.src = du;
     var b64du = du.replace(/^data:image\/?[A-z]*;base64,/, "");
     setimageurifdvalue(b64du)
+    let event = {target:{name: props.name,value: b64du}}
+    props.onChange(event)
   }
 
   return (
@@ -48,7 +50,7 @@ export default function ImageCaptureInput(props) {
         <button type="button" className="primary-btn" onClick={openCamera}>Open Camera</button>
       </ICol>
       <ICol down position='relative'>
-        <input ref={imagurifdReference} name={props.name}  onInvalid={(e)=>{e.target.setCustomValidity('Please Capture an Image')}} style={{opacity:0,width:0,position:'absolute'}} required={props.required} value={imageurifdvalue} type="text"/>
+        <input ref={imagurifdReference} name={props.name}  onInvalid={(e)=>{e.target.setCustomValidity('Please Capture an Image')}} style={{opacity:0,width:0,position:'absolute'}} required={props.required} value={imageurifdvalue} type="hidden"/>
         <img ref={tmagejsReference} width="300" height="300" style={{maxWidth:'300px',minWidth:'300px',minHeight:'300px',maxHeight:'300px'}} src={ImageFallback} alt='Preview' className='image-capture-preview-img' />
         <button type="button" className="primary-btn" onClick={captureImage}>Take Photo</button>
       </ICol>

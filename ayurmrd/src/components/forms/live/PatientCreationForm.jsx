@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import axios from 'axios';
 import IRow from '../essentials/form-components/IRow';
 import ICol from '../essentials/form-components/ICol';
 import SingleSelect from '../essentials/form-components/SingleSelect';
@@ -7,12 +8,15 @@ import SignatureCapture from '../essentials/form-components/SignatureCapture';
 import IDate from '../essentials/form-components/IDate';
 import ITxtInput from '../essentials/form-components/ITxtInput';
 import { GenderSelect } from '../essentials/form-components/SingleSelect';
+import { toast,Bounce } from 'react-toastify';
 
 
 
 
 export default function PatientCreationForm(props) {
 
+
+    const form_api_url = 'http://localhost:5000/test/api/fetchpatient'
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -25,7 +29,7 @@ export default function PatientCreationForm(props) {
     gender: "",
     address_line_1: "",
     address_line_2: "",
-    address_line_3: "",
+    state: "",
     country: "",
     pincode: "",
     signature: "",
@@ -33,10 +37,55 @@ export default function PatientCreationForm(props) {
     blood_group: ""
   });
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const post_api_url = 'http://localhost:5000/api/create_patient'
+    const submission = new Promise((resolve,reject) =>{ 
+      setTimeout(()=>{
+        axios.post(post_api_url, formData, { withCredentials: true }).then(response => {
+          if (response.data.status==='success') {
+            console.log(response);
+            resolve(response.data.message);
+          }
+          else if(response.data.status==='failed'){
+            reject(response.data.message)
+          }
+        }).catch(err => {console.log(err)
+          reject('Error Connecting to Server')
+        })
+      },1000)
+      
+    });
+
+    toast.promise(
+      submission,
+      {
+        pending: {
+          render(){
+            return "Creating Patient"
+          },
+        },
+        success: {
+          render({data}){
+            return `${data}`
+          },
+          // other options
+          icon: "🟢",
+        },
+        error: {
+          render({data}){
+            return `${data}`
+          }
+        }
+      }
+  )
+    
+  }
+
   let animated_inputs_label_class = 'input_has_value'
-  useEffect(() => {
-    fetchData(props.api_url);
-  }, [props.api_url]);
+  useEffect((e) => {
+    fetchData(form_api_url)
+  }, [form_api_url]);
 
   function fetchData(api_url) {
     fetch(api_url).then(response => {
@@ -58,6 +107,7 @@ export default function PatientCreationForm(props) {
       ...formData,
       [name]: value
     }))
+    
   }
 
  
@@ -65,7 +115,7 @@ export default function PatientCreationForm(props) {
   return (
     <>
       <h1>Create Patient</h1>
-      <form name='PatientCreationForm' id='PatientCreationForm' action="http://localhost:5000/test/post/" method="post" autoComplete='on'>
+      <form name='PatientCreationForm' id='PatientCreationForm' onSubmit={handleSubmit} autoComplete='on'>
         <IRow>
           <ICol>
             <ITxtInput name='username' value={formData.username} onChange={onChange} labAnimClass={animated_inputs_label_class}/>
@@ -90,7 +140,7 @@ export default function PatientCreationForm(props) {
         </IRow>
         <IRow >
         <ICol>
-            <IDate name='date_of_birth' value={formData.date} max={'today'} onChange={onChange} />
+            <IDate name='date_of_birth' value={formData.date_of_birth} max={'today'} onChange={onChange} />
           </ICol>
           <ICol>
           <ITxtInput name='occupation' value={formData.occupation} onChange={onChange} labAnimClass={animated_inputs_label_class}/>
@@ -107,25 +157,25 @@ export default function PatientCreationForm(props) {
           <ITxtInput name='address_line_2' value={formData.address_line_2} onChange={onChange} labAnimClass={animated_inputs_label_class}/>
           </ICol>
           <ICol>
-          <ITxtInput name='address_line_3' value={formData.address_line_3} onChange={onChange} labAnimClass={animated_inputs_label_class}/>
+          <ITxtInput name='state' value={formData.state} onChange={onChange} labAnimClass={animated_inputs_label_class}/>
           </ICol>
         </IRow>
         <IRow>
-          <ICol>
-            <GenderSelect name='gender' value={formData.gender} onChange={onChange} required={true}></GenderSelect>
-          </ICol>
-          <ICol>
+        <ICol>
           <SingleSelect name='country' api_url='http://localhost:5000/api/select/countries' value={formData.country} onChange={onChange} />
             <label htmlFor="country">Country</label>
           </ICol>
           <ICol>
+            <GenderSelect name='gender' value={formData.gender} onChange={onChange} required={true}></GenderSelect>
+          </ICol>
+          <ICol>
           <SingleSelect name='blood_group' api_url='http://localhost:5000/api/select/blood_group' value={formData.blood_group} onChange={onChange} />
-          <label htmlFor="blood_group">Blood Group</label>
+            <label htmlFor="blood_group">Blood Group</label>
           </ICol>
         </IRow>
-        <ImageCaptureInput title='Image Capture Input' name='imageinput' required />
+        <ImageCaptureInput title='Profile Image' value={formData.profile_img} name='profile_img' onChange={onChange} required />
         <IRow>
-          <SignatureCapture name='signature' label='Signature' required/>
+          <SignatureCapture name='signature' label='Signature' value={formData.signature} onChange={onChange} required/>
         </IRow>
         <IRow>
           <ICol>

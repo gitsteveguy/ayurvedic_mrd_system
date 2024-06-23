@@ -6,6 +6,8 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import AuthProvider from 'react-auth-kit';
 import createStore from 'react-auth-kit/createStore';
+import { ToastContainer,Bounce } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.min.css';
 
 const store = createStore({
   authName:'_auth',
@@ -20,6 +22,19 @@ root.render(
   <AuthProvider store={store}>
     <BrowserRouter>
     <App/>
+    <ToastContainer
+position="top-center"
+autoClose={5000}
+hideProgressBar={false}
+newestOnTop={false}
+closeOnClick
+rtl={false}
+pauseOnFocusLoss
+draggable
+pauseOnHover
+theme="colored"
+transition={Bounce}
+/>
     </BrowserRouter>
     </AuthProvider>
    //</React.StrictMode>
