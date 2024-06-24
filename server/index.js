@@ -1,13 +1,43 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const cors = require("cors");
+import express, { response } from 'express';
+import bodyParser from 'body-parser';
+import cors from 'cors';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+import cookieParser from 'cookie-parser';
+import fs from 'fs'
+import { imageToBase64 } from './utils.js';
+import { getUserbyUsername,getPwdbyUsername,verifyUser,createUser, getPatients,getUserbyID } from './database.js';
+import { log } from 'console';
+
 const app = express();
+let country_codes = JSON.parse(fs.readFileSync('./Jsons/countries.json', 'utf8'));
+let countries = Object.keys(country_codes)
+
+
 
 const corsOptions = {
     origin: "http://localhost:3000",
+    method : ["GET","POST"],
+    credentials : true
   };
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(cors(corsOptions));
+  app.use(cookieParser());
+  
+
+  dotenv.config({ path: './.env' });
+
+// Select API's
+app.get('/api/select/countries',(req,res)=>{
+   let select_countries = countries;
+   select_countries.unshift('Select a Country')
+    res.json(select_countries);
+})
+
+app.get('/api/select/blood_group',(req,res)=>{
+  const blood_group = ['Select a Blood Group','A+','A-','AB+','AB-','B+','B-','O+','O-']
+  res.json(blood_group);
+})
 
 app.get('/test/api/select',(req,res)=>{
     let options = ['Option 1', 'Option 2', 'Option 3', 'Option 4', 'Option 5']
@@ -16,8 +46,181 @@ app.get('/test/api/select',(req,res)=>{
 
 
 
+app.use(express.json())
+
 app.use("/assets", express.static('assets'));
 
+app.post('/login',async (req,res)=>{
+  const rusername = req.body.username;
+  const rpassword = req.body.password;
+  if(rpassword && rusername){
+  const isAuthenticated = await verifyUser(rusername, rpassword).catch(err=>res.send({error: err}));
+  if(isAuthenticated)
+  {
+    const User =  await getUserbyUsername(rusername);
+    const jwt_token = jwt.sign({ User }, process.env.JWT_SECRET, { expiresIn: '1h' });
+res.json({
+  isLoggedIn: true,
+  token: jwt_token,
+  user_id: User.user_id
+})
+  }
+  else
+  res.json({
+    isLoggedIn : false,
+    message :'Invalid Credentials'
+})
+}
+  else
+  res.json({
+    isLoggedIn : false,
+    message :'Enter Credentials'
+})
+  })
+
+//patient
+  app.post('/api/create_patient/', async(req, res) => {
+    let jwt_token = req.cookies._auth;
+    try {
+      const decode = jwt.verify(jwt_token, process.env.JWT_SECRET);
+    if(decode.User.permissions.includes('edit_patient')){
+    let formData = req.body;
+    try{
+     const [rstatus,user_id,msg] = await createUser(formData,'patient')
+     const response = {
+      status : rstatus,
+      id : user_id,
+      message: msg
+     }
+     console.log(response);
+     res.json(response)
+    }
+    catch(e){
+      console.log(e);
+      const response = {
+        status : 'failed',
+        id: '',
+        message : 'Unknown Reason'
+       }
+       res.json(response)
+    }
+  
+  }
+      
+    } catch (error) {
+      const response = {
+        status:'failed',
+        id : '',
+        message: 'Authentication failed'
+      }
+      res.json(response)
+    }
+    
+  });
+
+app.get('/api/patients',async (req,res)=>{
+    let jwt_token = req.cookies._auth;
+    try {
+      const decode = jwt.verify(jwt_token, process.env.JWT_SECRET);
+    if(decode.User.permissions.includes('view_patient')){
+    let formData = req.body;
+    const patients = await getPatients(req.query.search);
+    patients.forEach((patient)=>{
+     let imageurl = patient['profile_img'];
+     let base64img  = imageToBase64('./'+imageurl);
+     patient['profile_img'] = "data:image/png;base64,"+base64img;
+    })
+    res.json(patients)
+
+  }}
+    catch(err){
+      console.log(err);
+      const response = {
+        status:'failed',
+        message: 'Authentication failed'
+      }
+      res.json(response)
+    }
+  })
+
+  app.get('/api/get_patients_by_id',async (req,res)=>{
+    let jwt_token = req.cookies._auth;
+    try {
+      const decode = jwt.verify(jwt_token, process.env.JWT_SECRET);
+    if(decode.User.permissions.includes('view_patient')){
+    let id = req.query.id;
+    const patient = await getUserbyID(id,'patient');
+    let imageurl = patient['profile_img'];
+     let base64img  = imageToBase64('./'+imageurl);
+     patient['profile_img'] = "data:image/png;base64,"+base64img;
+    res.json(patient)
+
+  }}
+    catch(err){
+      console.log(err);
+      const response = {
+        status:'failed',
+        message: 'Authentication failed'
+      }
+      res.json(response)
+    }
+  })
+
+  app.get('/api/get_visits_by_patient_ID',(req,res)=>{
+    let visits = [
+      {
+        checkin : '20-05-2024',
+        checkout: '22-05-2024',
+        visit_id : 2
+      },
+      {
+        checkin : '20-05-2024',
+        checkout: '22-05-2024',
+        visit_id : 3
+      },
+      {
+        checkin : '20-05-2024',
+        checkout: '',
+        visit_id : 5
+      },
+      {
+        checkin : '20-05-2024',
+        checkout: '22-05-2024',
+        visit_id : 3
+      },
+      {
+        checkin : '20-05-2024',
+        checkout: '22-05-2024',
+        visit_id : 3
+      },
+    ]
+    res.json(visits)
+  })
+
+  app.get('/api/create_visit',async (req,res)=>{
+    let jwt_token = req.cookies._auth;
+    try {
+      const decode = jwt.verify(jwt_token, process.env.JWT_SECRET);
+    if(decode.User.permissions.includes('edit_patient')){
+    const visit_data = req.body.formData;
+    res.json(patient)
+
+  }}
+    catch(err){
+      console.log(err);
+      const response = {
+        status:'failed',
+        message: 'Authentication failed'
+      }
+      res.json(response)
+    }
+  })
+
+
+
+
+
+//Test APIS
 
 app.post('/test/post/', (req, res) => {
   const formData = req.body;
@@ -39,6 +242,29 @@ app.get('/test/api/fetchform',(req,res)=>{
     ],
     checkbox: "true",
     Radio: "Option 3" 
+  }
+  res.json(options);
+})
+
+app.get('/test/api/fetchpatient',(req,res)=>{
+  let options = {
+    username: '',
+    email: '',
+    password: '',
+    first_name: "",
+    last_name: "",
+    date_of_birth: "",
+    phone_no: "",
+    profile_img: "",
+    gender: "",
+    address_line_1: "",
+    address_line_2: "",
+    state: "",
+    country: "",
+    pincode: "",
+    signature: "",
+    occupation: "",
+    blood_group: ""
   }
   res.json(options);
 })
@@ -309,7 +535,7 @@ app.get('/test/api/patients',(req,res)=>{
 
 //Analytics
 app.get('/test/api/worldmap/patient_country',(req,res)=>{
-  let patient_country = { SG: 100, US: 500, IN: 20 , GB: 2,RU:10, AU:5}
+  let patient_country = { US: 500, IN: 100 , GB: 2,RU:10, AU:5}
   res.json(patient_country);
 })
 app.get('/test/api/regular_patients',(req,res)=>{
@@ -351,4 +577,6 @@ app.get('/test/api/regular_patients',(req,res)=>{
 
 
 
-app.listen(5000);
+app.listen(5000,()=>{
+  console.log('Server Started on Port:5000');
+});

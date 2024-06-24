@@ -7,6 +7,10 @@
     grid-template-columns: 16.5rem auto;
     overflow: hidden;
 }
+.container-top-btn-grp{
+    display: flex;
+    gap: 1rem;
+}
 
 .child-container{
     display: grid;
@@ -17,7 +21,8 @@
 .child-container-flex{
     display: flex;
     height: fit-content;
-    padding: 4rem;
+    padding: 1rem;
+    padding-bottom: 5rem ;
     gap: 1.5rem;
     flex-direction: column;
 }

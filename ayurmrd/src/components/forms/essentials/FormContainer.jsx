@@ -1,7 +1,58 @@
 import React from 'react'
+import axios from 'axios'
 
 import { useEffect } from 'react';
 import './Forms.css'
+
+export const repeatFormToObject = (formData)=>{
+  // Initialize array to hold the result
+  let formArray = [];
+  let keyarray = Array.from(formData.keys());
+  let firstkey = keyarray[0];
+  firstkey = firstkey.replaceAll('[','')
+  firstkey = firstkey.replaceAll(']','')
+  let object_index=-1;
+ 
+  // Process each entry in the formData
+  formData.forEach((value, key) => {
+      // Match keys like "fieldname[index][]"
+      let keyMatch = key.match(/([^\[]+)\[(\d+)\]\[\]/);
+      // Match keys like "fieldname[]"
+      let singleKeyMatch = key.match(/([^\[]+)\[\]/);
+  
+      let mainKey, index;
+      
+      if (keyMatch) {
+          mainKey = keyMatch[1];
+          if(mainKey===firstkey){
+            formArray.push({})
+            object_index++;
+          }
+          index = keyMatch[2];
+          if(typeof formArray[object_index][mainKey]==='undefined')
+          {formArray[object_index][mainKey] = [];
+            formArray[object_index][mainKey].push(value);
+          }
+          else{
+            formArray[object_index][mainKey].push(value);
+          }
+      } else if (singleKeyMatch) {
+          mainKey = singleKeyMatch[1];
+          index = formArray.length;
+          if(mainKey===firstkey){
+            formArray.push({})
+            object_index++;
+          }
+          formArray[object_index][mainKey] = value;
+      } else {
+          return;
+      }
+  
+      
+   
+  });
+  return formArray;
+}
 
 export default function FormContainer(props) {
   useEffect((e) => {
@@ -84,6 +135,7 @@ export default function FormContainer(props) {
   return (
     <div className="form-container">
     {props.form}
+    {props.children}
     </div>
   )
 }

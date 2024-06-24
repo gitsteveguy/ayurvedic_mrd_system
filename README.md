@@ -52,6 +52,12 @@ Watching this [video](https://youtu.be/HbSjyU2vf6Y?si=7EdEVJLy_OkPk-60) will giv
 ``` 
   npm start
 ```
+8. Visit localhost:3000 and enter credentials
+``` 
+  username: superadmin
+  password: superadmin123
+```
+
 
 ## Author
 - [@gitsteveguy](https://github.com/gitsteveguy)

@@ -1,0 +1,22 @@
+#detailContainer{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+    align-content: center;
+    img{width: 10vw;
+    height: 15vh;
+    }
+}
+.patient-details{
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    justify-content: space-between;
+    h3{
+        font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+}

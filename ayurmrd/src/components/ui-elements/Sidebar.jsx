@@ -6,9 +6,18 @@ import SickRoundedIcon from '@mui/icons-material/SickRounded';
 import BarChartRoundedIcon from '@mui/icons-material/BarChartRounded';
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import TableViewIcon from '@mui/icons-material/TableView';
+import LogoutIcon from '@mui/icons-material/Logout';
+import useSignOut from 'react-auth-kit/hooks/useSignOut';
+import { useNavigate } from "react-router-dom";
 import './Sidebar.css';
 
 export default function Sidebar(props) {
+  const signOut = useSignOut();
+  const navigate = useNavigate();
+  const logOut = ()=>{
+    signOut()
+    navigate('/login')
+  }
   return (
     <>
       <div id='sidebar_base'></div>
@@ -66,6 +75,12 @@ export default function Sidebar(props) {
           <TableViewIcon/>
           </span>
           <h3>Fetch Form</h3>
+        </a>
+        <a onClick={logOut} style={{cursor: 'pointer'}}>
+        <span>
+          <LogoutIcon/>
+          </span>
+          <h3>Logout</h3>
         </a>
       </div>
     </aside>
