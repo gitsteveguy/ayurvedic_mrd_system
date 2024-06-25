@@ -5,14 +5,13 @@ import IRow from '../../components/forms/essentials/form-components/IRow'
 import ICol from '../../components/forms/essentials/form-components/ICol'
 import IDate from '../../components/forms/essentials/form-components/IDate'
 import { useState,useEffect } from 'react'
-import { useSearchParams } from 'react-router-dom';
 import { toast,Bounce } from 'react-toastify';
 import axios from 'axios'
+import { getCurrentPatientID, getCurrentPatientVisitID } from '../../hooks/currentPatientnVisit'
 
 const AddVisit = () => {
-    const [searchParams, setSearchParams] = useSearchParams();
-    const patient_id = searchParams.get('patient_id');
-    const visit_id = searchParams.get('visit_id');
+    const patient_id = getCurrentPatientID();
+    const visit_id = getCurrentPatientVisitID();
     const [formData,setFormData] = useState({
         check_in: '',
         check_out:'',

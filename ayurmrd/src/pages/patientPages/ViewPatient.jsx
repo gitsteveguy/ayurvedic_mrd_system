@@ -2,9 +2,11 @@ import React from 'react'
 import Patient from '../../components/patient/Patient'
 import Visits from '../../components/card-grids/Visits'
 import AddIcon from '@mui/icons-material/Add';
+import { getCurrentPatientID } from '../../hooks/currentPatientnVisit';
 import './viewPatient.css'
 
 const ViewPatient = () => {
+  const current_patient_id = getCurrentPatientID()
     const visit_api_url = 'http://localhost:5000/api/get_visits_by_patient_ID'
     const hBtns = [
         {
@@ -12,7 +14,6 @@ const ViewPatient = () => {
           text : 'Add Visit',
           className: 'primary-btn',
           icon: <AddIcon/>,
-          parameters: ['patient_id']
         }
       ]
   return (
