@@ -196,6 +196,7 @@ input[type="text"],input[type="email"],input[type="number"],input[type="date"],i
       display: flex;
       flex-direction: column;
       gap: 1.5rem;
+      width: 100%;
     }
 
     .repeating-component{
@@ -298,10 +299,19 @@ input[type="text"],input[type="email"],input[type="number"],input[type="date"],i
    }
 
     /*Responsive Mobile*/
-    @media screen and (max-width: 700px) {
+    @media screen and (max-width: 1230px) {
       .inputs-container{
         flex-direction: column;
         gap: 2rem;
+      }
+    }
+    @media screen and (max-width: 1180px) {
+      .inputs-container:has(textarea){
+        flex-direction: column;
+        gap: 2rem;
+      }
+      .inputs-container textarea{
+        width: 90vw;
       }
     }
     

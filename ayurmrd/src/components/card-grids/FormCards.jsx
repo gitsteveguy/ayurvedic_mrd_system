@@ -1,8 +1,6 @@
 import React from 'react'
 import './card-grids.css';
 import EditIcon from '@mui/icons-material/Edit';
-import { setCurrentPatientID } from '../../hooks/currentPatientnVisit';
-import { useNavigate } from 'react-router-dom';
 
 
 const FormCards = (props) => {

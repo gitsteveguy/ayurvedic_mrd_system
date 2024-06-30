@@ -16,7 +16,7 @@ const ViewVisit = () => {
       const doctorForms = [
         {
           name: 'Initial Assessment',
-          href: '/patients/view_patient_visit/initial_assesment'
+          href: '/patients/view_patient_visit/initial_assessment'
         },
         {
           name: 'Medication Records',
@@ -30,12 +30,16 @@ const ViewVisit = () => {
           name: 'Vital Chart',
           href: '/patients/view_patient_visit/vital_chart'
         },
+        {
+          name: 'Discharge Form',
+          href: '/patients/view_patient_visit/discharge_form'
+        }
         
       ]
       const nurseForms = [
         {
           name: 'Initial Assessment',
-          href: '/patients/view_patient_visit/nurse_initial_assesment'
+          href: '/patients/view_patient_visit/nurse_initial_assessment'
         },
         {
           name: 'Fall Risk Assessment',

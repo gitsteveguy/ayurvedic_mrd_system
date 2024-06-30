@@ -18,8 +18,8 @@ export default function FetchForm(props) {
     number: "",
     select: "",
     MultiSelect: [],
-    checkbox: "",
-    Radio: ""
+    checkbox: "true",
+    Radio: "Option 2"
   });
 
   let animated_inputs_label_class = 'input_has_value'

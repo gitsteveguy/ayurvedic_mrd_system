@@ -14,6 +14,7 @@ export default function Visits(props) {
     const visits_api_url = props.visits_api_url;
     useEffect(() => {
         fetchData(visits_api_url);
+        // eslint-disable-next-line
       }, [visits_api_url]);
 
       function fetchData(visits_api_url){
@@ -36,7 +37,7 @@ export default function Visits(props) {
         return(
             <div className="card" key={index}>
             <h3>{visit_data.checkin+' to '+checkout}</h3>
-            <a  className='primary-btn' onClick={()=>{ setCurrentPatientVisitID(visit_data.visit_id); navigate('/patients/view_patient_visit')}} >View Details <VisibilityIcon/></a>
+            <button  className='primary-btn' onClick={()=>{ setCurrentPatientVisitID(visit_data.visit_id); navigate('/patients/view_patient_visit')}} >View Details <VisibilityIcon/></button>
         </div>
         )
     })}

@@ -2,8 +2,24 @@ import React from 'react'
 import { useEffect, useState } from 'react';
 
 export default function Checkbox(props) {
-  const [checkbox, setValue] = useState(false)
+  let ivalue = false;
+  if(props.defaultValue==true)
+    ivalue=true
+  const [checkbox, setValue] = useState(ivalue)
 
+  const toTitleCase = (str)=>{
+    return str.replace(
+      /\w\S*/g,
+      function(txt) {
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+      }
+    );
+  }
+let label = ''
+if(!props.label)
+  label = toTitleCase(props.name.split('_').join(' '))
+else
+  label = props.label
 
   const rep_onChange = (e)=>{
     if(checkbox)
@@ -13,13 +29,16 @@ export default function Checkbox(props) {
   }  
 
   const main_onChange = (e)=>{
+    let nsvalue = 'false';
     if(checkbox===true){
+      nsvalue='false'
       setValue(false)
     }
     else{
+      nsvalue='true'
       setValue(true)
     }
-    let event = {target : {name : props.name, value : checkbox}}
+    let event = {target : {name : props.name, value : nsvalue}}
   props.onChange(event)
   }
 
@@ -47,7 +66,7 @@ export default function Checkbox(props) {
     <>
     <input type="checkbox" style={{display:'none'}}   name={props.name} checked={checkbox===false} value ='false' />
     <input type="checkbox" className='m-checkbox' name={props.name} checked={checkbox} value='true' onChange={changefn}/>
-     <label htmlFor="checkbox"> Checkbox</label>
+     <label htmlFor="checkbox">{label}</label>
      </>
   )
 }
