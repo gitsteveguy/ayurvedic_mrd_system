@@ -1,7 +1,6 @@
 import mysql from "mysql2";
 import dotenv from "dotenv";
 import bcrypt from "bcrypt";
-import Joi from "joi";
 import { userSchema } from "./schemas.js";
 import fs from "fs";
 import path from "path";
@@ -67,7 +66,7 @@ else{
       }
 }
 }
-
+// Patients and Users
 export async function createUser(user,role) {
   try {
     const { error, value } = userSchema.validate(user, {
@@ -176,4 +175,128 @@ export async function getPatients(search='',sort='descending'){
         [`%${search}%`, `%${search}%`, search]
       );
       return result;
+}
+
+export async function createVisit(patient_id,check_in_date){
+  const isql = "SELECT visit_id,DATE_FORMAT(date_of_admission,'%d-%m-%y') as date_of_admission FROM visits WHERE user_id=? AND date_of_discharge IS NULL"; 
+  try{
+  const[iresult] = await DB.query(isql,[patient_id]);
+  if(iresult.length>0){
+    return ["failed", '', "Checkout the visit on "+iresult[0].date_of_admission+" to create a new visit"];
+  }
+ 
+  const sql = 'INSERT INTO visits(user_id,date_of_admission) VALUES(?,?)'
+  try{
+   const[result] = await DB.query(sql,[patient_id,check_in_date]);
+    const id = result.insertId;
+    return ["success", id, "Visit has been Created"];
+  }
+  catch(err){
+    console.log(err);
+    return ["failed", '', "Visit has not been Created"];
+  }
+}
+catch(err){
+  console.log(err);
+  return ["failed", '', "Visit has not been Created"];
+}
+}
+export async function getVisitsByPatientID(patient_id){
+  const sql = `SELECT DATE_FORMAT(date_of_admission,'%d-%m-%y') as checkin,  DATE_FORMAT(date_of_discharge,'%d-%m-%y') as checkout,visit_id FROM visits WHERE user_id = ?`
+  try{
+   const [result] = await DB.query(sql,[patient_id]);
+    return result;
+  }
+  catch(err){
+    console.log(err);
+    return ["failed", '', "Visit has not been Created"];
+  }
+}
+
+//forms
+//doctors' initial assessment
+export async function handleDoctorInitialAssessment(formData){
+  console.log(formData);
+  const isql = "SELECT record_id FROM doctor_initial_assessment_form WHERE user_id=? AND visit_id=?"; 
+  try{
+  const[iresult] = await DB.query(isql,[formData.user_id,formData.visit_id]);
+  if(iresult.length===0){
+    const sql = ` INSERT INTO doctor_initial_assessment_form ( user_id, visit_id, temperature, pulse, blood_pressure, height, pain_assessment, weight, bmi, present_complaints, sleep_hours, unconscious, disoriented, bedridden, others, addictions, allergies, existing_medicines, doctor_id, doctor_name, doctors_sign ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) `;
+
+    const values = [ formData.user_id, formData.visit_id, formData.temperature, formData.pulse, formData.blood_pressure, formData.height, formData.pain_assessment, formData.weight, formData.bmi, formData.present_complaints, formData.sleep_hours, formData.unconscious, formData.disoriented, formData.bedridden, formData.others, formData.addictions, formData.allergies, formData.existing_medicines, formData.doctor_id, formData.doctor_name, formData.doctor_sign ];
+try{
+const [result] = await DB.query(sql, values);
+let id = result.insertId
+return ["success", id, "Record has been Inserted"]
+}
+    catch(err){
+      console.log(err);
+      return ["failed", id, "Record has not been Inserted"]
+    }
+  }
+  else{
+    const record_id = iresult[0].record_id;
+    const sql = ` UPDATE doctor_initial_assessment_form SET user_id = ?, visit_id = ?, temperature = ?, pulse = ?, blood_pressure = ?, height = ?, pain_assessment = ?, weight = ?, bmi = ?, present_complaints = ?, sleep_hours = ?, unconscious = ?, disoriented = ?, bedridden = ?, others = ?, addictions = ?,allergies = ?,existing_medicines = ?, doctor_id = ?, doctor_name = ?, doctors_sign = ? WHERE record_id = ? `;
+
+
+const values = [
+  formData.user_id, formData.visit_id, formData.temperature, formData.pulse, 
+  formData.blood_pressure, formData.height, formData.pain_assessment, 
+  formData.weight, formData.bmi, formData.present_complaints, 
+  formData.sleep_hours, formData.unconscious, formData.disoriented, 
+  formData.bedridden, formData.others, formData.addictions, formData.allergies,formData.existing_medicines, 
+  formData.doctor_id, formData.doctor_name, formData.doctors_sign,record_id
+];
+try {
+  const [result] = await DB.query(sql, values);
+  console.log(result);
+  return ['success','','Record Updated Successfully']
+} catch (err) {
+  console.log(err);
+  return ["failed",'', "Record has not been Updated"]
+}
+  }
+}
+  catch(err){
+    console.log(err);
+    return ["failed",'', "Record has not been Inserted or Updated"]
+  }
+}
+
+export async function getDoctorInitialAssessment(user_id,visit_id){
+  const isql = "SELECT * FROM doctor_initial_assessment_form WHERE user_id=? AND visit_id=?"; 
+  try{
+  const[iresult] = await DB.query(isql,[user_id,visit_id]);
+  if(iresult.length>0)
+  return ['success',iresult[0],true];
+  else
+  return ['success','',false];
+}
+  catch(err){
+    console.log(err);
+    return ['failed','',''];
+  }
+}
+
+export async function addMedicationRecords(payload){
+  const user_id = payload.user_id;
+  const visit_id = payload.visit_id;
+  const doctor_id = payload.doctor_id;
+  const doctor_name = payload.doctor_name;
+  const doctors_sign = payload.doctors_sign;
+
+  const records = payload.formData;
+    const sql = 'INSERT INTO medication_orders(visit_id,user_id,date,medicine,route_site,dose,time,anupana,remarks,doctor_id,doctor_name,doctors_sign) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)'
+    for (const record of records) {
+    try{
+      const[result] = await DB.query(sql,[visit_id,user_id,record.date,record.medicine,record.route_site,record.dose,record.time,record.anupana,record.remarks,doctor_id,doctor_name,doctors_sign]);
+    }
+    catch(err){
+      console.log(err);
+      return ['failed',''];
+
+    }
+  }
+  return['success','Inserted '+records.length+' records'];
+
 }

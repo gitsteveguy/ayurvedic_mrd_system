@@ -52,7 +52,7 @@ export default function Patients() {
                 name : datum.first_name+" "+datum.last_name,
                 img : datum.profile_img,
                 last_visit : datum.patient_visit,
-                btn_url : '/patients/view_patient?patient_id='+datum.user_id
+                patient_id : datum.user_id
               })
             })
             set_patients_data(user_data)

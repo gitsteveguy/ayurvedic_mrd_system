@@ -6,10 +6,11 @@ import axios from 'axios';
 import CallIcon from '@mui/icons-material/Call';
 import EmailIcon from '@mui/icons-material/Email';
 import BloodtypeIcon from '@mui/icons-material/Bloodtype';
-import { useSearchParams } from 'react-router-dom';
+import { getCurrentPatientID } from '../../hooks/currentPatientnVisit';
 
 
 const Patient = (props) => {
+    const patient_id = getCurrentPatientID()
     const [patientData,setPatientData] = useState({
         address_line_1: "",
         address_line_2: "",
@@ -51,13 +52,6 @@ const Patient = (props) => {
       }
 
     const patient_data_api_url = 'http://localhost:5000/api/get_patients_by_id';
-    const [searchParams, setSearchParams] = useSearchParams();
-    const patient_id = searchParams.get('patient_id');
-    const visit_id = searchParams.get('visit_id');
-    const ids = {
-      patient_id : patient_id,
-      visit_id : visit_id
-    }
     
     useEffect(() => {
         axios.get(patient_data_api_url,{params: {id: patient_id}, withCredentials: true}).then(response => {
@@ -91,18 +85,11 @@ const Patient = (props) => {
             </div>
             {props.hBtns && <div className="container-top-btn-grp" style={{margin:'0.5rem'}}>
           {props.hBtns.map((btn,index)=>{
-            let append_parameter='';
-            if(btn.parameters){
-              if(patient_id)
-              append_parameter='?patient_id='+patient_id;
-              if(patient_id && visit_id)
-                append_parameter='?patient_id='+patient_id+'&visit_id='+visit_id;
-            }
             let borderRadius='24px';
             if(!btn.text)
               borderRadius='50%'
               return(
-              <a key={index} href={btn.href+append_parameter} className={btn.className} style={{borderRadius:borderRadius}} tooltip={btn.tooltip}>{btn.icon}{btn.text}</a>)
+              <a key={index} href={btn.href} className={btn.className} style={{borderRadius:borderRadius}} tooltip={btn.tooltip}>{btn.icon}{btn.text}</a>)
           })
           }
         </div>}

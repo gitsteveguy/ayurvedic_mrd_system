@@ -1,8 +1,6 @@
 import React from 'react'
 
-const ITxtInput = (props) => {
-    let type =props.type ? props.type: 'text';
-
+const ITextBox = (props) => {
     const toTitleCase = (str)=>{
         return str.replace(
           /\w\S*/g,
@@ -18,10 +16,10 @@ const ITxtInput = (props) => {
       label = props.label
   return (
     <>
-    <input className='animated_inputs' id={props.name} type={type} name={props.name} value={props.value} onChange={props.onChange} minLength={props.min} maxLength={props.max}/>
-    <label className={props.value === '' ? '' : props.labAnimClass} htmlFor={props.name}>{label}</label>
+    <textarea name={props.name} value={props.value} rows='10' onChange={props.onChange} minLength={props.min} maxLength={props.max}></textarea>
+    <label htmlFor={props.name}>{label}</label>
     </>
   )
 }
 
-export default ITxtInput
+export default ITextBox

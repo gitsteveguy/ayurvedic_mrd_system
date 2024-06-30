@@ -4,20 +4,18 @@ import FormContainer from '../../components/forms/essentials/FormContainer'
 import IRow from '../../components/forms/essentials/form-components/IRow'
 import ICol from '../../components/forms/essentials/form-components/ICol'
 import IDate from '../../components/forms/essentials/form-components/IDate'
-import { useState,useEffect } from 'react'
-import { useSearchParams } from 'react-router-dom';
-import { toast,Bounce } from 'react-toastify';
+import { useState} from 'react'
+import { toast } from 'react-toastify';
 import axios from 'axios'
+import { getCurrentPatientID } from '../../hooks/currentPatientnVisit'
+import { useNavigate } from 'react-router-dom'
 
 const AddVisit = () => {
-    const [searchParams, setSearchParams] = useSearchParams();
-    const patient_id = searchParams.get('patient_id');
-    const visit_id = searchParams.get('visit_id');
+  const navigate = useNavigate()
+    const patient_id = getCurrentPatientID();
     const [formData,setFormData] = useState({
         check_in: '',
-        check_out:'',
-        patient_id : patient_id,
-        visit_id : visit_id
+        patient_id : patient_id
     })
     const handleSubmit = (e)=>{
         e.preventDefault();
@@ -29,6 +27,7 @@ const AddVisit = () => {
                 if (response.data.status==='success') {
                   console.log(response);
                   resolve(response.data.message);
+                  navigate('/patients/view_patient')
                 }
                 else if(response.data.status==='failed'){
                   reject(response.data.message)
@@ -75,19 +74,16 @@ function onChange(e) {
     <Patient title={'Add Visit'}>
     <div className="card">
     <FormContainer>
-        <form name='add_visit' id='add_visit' onSubmit={handleSubmit}>
+        <form name='add_visit' id='add_visit' onSubmit={handleSubmit} style={{gap: '0.5rem',padding:'1rem'}}>
             <IRow>
                 <ICol>
-                <IDate name='check_in' value={formData.check_in} max={'today'} onChange={onChange} />
-                </ICol>
-                <ICol>
-                <IDate name='check_out' value={formData.check_out} max={'today'} onChange={onChange} />
+                <IDate name='check_in' value={formData.check_in} max={'today'} onChange={onChange} required={true} />
                 </ICol>
             </IRow>
             <IRow>
             <ICol>
             <button type='button' className='danger-btn formbtn' tooltip='Cancel'>Cancel</button>
-            <button type='submit' form='add_visit' className='primary-btn formbtn' tooltip='Submit' value="submit">Submit</button>
+            <button type='submit' form='add_visit' className='primary-btn formbtn' tooltip='Create Visit' value="submit">Create Visit</button>
           </ICol>
             </IRow>
         </form>

@@ -6,7 +6,11 @@ import Dashboard from "./pages/Dashboard";
 import Staff from "./pages/Staff";
 import Patients from "./pages/Patients";
 import ViewPatient from "./pages/patientPages/ViewPatient";
+import ViewVisit from "./pages/patientPages/ViewVisit";
 import AddVisit from "./pages/patientPages/AddVisit";
+
+import DoctorsInitialAssessmentFormPage from "./pages/patientPages/Forms/Doctors/DoctorsInitialAssessmentFormPage";
+import MedicationRecordsPage from "./pages/patientPages/Forms/Doctors/MedicationRecordsPage";
 
 import Analytics from "./pages/Analytics";
 import Login from "./pages/Login";
@@ -33,8 +37,13 @@ function App() {
         <Route path="/patients" element={<Patients />} />
         <Route path="/patients/create_patient" element={<Container page_name="Create Patient" child={<PatientCreationPage />} active_menu="Patients"/>} />
         <Route path="/patients/view_patient" element={<ViewPatient/>}/>
+        <Route path="/patients/view_patient_visit" element={<ViewVisit/>}/>
         <Route path="/patients/add_visit" element={<AddVisit/>}/>
-        
+
+        <Route path="/patients/view_patient_visit/initial_assessment" element={<DoctorsInitialAssessmentFormPage/>}/>
+        <Route path="/patients/view_patient_visit/medication_records" element={<MedicationRecordsPage/>}/>        
+
+
         <Route path="/analytics" element={<Analytics />} />
         <Route
           path="/dashboard/demo/repeatingform"

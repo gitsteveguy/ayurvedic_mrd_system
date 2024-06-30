@@ -2,6 +2,7 @@ import React from 'react'
 import Patient from '../../components/patient/Patient'
 import Visits from '../../components/card-grids/Visits'
 import AddIcon from '@mui/icons-material/Add';
+import { getCurrentPatientID } from '../../hooks/currentPatientnVisit';
 import './viewPatient.css'
 
 const ViewPatient = () => {
@@ -12,7 +13,6 @@ const ViewPatient = () => {
           text : 'Add Visit',
           className: 'primary-btn',
           icon: <AddIcon/>,
-          parameters: ['patient_id']
         }
       ]
   return (

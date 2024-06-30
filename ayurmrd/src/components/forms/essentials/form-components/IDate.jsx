@@ -23,7 +23,7 @@ const IDate = (props) => {
     }
   return (
     <>
-    <input id={props.name} type="date" name={props.name} value={props.value} onChange={props.onChange} max={max} min={min}/>
+    <input id={props.name} type="date" name={props.name} value={props.value} onChange={props.onChange} max={max} min={min} required={props.required}/>
     <label htmlFor={props.name} >{label}</label>
     </>
   )
