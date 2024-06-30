@@ -1,7 +1,6 @@
 import mysql from "mysql2";
 import dotenv from "dotenv";
 import bcrypt from "bcrypt";
-import Joi from "joi";
 import { userSchema } from "./schemas.js";
 import fs from "fs";
 import path from "path";
@@ -67,7 +66,7 @@ else{
       }
 }
 }
-
+// Patients and Users
 export async function createUser(user,role) {
   try {
     const { error, value } = userSchema.validate(user, {
@@ -176,4 +175,40 @@ export async function getPatients(search='',sort='descending'){
         [`%${search}%`, `%${search}%`, search]
       );
       return result;
+}
+
+export async function createVisit(patient_id,check_in_date){
+  const isql = "SELECT visit_id,DATE_FORMAT(date_of_admission,'%d-%m-%y') as date_of_admission FROM visits WHERE user_id=? AND date_of_discharge IS NULL"; 
+  try{
+  const[iresult] = await DB.query(isql,[patient_id]);
+  if(iresult.length>0){
+    return ["failed", '', "Checkout the visit on "+iresult[0].date_of_admission+" to create a new visit"];
+  }
+ 
+  const sql = 'INSERT INTO visits(user_id,date_of_admission) VALUES(?,?)'
+  try{
+   const[result] = await DB.query(sql,[patient_id,check_in_date]);
+    const id = result.insertId;
+    return ["success", id, "Visit has been Created"];
+  }
+  catch(err){
+    console.log(err);
+    return ["failed", '', "Visit has not been Created"];
+  }
+}
+catch(err){
+  console.log(err);
+  return ["failed", '', "Visit has not been Created"];
+}
+}
+export async function getVisitsByPatientID(patient_id){
+  const sql = `SELECT DATE_FORMAT(date_of_admission,'%d-%m-%y') as checkin,  DATE_FORMAT(date_of_discharge,'%d-%m-%y') as checkout,visit_id FROM visits WHERE user_id = ?`
+  try{
+   const [result] = await DB.query(sql,[patient_id]);
+    return result;
+  }
+  catch(err){
+    console.log(err);
+    return ["failed", '', "Visit has not been Created"];
+  }
 }

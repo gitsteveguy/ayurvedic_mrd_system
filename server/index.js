@@ -6,7 +6,7 @@ import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import fs from 'fs'
 import { imageToBase64 } from './utils.js';
-import { getUserbyUsername,getPwdbyUsername,verifyUser,createUser, getPatients,getUserbyID } from './database.js';
+import { getUserbyUsername,getPwdbyUsername,verifyUser,createUser, getPatients,getUserbyID,createVisit,getVisitsByPatientID } from './database.js';
 import { log } from 'console';
 
 const app = express();
@@ -166,45 +166,23 @@ app.get('/api/patients',async (req,res)=>{
     }
   })
 
-  app.get('/api/get_visits_by_patient_ID',(req,res)=>{
-    let visits = [
-      {
-        checkin : '20-05-2024',
-        checkout: '22-05-2024',
-        visit_id : 2
-      },
-      {
-        checkin : '20-05-2024',
-        checkout: '22-05-2024',
-        visit_id : 3
-      },
-      {
-        checkin : '20-05-2024',
-        checkout: '',
-        visit_id : 5
-      },
-      {
-        checkin : '20-05-2024',
-        checkout: '22-05-2024',
-        visit_id : 3
-      },
-      {
-        checkin : '20-05-2024',
-        checkout: '22-05-2024',
-        visit_id : 3
-      },
-    ]
+  app.get('/api/get_visits_by_patient_ID', async (req,res)=>{
+    const visits = await getVisitsByPatientID(req.query.patient_id)
     res.json(visits)
   })
 
-  app.get('/api/create_visit',async (req,res)=>{
+  app.post('/api/create_visit',async (req,res)=>{
     let jwt_token = req.cookies._auth;
     try {
       const decode = jwt.verify(jwt_token, process.env.JWT_SECRET);
-    if(decode.User.permissions.includes('edit_patient')){
-    const visit_data = req.body.formData;
-    res.json(patient)
-
+    if(decode.User.permissions.includes('edit_visit')){
+    const visit_data = req.body;
+   const [status,id,message] = await createVisit(visit_data.patient_id,visit_data.check_in)
+      res.json({
+        status: status,
+        id : id,
+        message : message
+      })
   }}
     catch(err){
       console.log(err);

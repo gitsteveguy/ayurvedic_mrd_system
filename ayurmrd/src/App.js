@@ -6,6 +6,7 @@ import Dashboard from "./pages/Dashboard";
 import Staff from "./pages/Staff";
 import Patients from "./pages/Patients";
 import ViewPatient from "./pages/patientPages/ViewPatient";
+import ViewVisit from "./pages/patientPages/ViewVisit";
 import AddVisit from "./pages/patientPages/AddVisit";
 
 import Analytics from "./pages/Analytics";
@@ -33,6 +34,7 @@ function App() {
         <Route path="/patients" element={<Patients />} />
         <Route path="/patients/create_patient" element={<Container page_name="Create Patient" child={<PatientCreationPage />} active_menu="Patients"/>} />
         <Route path="/patients/view_patient" element={<ViewPatient/>}/>
+        <Route path="/patients/view_patient_visit" element={<ViewVisit/>}/>
         <Route path="/patients/add_visit" element={<AddVisit/>}/>
         
         <Route path="/analytics" element={<Analytics />} />

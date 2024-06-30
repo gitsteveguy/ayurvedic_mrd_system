@@ -6,7 +6,6 @@ import { getCurrentPatientID } from '../../hooks/currentPatientnVisit';
 import './viewPatient.css'
 
 const ViewPatient = () => {
-  const current_patient_id = getCurrentPatientID()
     const visit_api_url = 'http://localhost:5000/api/get_visits_by_patient_ID'
     const hBtns = [
         {
