@@ -12,7 +12,7 @@ import { getCurrentPatientID, getCurrentPatientVisitID } from '../../../../hooks
 import useAuth from '../../../../hooks/useAuth';
 import { Link } from 'react-router-dom';
 
-export default function DoctorsInitialAssessmentForm() {
+export default function DoctorsInitialAssessmentForm(props) {
   const current_patient_id = getCurrentPatientID();
   const current_patient_visit_id = getCurrentPatientVisitID();
   const fetch_api_url ='http://localhost:5000/api/get_doctor_initial_assessment'
@@ -42,7 +42,13 @@ export default function DoctorsInitialAssessmentForm() {
     doctor_name : currentUser.first_name+' '+currentUser.last_name,
     doctor_sign : currentUser.signature_img
   });
-
+  let inert = false;
+  if(props.inert==='true'){
+    inert='true'
+  }
+  else{
+    inert = false
+  }
   let animated_inputs_label_class = 'input_has_value'
  
   useEffect(()=>{
@@ -132,7 +138,7 @@ const handleSubmit = (e)=>{
   return (
     <>
       <h1>Doctors Initial Assesment</h1>
-      <form name='initialassessment' id='initialassessment'  autoComplete='off' onSubmit={handleSubmit}>
+      <form name='initialassessment' id='initialassessment' inert={inert} autoComplete='off' onSubmit={handleSubmit}>
         <IRow title='Vital Signs'>
           <ICol>
           <ITxtInput name='temperature' value={formData.temperature} onChange={onChange} type='number' labAnimClass={animated_inputs_label_class}/>
@@ -194,12 +200,12 @@ const handleSubmit = (e)=>{
             <ITextBox name='others' value={formData.others} onChange={onChange} max='1000'/>
         </ICol>
         </IRow>
-        <IRow>
+       {props.inert==='false' && <IRow>
           <ICol>
           <Link to='/patients/view_patient_visit'><button type='button' className='danger-btn formbtn' tooltip='Cancel'>Cancel</button></Link>
             <button type='submit' form="initialassessment" className=' primary-btn formbtn' tooltip='Submit' value="submit">Submit</button>
           </ICol>
-        </IRow>
+        </IRow>}
       </form>
     </>
   )

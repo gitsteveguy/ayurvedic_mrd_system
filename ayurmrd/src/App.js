@@ -11,6 +11,8 @@ import AddVisit from "./pages/patientPages/AddVisit";
 
 import DoctorsInitialAssessmentFormPage from "./pages/patientPages/Forms/Doctors/DoctorsInitialAssessmentFormPage";
 import MedicationRecordsPage from "./pages/patientPages/Forms/Doctors/MedicationRecordsPage";
+import TreatmentProcedureFormPage from "./pages/patientPages/Forms/Doctors/TreatmentProcedureFormPage";
+import VitalChartFormPage from "./pages/patientPages/Forms/Doctors/VitalChartFormPage";
 
 import Analytics from "./pages/Analytics";
 import Login from "./pages/Login";
@@ -19,7 +21,7 @@ import Container from "./components/Container";
 import FetchFormPage from "./pages/demo/FetchFormPage";
 import RepeatingComponent from "./components/forms/essentials/form-components/RepeatingComponent";
 import DoctorsObsChartPage from "./pages/formpages/DoctorsObsChartPage";
-import DoctorsVitalChartPage from "./pages/formpages/DoctorsVitalChartPage";
+
 
 import PatientCreationPage from "./pages/formpages/PatientCreationPage";
 
@@ -41,7 +43,9 @@ function App() {
         <Route path="/patients/add_visit" element={<AddVisit/>}/>
 
         <Route path="/patients/view_patient_visit/initial_assessment" element={<DoctorsInitialAssessmentFormPage/>}/>
-        <Route path="/patients/view_patient_visit/medication_records" element={<MedicationRecordsPage/>}/>        
+        <Route path="/patients/view_patient_visit/medication_records" element={<MedicationRecordsPage/>}/>  
+        <Route path="/patients/view_patient_visit/treatment_procedure_order" element={<TreatmentProcedureFormPage/>}/> 
+        <Route path="/patients/view_patient_visit/vital_chart" element={<VitalChartFormPage/>}/>        
 
 
         <Route path="/analytics" element={<Analytics />} />
@@ -72,15 +76,6 @@ function App() {
             <Container
               page_name="Doctor's Observation Chart"
               child={<DoctorsObsChartPage />}
-            />
-          }
-        />
-        <Route
-          path="/dashboard/patientforms/doctorsvitalchartform"
-          element={
-            <Container
-              page_name="Doctor's Vital Chart"
-              child={<DoctorsVitalChartPage />}
             />
           }
         />

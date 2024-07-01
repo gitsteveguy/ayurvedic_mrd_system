@@ -7,10 +7,12 @@ import CallIcon from '@mui/icons-material/Call';
 import EmailIcon from '@mui/icons-material/Email';
 import BloodtypeIcon from '@mui/icons-material/Bloodtype';
 import { getCurrentPatientID } from '../../hooks/currentPatientnVisit';
+import useAuth from '../../hooks/useAuth';
 
 
 const Patient = (props) => {
-    const patient_id = getCurrentPatientID()
+    const patient_id = getCurrentPatientID();
+    const current_user = useAuth();
     const [patientData,setPatientData] = useState({
         address_line_1: "",
         address_line_2: "",
@@ -84,7 +86,7 @@ const Patient = (props) => {
             </div>
             </div>
             {props.hBtns && <div className="container-top-btn-grp" style={{margin:'0.5rem'}}>
-          {props.hBtns.map((btn,index)=>{
+          {current_user.permissions.includes('edit_visit') && props.hBtns.map((btn,index)=>{
             let borderRadius='24px';
             if(!btn.text)
               borderRadius='50%'

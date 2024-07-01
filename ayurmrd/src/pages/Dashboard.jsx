@@ -4,13 +4,22 @@ import useAuth from '../hooks/useAuth'
 import WorldMap from '../components/maps/WorldMap'
 import RecentVisits from '../components/card-grids/RecentVisits'
 import { useState,useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { setCurrentPatientID } from '../hooks/currentPatientnVisit'
 
 
 export default function Dashboard() {
   const currentUser = useAuth();
+  const navigate = useNavigate()
   const map_data_url = 'http://localhost:5000/test/api/worldmap/patient_country'
   const recent_visit_api_url = 'http://localhost:5000/test/api/recentvisit'
   const [mapData,setMapData] = useState({})
+
+
+  if(currentUser.permissions.includes('view_self')){
+    setCurrentPatientID(currentUser.user_id)
+    navigate('/patients/view_patient')
+  }
 
   useEffect(() => {
     fetchMapData(map_data_url)

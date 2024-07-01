@@ -5,7 +5,7 @@ import { userSchema } from "./schemas.js";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { saveBase64Image } from "./utils.js";
+import { imageToBase64, saveBase64Image } from "./utils.js";
 
 dotenv.config({ path: "./.env" });
 
@@ -209,7 +209,7 @@ export async function getVisitsByPatientID(patient_id){
   }
   catch(err){
     console.log(err);
-    return ["failed", '', "Visit has not been Created"];
+    return ["failed", '', "Error Fetching Visits"];
   }
 }
 
@@ -278,6 +278,7 @@ export async function getDoctorInitialAssessment(user_id,visit_id){
   }
 }
 
+//medication_records
 export async function addMedicationRecords(payload){
   const user_id = payload.user_id;
   const visit_id = payload.visit_id;
@@ -298,5 +299,100 @@ export async function addMedicationRecords(payload){
     }
   }
   return['success','Inserted '+records.length+' records'];
+}
 
+export async function getMedicationRecords(user_id,visit_id){
+  const sql = `SELECT med_ord_id as id,DATE_FORMAT(date,'%d-%m-%y') AS date,medicine,route_site,dose,time,anupana,remarks,doctor_name,doctors_sign FROM medication_orders WHERE user_id = ? AND visit_id = ?`
+  try{
+   const [results] = await DB.query(sql,[user_id,visit_id]);
+   const actual_result = []
+   results.forEach((result)=>{
+    result['doctors_sign']= 'data:image/png;base64,'+imageToBase64(result['doctors_sign'])
+    actual_result.push(result)
+   })
+    return ['success',actual_result,'Successfully Fetched Records'];
+  }
+  catch(err){
+    console.log(err);
+    return ["failed", '', "Error Fetching Records"];
+  }
+}
+
+//treatment_procedure_records
+export async function addTreatmentProcedureRecords(payload){
+  const user_id = payload.user_id;
+  const visit_id = payload.visit_id;
+  const doctor_id = payload.doctor_id;
+  const doctor_name = payload.doctor_name;
+  const doctors_sign = payload.doctors_sign;
+
+  const records = payload.formData;
+    const sql = 'INSERT INTO treat_proc_ord(visit_id,user_id,date,time,treatment_procedure,medicine,site_loc,no_of_days,precautions,doctor_id,doctor_name,doctors_sign) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)'
+    for (const record of records) {
+    try{
+      const[result] = await DB.query(sql,[visit_id,user_id,record.date,record.time,record.treatment_procedure,record.medicine,record.site_loc,record.no_of_days,record.precautions,doctor_id,doctor_name,doctors_sign]);
+    }
+    catch(err){
+      console.log(err);
+      return ['failed',''];
+    }
+  }
+  return['success','Inserted '+records.length+' records'];
+}
+
+export async function getTreatmentProcedureRecords(user_id,visit_id){
+  const sql = `SELECT treat_proc_id as id,DATE_FORMAT(date,'%d-%m-%y') AS date,time,treatment_procedure,medicine,site_loc,no_of_days,precautions,doctor_name,doctors_sign FROM treat_proc_ord WHERE user_id = ? AND visit_id = ?`
+  try{
+   const [results] = await DB.query(sql,[user_id,visit_id]);
+   const actual_result = []
+   results.forEach((result)=>{
+    result['doctors_sign']= 'data:image/png;base64,'+imageToBase64(result['doctors_sign'])
+    actual_result.push(result)
+   })
+    return ['success',actual_result,'Successfully Fetched Records'];
+  }
+  catch(err){
+    console.log(err);
+    return ["failed", '', "Error Fetching Records"];
+  }
+}
+
+
+//vital_chart_records
+export async function addVitalChartRecords(payload){
+  const user_id = payload.user_id;
+  const visit_id = payload.visit_id;
+  const doctor_id = payload.doctor_id;
+  const doctor_name = payload.doctor_name;
+  const doctors_sign = payload.doctors_sign;
+
+  const records = payload.formData;
+    const sql = 'INSERT INTO vital_chart_form(visit_id,user_id,date,time,temperature,pulse,bp,weight,remarks,doctor_id,doctor_name,doctors_sign) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)'
+    for (const record of records) {
+    try{
+      const[result] = await DB.query(sql,[visit_id,user_id,record.date,record.time,record.temperature,record.pulse,record.bp,record.weight,record.remarks,doctor_id,doctor_name,doctors_sign]);
+    }
+    catch(err){
+      console.log(err);
+      return ['failed',''];
+    }
+  }
+  return['success','Inserted '+records.length+' records'];
+}
+
+export async function getVitalChartRecords(user_id,visit_id){
+  const sql = `SELECT vital_chart_id as id,DATE_FORMAT(date,'%d-%m-%y') AS date,time,temperature,pulse,bp,weight,remarks,doctor_name,doctors_sign FROM vital_chart_form WHERE user_id = ? AND visit_id = ?`
+  try{
+   const [results] = await DB.query(sql,[user_id,visit_id]);
+   const actual_result = []
+   results.forEach((result)=>{
+    result['doctors_sign']= 'data:image/png;base64,'+imageToBase64(result['doctors_sign'])
+    actual_result.push(result)
+   })
+    return ['success',actual_result,'Successfully Fetched Records'];
+  }
+  catch(err){
+    console.log(err);
+    return ["failed", '', "Error Fetching Records"];
+  }
 }

@@ -38,14 +38,6 @@ const ViewVisit = () => {
       ]
       const nurseForms = [
         {
-          name: 'Initial Assessment',
-          href: '/patients/view_patient_visit/nurse_initial_assessment'
-        },
-        {
-          name: 'Fall Risk Assessment',
-          href: '/patients/view_patient_visit/fall_risk_assessment'
-        },
-        {
           name: 'Nursing Care Plan',
           href: '/patients/view_patient_visit/nursing_care_plan'
         },
@@ -59,9 +51,9 @@ const ViewVisit = () => {
     <Patient hBtns={hBtns} title={'View Patient'}>
         <div className="forms-container">
         <h2>Doctor's Forms</h2>
-        <FormCards forms={doctorForms}></FormCards>
+        <FormCards forms={doctorForms} formType='doctor_forms'></FormCards>
         <h2>Nurse's Forms</h2>
-        <FormCards forms={nurseForms}></FormCards>
+        <FormCards forms={nurseForms} formType='nurse_forms'></FormCards>
         </div>
     </Patient>
   )

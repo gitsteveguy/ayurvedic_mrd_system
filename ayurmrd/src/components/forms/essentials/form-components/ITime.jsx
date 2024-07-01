@@ -1,6 +1,6 @@
 import React from 'react'
 
-const IDate = (props) => {
+const ITime = (props) => {
 
     const toTitleCase = (str)=>{
         return str.replace(
@@ -27,10 +27,10 @@ const IDate = (props) => {
     }
   return (
     <>
-    <input id={props.name} type="date" name={props.name} value={props.value} onChange={props.onChange} max={max} min={min} required={props.required}/>
+    <input id={props.name} type="time" name={props.name} value={props.value} onChange={props.onChange} max={max} min={min} required={props.required}/>
     <label htmlFor={props.name} >{label}</label>
     </>
   )
 }
 
-export default IDate
+export default ITime;
