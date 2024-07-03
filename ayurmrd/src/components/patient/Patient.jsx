@@ -8,11 +8,14 @@ import EmailIcon from '@mui/icons-material/Email';
 import BloodtypeIcon from '@mui/icons-material/Bloodtype';
 import { getCurrentPatientID } from '../../hooks/currentPatientnVisit';
 import useAuth from '../../hooks/useAuth';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import { useNavigate } from 'react-router-dom';
 
 
 const Patient = (props) => {
     const patient_id = getCurrentPatientID();
     const current_user = useAuth();
+    const navigate = useNavigate()
     const [patientData,setPatientData] = useState({
         address_line_1: "",
         address_line_2: "",
@@ -85,8 +88,9 @@ const Patient = (props) => {
             <h3>Age : {calculateAge(patientData.date_of_birth)}</h3>
             </div>
             </div>
-            {props.hBtns && <div className="container-top-btn-grp" style={{margin:'0.5rem'}}>
-          {current_user.permissions.includes('edit_visit') && props.hBtns.map((btn,index)=>{
+             <div className="container-top-btn-grp" style={{margin:'0.5rem'}}>
+            <a className='primary-btn' onClick={() => navigate(-1)} style={{borderRadius:'24px'}}><ArrowBackIosNewIcon/>Go Back</a>
+          {current_user.permissions.includes('edit_visit') && props.hBtns && props.hBtns.map((btn,index)=>{
             let borderRadius='24px';
             if(!btn.text)
               borderRadius='50%'
@@ -94,7 +98,8 @@ const Patient = (props) => {
               <a key={index} href={btn.href} className={btn.className} style={{borderRadius:borderRadius}} tooltip={btn.tooltip}>{btn.icon}{btn.text}</a>)
           })
           }
-        </div>}
+
+        </div>
         </div>
         {props.children}
   

@@ -1,11 +1,11 @@
 import mysql from "mysql2";
 import dotenv from "dotenv";
 import bcrypt from "bcrypt";
-import { userSchema } from "./schemas.js";
+import { patientSchema, userSchema } from "./schemas.js";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { imageToBase64, saveBase64Image } from "./utils.js";
+import { imageToBase64, saveBase64Image,getMonthName } from "./utils.js";
 
 dotenv.config({ path: "./.env" });
 
@@ -25,6 +25,135 @@ const DB = mysql
   })
   .promise();
 
+  export async function getPatientCountries() {
+    const [resultu] = await DB.query(
+      "SELECT country_code, COUNT(user_id) as user_count FROM users WHERE role = 'patient' GROUP BY country_code"
+    );
+
+    const resultDict = resultu.reduce((acc, row) => {
+      acc[row.country_code] = row.user_count;
+      return acc;
+  }, {});
+    return resultDict;
+  }
+
+  export async function getPatientVisitAnalyticsData(){
+    const [resultu] = await DB.query(
+      "SELECT * FROM visits WHERE YEAR(date_of_admission) = YEAR(CURDATE())"
+    );
+    const latestDate = new Date(Math.max(...resultu.map(visit => new Date(visit.date_of_admission))));
+    const latestMonthIndex = latestDate.getMonth();
+    // Initialize all months with 0 visits for 2024
+const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"].slice(0, latestMonthIndex + 1);
+
+let visits = months.reduce((acc, month) => {
+  acc[month] = 0;
+  return acc;
+}, {});
+
+// Grouping data by month for the current year (2024)
+resultu.forEach(visit => {
+  const month = getMonthName(visit.date_of_admission);
+  visits[month]++;
+});
+
+const formattedData = Object.keys(visits).map(month => ({
+  x: month,
+  y: visits[month]
+}));
+    const result = [
+        {
+          label: "Visits - 2024",
+          data: formattedData,
+          borderColor: "#008500",
+          backgroundColor: "#008500",
+        }
+      ]
+    
+    return result;
+  }
+
+  export async function getLatestVisits(){
+    const [visits] = await DB.query(
+     ` SELECT v.visit_id, v.user_id, DATE_FORMAT(v.date_of_admission,'%d-%m-%Y') AS date_of_admission, u.first_name, u.last_name ,u.profile_img FROM visits v JOIN users u ON v.user_id = u.user_id ORDER BY v.date_of_admission DESC LIMIT 5`
+    );
+
+    const recentVisits = visits.map(visit => ({
+      patient_name: `${visit.first_name} ${visit.last_name}`,
+      patient_img: 'data:image/png;base64,'+imageToBase64(visit.profile_img),
+      patient_visit: visit.date_of_admission,
+      visit_id: visit.visit_id,
+      user_id: visit.user_id
+  }));
+    return recentVisits;
+  }
+
+  export async function getStaffData(search=''){
+    const [result] = await DB.query(
+     `SELECT first_name,last_name,profile_img,user_id FROM users WHERE role<>'patient' AND role<>'superadmin' AND (first_name LIKE ? OR last_name LIKE ? OR user_id = ?)`,[`%${search}%`, `%${search}%`, search]
+    );
+
+    const staffs = result.map(staff => ({
+      staff_name: `${staff.first_name} ${staff.last_name}`,
+      staff_img: 'data:image/png;base64,'+imageToBase64(staff.profile_img),
+      role: staff.role,
+      user_id: staff.user_id
+  }));
+    return staffs;
+  }
+
+  export async function getRegularPatients(){
+    const [patients] = await DB.query(
+     `SELECT u.user_id, u.first_name, u.last_name, u.profile_img, COUNT(v.visit_id) AS patient_visit_count FROM users u JOIN visits v ON u.user_id = v.user_id GROUP BY u.user_id, u.first_name, u.last_name ORDER BY patient_visit_count DESC LIMIT 5;`
+    );
+
+
+        const topPatients = patients.map(patient => ({
+            patient_name: `${patient.first_name} ${patient.last_name}`,
+            patient_img: 'data:image/png;base64,'+imageToBase64(patient.profile_img),
+            patient_visit_count: patient.patient_visit_count,
+            patient_id: patient.user_id
+        }));
+    return topPatients;
+  }
+
+  export async function getVisitByID(visit_id){
+    const [visit] = await DB.query(
+     `SELECT visit_id,user_id, staff_editable,DATE_FORMAT(date_of_admission,'%Y-%m-%d') AS check_in FROM visits WHERE visit_id = ?;`,[visit_id]
+    );
+    return visit[0];
+  }
+
+  export async function getStaffRoles(){
+    const sql = `SELECT name FROM roles WHERE name<>'patient' AND name<>'superadmin'`
+    try{
+     const [result] = await DB.query(sql);
+     const roles = result.map(role => role.name);
+      return roles;
+    }
+    catch(err){
+      console.log(err);
+    }
+  }
+  
+
+  export async function updateVisit(formData){
+    const visit_id = formData.visit_id;
+    const patient_id = formData.patient_id;
+    const checkout = formData.check_out;
+  
+      const sql = `UPDATE visits SET date_of_discharge = ? WHERE visit_id = ? AND user_id = ?`
+      try{
+        const[result] = await DB.query(sql,[checkout,visit_id,patient_id]);
+        return['success',result.insertId,'Succesfully Checkout'];
+      }
+      catch(err){
+        console.log(err);
+        return ['failed','','Checkout was unsuccesfull'];
+      }
+    
+  }
+
 export async function getUserbyUsername(username) {
   const [resultu] = await DB.query(
     "Select user_id,username,email,first_name,last_name,role,date_of_birth,phone_no,profile_img,gender,address_line_1,address_line_2,state,country,country_code,pincode,signature_img,occupation,blood_group from users where username = ?",
@@ -38,6 +167,7 @@ export async function getUserbyUsername(username) {
   user["permissions"] = JSON.parse(resultp[0].permissions);
   return user;
 }
+
 
 export async function getUserbyID(id,role='any') {
     if(role==='any'){
@@ -69,12 +199,22 @@ else{
 // Patients and Users
 export async function createUser(user,role) {
   try {
-    const { error, value } = userSchema.validate(user, {
+    if(role==='patient'){
+    const { error, value } = patientSchema.validate(user, {
       abortEarly: false,
     });
     if (error) {
       throw new Error(`${error.details.map((d) => d.message).join(", ")}`);
+    }}
+    else{
+      const { error, value } = userSchema.validate(user, {
+        abortEarly: false,
+      });
+      if (error) {
+        throw new Error(`${error.details.map((d) => d.message).join(", ")}`);
+      }
     }
+
     const password = await bcrypt.hash(user.password, 10);
     const username = user.username;
     const profile_img = user.profile_img;
@@ -177,6 +317,8 @@ export async function getPatients(search='',sort='descending'){
       return result;
 }
 
+
+
 export async function createVisit(patient_id,check_in_date){
   const isql = "SELECT visit_id,DATE_FORMAT(date_of_admission,'%d-%m-%y') as date_of_admission FROM visits WHERE user_id=? AND date_of_discharge IS NULL"; 
   try{
@@ -201,8 +343,9 @@ catch(err){
   return ["failed", '', "Visit has not been Created"];
 }
 }
+
 export async function getVisitsByPatientID(patient_id){
-  const sql = `SELECT DATE_FORMAT(date_of_admission,'%d-%m-%y') as checkin,  DATE_FORMAT(date_of_discharge,'%d-%m-%y') as checkout,visit_id FROM visits WHERE user_id = ?`
+  const sql = `SELECT DATE_FORMAT(date_of_admission,'%d-%m-%y') as checkin,  DATE_FORMAT(date_of_discharge,'%d-%m-%y') as checkout,visit_id FROM visits WHERE user_id = ? ORDER BY date_of_admission DESC`
   try{
    const [result] = await DB.query(sql,[patient_id]);
     return result;
@@ -236,11 +379,11 @@ return ["success", id, "Record has been Inserted"]
   }
   else{
     const record_id = iresult[0].record_id;
-    const sql = ` UPDATE doctor_initial_assessment_form SET user_id = ?, visit_id = ?, temperature = ?, pulse = ?, blood_pressure = ?, height = ?, pain_assessment = ?, weight = ?, bmi = ?, present_complaints = ?, sleep_hours = ?, unconscious = ?, disoriented = ?, bedridden = ?, others = ?, addictions = ?,allergies = ?,existing_medicines = ?, doctor_id = ?, doctor_name = ?, doctors_sign = ? WHERE record_id = ? `;
+    const sql = ` UPDATE doctor_initial_assessment_form SET temperature = ?, pulse = ?, blood_pressure = ?, height = ?, pain_assessment = ?, weight = ?, bmi = ?, present_complaints = ?, sleep_hours = ?, unconscious = ?, disoriented = ?, bedridden = ?, others = ?, addictions = ?,allergies = ?,existing_medicines = ?, doctor_id = ?, doctor_name = ?, doctors_sign = ? WHERE record_id = ? `;
 
 
 const values = [
-  formData.user_id, formData.visit_id, formData.temperature, formData.pulse, 
+  formData.temperature, formData.pulse, 
   formData.blood_pressure, formData.height, formData.pain_assessment, 
   formData.weight, formData.bmi, formData.present_complaints, 
   formData.sleep_hours, formData.unconscious, formData.disoriented, 
@@ -394,5 +537,68 @@ export async function getVitalChartRecords(user_id,visit_id){
   catch(err){
     console.log(err);
     return ["failed", '', "Error Fetching Records"];
+  }
+}
+
+//discharge_form
+export async function getDischargeForm(user_id,visit_id){
+  const isql = "SELECT * FROM discharge_summary WHERE user_id=? AND visit_id=?"; 
+  try{
+  const[iresult] = await DB.query(isql,[user_id,visit_id]);
+  if(iresult.length>0)
+  return ['success',iresult[0],true];
+  else
+  return ['success','',false];
+}
+  catch(err){
+    console.log(err);
+    return ['failed','',''];
+  }
+}
+
+export async function handleDischargeForm(formData){
+  console.log('trigger');
+  console.log(formData);
+  const isql = "SELECT discharge_id FROM discharge_summary WHERE user_id=? AND visit_id=?"; 
+  try{
+  const[iresult] = await DB.query(isql,[formData.user_id,formData.visit_id]);
+  if(iresult.length===0){
+    const sql = ` INSERT INTO discharge_summary ( user_id, visit_id, ailments, diagnosis, discharge_condition, restricted_activities, advices, discharge_meds, doctor_id, doctor_name, doctors_sign ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) `;
+
+    const values = [ formData.user_id, formData.visit_id, formData.ailments, formData.diagnosis, formData.discharge_condition, formData.restricted_activities, formData.advices, formData.discharge_meds, formData.doctor_id, formData.doctor_name, formData.doctor_sign ];
+try{
+const [result] = await DB.query(sql, values);
+let id = result.insertId
+return ["success", id, "Record has been Inserted"]
+}
+    catch(err){
+      console.log(err);
+      return ["failed", id, "Record has not been Inserted"]
+    }
+  }
+  else{
+    const record_id = iresult[0].discharge_id;
+    const sql = ` UPDATE discharge_summary SET ailments = ?, diagnosis = ?, discharge_condition = ?, restricted_activities = ?, advices = ?, discharge_meds = ?, doctor_id = ?, doctor_name = ?, doctors_sign = ? WHERE discharge_id = ? `;
+
+
+const values = [
+  formData.ailments, formData.diagnosis, 
+  formData.discharge_condition, formData.restricted_activities, formData.advices, 
+  formData.discharge_meds,
+  formData.doctor_id, formData.doctor_name, formData.doctors_sign,record_id
+];
+try {
+  const [result] = await DB.query(sql, values);
+  console.log(result);
+  return ['success','','Record Updated Successfully']
+} catch (err) {
+  console.log(err);
+  return ["failed",'', "Record has not been Updated"]
+}
+  }
+}
+  catch(err){
+    console.log(err);
+    return ["failed",'', "Record has not been Inserted or Updated"]
   }
 }

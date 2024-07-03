@@ -2,6 +2,10 @@ import React from 'react'
 
 const IDate = (props) => {
 
+  let inert=false
+  if(props.inert==='true')
+    inert=''
+
     const toTitleCase = (str)=>{
         return str.replace(
           /\w\S*/g,
@@ -11,8 +15,10 @@ const IDate = (props) => {
         );
       }
       let label =''
-    if(!props.label)
+    if(!props.label){
+      if(props.name)
       label = toTitleCase(props.name.split('_').join(' '));
+    }
     else
       label = props.label
 
@@ -27,7 +33,7 @@ const IDate = (props) => {
     }
   return (
     <>
-    <input id={props.name} type="date" name={props.name} value={props.value} onChange={props.onChange} max={max} min={min} required={props.required}/>
+    <input id={props.name} type="date" name={props.name} inert={inert} value={props.value} onChange={props.onChange} max={max} min={min} required={props.required}/>
     <label htmlFor={props.name} >{label}</label>
     </>
   )

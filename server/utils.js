@@ -23,5 +23,11 @@ export const imageToBase64 = (filePath)=> {
   return base64Image;
 }
 
+export const getMonthName = (dateString) => {
+  const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"];
+  const date = new Date(dateString);
+  return monthNames[date.getMonth()];
+};
+
   
   

@@ -4,13 +4,15 @@ import UserCards from '../components/card-grids/UserCards'
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 import SearchIcon from '@mui/icons-material/Search';
 import { useState,useEffect } from 'react'
+import axios from 'axios';
 
 export default function Staff() {
-    const staff_data_api_url = 'http://localhost:5000/test/api/staffdata'
+    const staff_data_api_url = 'http://localhost:5000/api/staffdata'
     const [staff_data,set_staff_data] = useState([])
+    const [search,setSearch] = useState('')
     const hBtns = [
       {
-        href: '/staff/create-staff',
+        href: '/staff/create_staff',
         text : 'Add Staff',
         className: 'primary-btn',
         icon: <PersonAddAltIcon/>
@@ -29,15 +31,19 @@ export default function Staff() {
             }
           })
         })
-        fetchData(staff_data_api_url)
-      },[staff_data_api_url])
+        fetchData(staff_data_api_url,search)
+      },[staff_data_api_url,search])
+
+      const onChange = (e)=>{
+        setSearch(e.target.value);
+      }
 
         function fetchData(staff_data_api_url){
-          fetch(staff_data_api_url).then(response => {
-            if (!response.ok) {
+          axios.get(staff_data_api_url,{params: {search: search}, withCredentials: true}).then(response => {
+            if (!response) {
               throw new Error('Network response was not ok');
             }
-            return response.json();
+            return (response.data);
           }).then((data) => {
             if (typeof data != {}) {
               let user_data = []
@@ -46,7 +52,7 @@ export default function Staff() {
                   name : datum.staff_name,
                   img : datum.staff_img,
                   role : datum.role,
-                  btn_url : datum.btn_url
+                  id : datum.btn_url
                 })
               })
               set_staff_data(user_data)
@@ -56,7 +62,7 @@ export default function Staff() {
   return (
     <Container page_name='Staff' active_menu='Staff' type='flex' hBtns={hBtns} >
       <div className="search-input input_group">
-        <input type="text" role='search' name='search' className='animated_inputs'/>
+        <input type="text" role='search' name='search' className='animated_inputs' value={search} onChange={onChange}/>
         <label htmlFor="search">Search by Name</label>
         <SearchIcon/>
 

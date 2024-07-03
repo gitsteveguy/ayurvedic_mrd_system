@@ -4,22 +4,47 @@ import FormContainer from '../../components/forms/essentials/FormContainer'
 import IRow from '../../components/forms/essentials/form-components/IRow'
 import ICol from '../../components/forms/essentials/form-components/ICol'
 import IDate from '../../components/forms/essentials/form-components/IDate'
-import { useState} from 'react'
+import { useState, useEffect} from 'react'
 import { toast } from 'react-toastify';
 import axios from 'axios'
-import { getCurrentPatientID } from '../../hooks/currentPatientnVisit'
+import { getCurrentPatientID,getCurrentPatientVisitID } from '../../hooks/currentPatientnVisit'
 import { useNavigate } from 'react-router-dom'
 
-const AddVisit = () => {
-  const navigate = useNavigate()
+const EditVisit = () => {
+    const [check_in,setCheckIn] = useState('');
+    const fetch_api_url ='http://localhost:5000/api/get_visit_by_ID';
+    const post_api_url = 'http://localhost:5000/api/update_visit'
+    const navigate = useNavigate()
     const patient_id = getCurrentPatientID();
+    const visit_id = getCurrentPatientVisitID();
     const [formData,setFormData] = useState({
-        check_in: '',
-        patient_id : patient_id
+        check_out: '',
+        patient_id : patient_id,
+        visit_id : visit_id
     })
+
+    const fetchVisit = (visit_id)=>{
+        axios.get(fetch_api_url,{params: {visit_id: visit_id}, withCredentials: true}).then(response => {
+            if (!response) {
+              throw new Error('Network response was not ok');
+            }
+            return (response.data);
+          }).then((data) => {
+            if (typeof data != {}) {
+              if(data.check_in)
+               {
+                console.log(data.check_in);
+              setCheckIn(data.check_in);}
+            }
+          })
+    }
+
+    useEffect(()=>{
+        fetchVisit(visit_id)
+    },[fetch_api_url])
+
     const handleSubmit = (e)=>{
         e.preventDefault();
-        const post_api_url = 'http://localhost:5000/api/create_visit'
         const submission = new Promise((resolve,reject) =>{ 
             setTimeout(()=>{
               axios.post(post_api_url, formData, { withCredentials: true }).then(response => {
@@ -43,7 +68,7 @@ const AddVisit = () => {
             {
               pending: {
                 render(){
-                  return "Creating Visit"
+                  return "Updating Visit"
                 },
               },
               success: {
@@ -62,27 +87,30 @@ const AddVisit = () => {
         )
     }
 
-function onChange(e) {
-    const { name, value } = e.target;
-    setFormData(() => ({
-        ...formData,
-        [name]: value
-    }))
-    }
+    function onChange(e) {
+        const { name, value } = e.target;
+        setFormData(() => ({
+            ...formData,
+            [name]: value
+        }))
+        }
   return (
-    <Patient title={'Add Visit'}>
+     <Patient title={'Checkout Visit'}>
     <div className="card">
     <FormContainer>
-        <form name='add_visit' id='add_visit' onSubmit={handleSubmit} style={{gap: '0.5rem',padding:'1rem'}}>
+        <form name='checkout_visit' id='checkout_visit' onSubmit={handleSubmit} style={{gap: '0.5rem',padding:'1rem'}}>
             <IRow>
+            <ICol>
+                <IDate value={check_in} label='Check In' max={'today'} inert='true' required={true} />
+                </ICol>
                 <ICol>
-                <IDate name='check_in' value={formData.check_in} max={'today'} onChange={onChange} required={true} />
+                <IDate name='check_out' min={check_in} value={formData.check_out} max={'today'} onChange={onChange} required={true} />
                 </ICol>
             </IRow>
             <IRow>
             <ICol>
             <button type='button' className='danger-btn formbtn' tooltip='Cancel'>Cancel</button>
-            <button type='submit' form='add_visit' className='primary-btn formbtn' tooltip='Create Visit' value="submit">Create Visit</button>
+            <button type='submit' form='checkout_visit' className='primary-btn formbtn' tooltip='Check Out' value="submit">Check Out</button>
           </ICol>
             </IRow>
         </form>
@@ -92,4 +120,4 @@ function onChange(e) {
   )
 }
 
-export default AddVisit
+export default EditVisit

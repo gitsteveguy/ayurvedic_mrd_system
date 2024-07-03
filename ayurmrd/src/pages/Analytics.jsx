@@ -3,12 +3,13 @@ import Container from '../components/Container'
 import LineChart from '../components/charts/LineChart';
 import UserCards from '../components/card-grids/UserCards';
 import WorldMap from '../components/maps/WorldMap';
+import axios from 'axios';
 import { useState,useEffect } from 'react'
 
 export default function Analytics() {
-    const chart_api_url = 'http://localhost:5000/test/api/charts/visits'
-    const map_data_url = 'http://localhost:5000/test/api/worldmap/patient_country'
-    const regular_patient_api_url = 'http://localhost:5000/test/api/regular_patients'
+    const chart_api_url = 'http://localhost:5000/api/charts/visits'
+    const map_data_url = 'http://localhost:5000/api/worldmap/patient_country'
+    const regular_patient_api_url = 'http://localhost:5000/api/regular_patients'
     const [visitData,setVisitData] = useState({
       datasets : [{
         label : 'Visits',
@@ -50,11 +51,11 @@ export default function Analytics() {
     }, [chart_api_url,map_data_url,regular_patient_api_url]);
   
     function fetchVisitsData(chart_api_url) {
-      fetch(chart_api_url).then(response => {
-        if (!response.ok) {
+      axios.get(chart_api_url,{withCredentials: true}).then(response => {
+        if (!response) {
           throw new Error('Network response was not ok');
         }
-        return response.json();
+        return (response.data);
       }).then((data) => {
         if (typeof data != {}) {
           setVisitData(data);
@@ -63,12 +64,12 @@ export default function Analytics() {
     }
 
     function fetchMapData(map_data_url){
-        fetch(map_data_url).then(response => {
-            if (!response.ok) {
-              throw new Error('Network response was not ok');
-            }
-            return response.json();
-          }).then((data) => {
+      axios.get(map_data_url,{withCredentials: true}).then(response => {
+        if (!response) {
+          throw new Error('Network response was not ok');
+        }
+        return (response.data);
+      }).then((data) => {
             if (typeof data != {}) {
                 setMapData(data);
             }
@@ -76,12 +77,12 @@ export default function Analytics() {
     }
 
     function fetchRegularPatients(regular_patient_api_url){
-        fetch(regular_patient_api_url).then(response => {
-            if (!response.ok) {
-              throw new Error('Network response was not ok');
-            }
-            return response.json();
-          }).then((data) => {
+      axios.get(regular_patient_api_url,{withCredentials: true}).then(response => {
+        if (!response) {
+          throw new Error('Network response was not ok');
+        }
+        return (response.data);
+      }).then((data) => {
             if (typeof data != {}) {
                 let user_data = []
                 data.forEach((datum)=>{
@@ -89,7 +90,7 @@ export default function Analytics() {
                       name : datum.patient_name,
                       img : datum.patient_img,
                       visit_count : datum.patient_visit_count,
-                      btn_url : datum.btn_url
+                      patient_id : datum.patient_id
                     })
                   })
                     setRegularPatients(user_data)
