@@ -14,6 +14,7 @@ import {
   getRegularPatients,
   getVisitByID,
   updateVisit,
+  updateUser,
   getStaffRoles,
   getStaffData,
   getUserbyUsername,
@@ -59,8 +60,24 @@ app.get("/api/select/countries", (req, res) => {
   res.json(select_countries);
 });
 app.get("/api/select/staff_roles", async(req, res) => {
-  const roles = await getStaffRoles();
+  let jwt_token = req.cookies._auth;
+  try {
+    const decode = jwt.verify(jwt_token, process.env.JWT_SECRET);
+    if (decode.User.permissions.includes("edit_staff")) {
+      let roles=[]
+      if (decode.User.permissions.includes("superadmin"))
+       roles = await getStaffRoles(true);
+      else
+        roles = await getStaffRoles();
   res.json(roles);
+    }}
+    catch (error) {
+      const response = {
+        status: "failed",
+        message: "Authentication failed",
+      };
+      res.json(response);
+    }
 });
 
 app.get("/api/select/blood_group", (req, res) => {
@@ -843,13 +860,72 @@ catch (err) {
 }});
 
 
+app.get("/api/fetchpatientdetail", async (req, res) => {
+  let jwt_token = req.cookies._auth;
+  try {
+    const decode = jwt.verify(jwt_token, process.env.JWT_SECRET);
+    if (decode.User.permissions.includes("edit_patient")) {
+  let formData = await getUserbyID(req.query.user_id,'patient');
+  formData['profile_img'] = imageToBase64(formData.profile_img).replace(/^data:image\/?[A-z]*;base64,/, "")
+  formData['signature_img'] = imageToBase64(formData.signature_img).replace(/^data:image\/?[A-z]*;base64,/, "")
+  res.json({
+    status : 'success',
+    formData: formData
+  });
+}
+else{
+  const response = {
+    status: "failed",
+    message: "You do not have sufficient permissions to view this.",
+  };
+  res.json(response);
+}
+}
+catch(err){
+  console.log(err);
+  const response = {
+    status: "failed",
+    message: "Authentication failed",
+  };
+  res.json(response);
+}
+}
+);
+
+app.post("/api/update_patient", async (req, res) => {
+  let jwt_token = req.cookies._auth;
+  try {
+    const decode = jwt.verify(jwt_token, process.env.JWT_SECRET);
+    if (decode.User.permissions.includes("edit_patient")) {
+      const formData = req.body;
+      const [status, id, message] = await updateUser(formData,'patient');
+      res.json({
+        status: status,
+        id: id,
+        message: message,
+      });
+    }
+    else{
+      const response = {
+        status: "failed",
+        id:'',
+        message: "You do not have sufficient permissions to perform this action.",
+      };
+      res.json(response);
+    }
+  } catch (err) {
+    console.log(err);
+    const response = {
+      status: "failed",
+      message: "Authentication failed",
+    };
+    res.json(response);
+  }
+});
+
 //Test APIS
 
 
-app.get("/test/api/select", (req, res) => {
-  let options = ["Option 1", "Option 2", "Option 3", "Option 4", "Option 5"];
-  res.json(options);
-});
 
 
 
@@ -857,101 +933,7 @@ app.get("/test/api/select", (req, res) => {
 
 
 //Patients
-app.get("/test/api/patients", (req, res) => {
-  let patients = [
-    {
-      patient_name: "Patient 1",
-      patient_img: "http://localhost:5000/assets/dummy/patient.jpg",
-      patient_visit: "20-05-2024",
-      btn_url: "/patient?id=1",
-    },
-    {
-      patient_name: "Patient 2",
-      patient_img: "http://localhost:5000/assets/dummy/patient.jpg",
-      patient_visit: "21-05-2024",
-      btn_url: "/patient?id=2",
-    },
-    {
-      patient_name: "Patient 3",
-      patient_img: "http://localhost:5000/assets/dummy/patient.jpg",
-      patient_visit: "22-05-2024",
-      btn_url: "/patient?id=3",
-    },
-    {
-      patient_name: "Patient 4",
-      patient_img: "http://localhost:5000/assets/dummy/patient.jpg",
-      patient_visit: "23-05-2024",
-      btn_url: "/patient?id=4",
-    },
-    {
-      patient_name: "Patient 5",
-      patient_img: "http://localhost:5000/assets/dummy/patient.jpg",
-      patient_visit: "24-05-2024",
-      btn_url: "/patient?id=5",
-    },
-    {
-      patient_name: "Patient 6",
-      patient_img: "http://localhost:5000/assets/dummy/patient.jpg",
-      patient_visit: "25-05-2024",
-      btn_url: "/patient?id=6",
-    },
-    {
-      patient_name: "Patient 7",
-      patient_img: "http://localhost:5000/assets/dummy/patient.jpg",
-      patient_visit: "26-05-2024",
-      btn_url: "/patient?id=7",
-    },
-    {
-      patient_name: "Patient 8",
-      patient_img: "http://localhost:5000/assets/dummy/patient.jpg",
-      patient_visit: "27-05-2024",
-      btn_url: "/patient?id=8",
-    },
-    {
-      patient_name: "Patient 9",
-      patient_img: "http://localhost:5000/assets/dummy/patient.jpg",
-      patient_visit: "28-05-2024",
-      btn_url: "/patient?id=9",
-    },
-    {
-      patient_name: "Patient 10",
-      patient_img: "http://localhost:5000/assets/dummy/patient.jpg",
-      patient_visit: "29-05-2024",
-      btn_url: "/patient?id=10",
-    },
-    {
-      patient_name: "Patient 11",
-      patient_img: "http://localhost:5000/assets/dummy/patient.jpg",
-      patient_visit: "30-05-2024",
-      btn_url: "/patient?id=11",
-    },
-    {
-      patient_name: "Patient 12",
-      patient_img: "http://localhost:5000/assets/dummy/patient.jpg",
-      patient_visit: "31-05-2024",
-      btn_url: "/patient?id=12",
-    },
-    {
-      patient_name: "Patient 13",
-      patient_img: "http://localhost:5000/assets/dummy/patient.jpg",
-      patient_visit: "01-06-2024",
-      btn_url: "/patient?id=13",
-    },
-    {
-      patient_name: "Patient 14",
-      patient_img: "http://localhost:5000/assets/dummy/patient.jpg",
-      patient_visit: "02-06-2024",
-      btn_url: "/patient?id=14",
-    },
-    {
-      patient_name: "Patient 15",
-      patient_img: "http://localhost:5000/assets/dummy/patient.jpg",
-      patient_visit: "03-06-2024",
-      btn_url: "/patient?id=15",
-    },
-  ];
-  res.json(patients);
-});
+
 
 
 

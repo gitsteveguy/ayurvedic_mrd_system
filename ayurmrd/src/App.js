@@ -26,6 +26,7 @@ import DoctorsObsChartPage from "./pages/formpages/DoctorsObsChartPage";
 
 
 import PatientCreationPage from "./pages/formpages/PatientCreationPage";
+import PatientEditFormPage from "./pages/formpages/PatientEditFormPage";
 import StaffCreationPage from "./pages/formpages/StaffCreationPage";
 
 import "./App.css";
@@ -43,6 +44,7 @@ function App() {
 
         <Route path="/patients" element={<Patients />} />
         <Route path="/patients/create_patient" element={<Container page_name="Create Patient" child={<PatientCreationPage />} active_menu="Patients"/>} />
+        <Route path="/patients/edit_patient" element={<Container page_name="Edit Patient" child={<PatientEditFormPage />} active_menu="Patients"/>} />
         <Route path="/patients/view_patient" element={<ViewPatient/>}/>
         <Route path="/patients/view_patient_visit" element={<ViewVisit/>}/>
         <Route path="/patients/add_visit" element={<AddVisit/>}/>

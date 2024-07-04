@@ -1,11 +1,11 @@
 import mysql from "mysql2";
 import dotenv from "dotenv";
 import bcrypt from "bcrypt";
-import { patientSchema, userSchema } from "./schemas.js";
+import { patientSchema, patientUpdateSchema, userSchema, userUpdateSchema } from "./schemas.js";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { imageToBase64, saveBase64Image,getMonthName } from "./utils.js";
+import { imageToBase64, saveBase64Image,getMonthName,toTitleCase } from "./utils.js";
 
 dotenv.config({ path: "./.env" });
 
@@ -90,13 +90,13 @@ const formattedData = Object.keys(visits).map(month => ({
 
   export async function getStaffData(search=''){
     const [result] = await DB.query(
-     `SELECT first_name,last_name,profile_img,user_id FROM users WHERE role<>'patient' AND role<>'superadmin' AND (first_name LIKE ? OR last_name LIKE ? OR user_id = ?)`,[`%${search}%`, `%${search}%`, search]
+     `SELECT first_name,last_name,profile_img,user_id,role FROM users WHERE role<>'patient' AND role<>'superadmin' AND (first_name LIKE ? OR last_name LIKE ? OR user_id = ?)`,[`%${search}%`, `%${search}%`, search]
     );
 
     const staffs = result.map(staff => ({
       staff_name: `${staff.first_name} ${staff.last_name}`,
       staff_img: 'data:image/png;base64,'+imageToBase64(staff.profile_img),
-      role: staff.role,
+      role: toTitleCase(staff.role),
       user_id: staff.user_id
   }));
     return staffs;
@@ -124,8 +124,14 @@ const formattedData = Object.keys(visits).map(month => ({
     return visit[0];
   }
 
-  export async function getStaffRoles(){
-    const sql = `SELECT name FROM roles WHERE name<>'patient' AND name<>'superadmin'`
+  export async function getStaffRoles(isSuperAdmin=false){
+    let sql=''
+    if(!isSuperAdmin){
+    sql = `SELECT name FROM roles WHERE name<>'patient' AND name<>'superadmin' AND name<>'admin'`
+    }
+    else{
+      sql = `SELECT name FROM roles WHERE name<>'patient' AND name<>'superadmin'`
+    }
     try{
      const [result] = await DB.query(sql);
      const roles = result.map(role => role.name);
@@ -173,7 +179,7 @@ export async function getUserbyID(id,role='any') {
     if(role==='any'){
         try{
     const [resultu] = await DB.query(
-      "Select user_id,username,email,first_name,last_name,role,date_of_birth,phone_no,profile_img,gender,address_line_1,address_line_2,state,country,country_code,pincode,signature_img,occupation,blood_group from users where user_id = ?",
+      "Select user_id,username,email,first_name,last_name,role,DATE_FORMAT(date_of_birth,'%Y-%m-%d') as date_of_birth,phone_no,profile_img,gender,address_line_1,address_line_2,state,country,country_code,pincode,signature_img,occupation,blood_group from users where user_id = ?",
       [id]
     );
     const user = resultu[0];
@@ -186,7 +192,7 @@ export async function getUserbyID(id,role='any') {
 else{
     try{
     const [resultu] = await DB.query(
-        `Select user_id,username,email,first_name,last_name,role,date_of_birth,phone_no,profile_img,gender,address_line_1,address_line_2,state,country,country_code,pincode,signature_img,occupation,blood_group from users where user_id = ? and role='${role}'`,
+        `Select user_id,username,email,first_name,last_name,role,DATE_FORMAT(date_of_birth,'%Y-%m-%d') as date_of_birth,phone_no,profile_img,gender,address_line_1,address_line_2,state,country,country_code,pincode,signature_img,occupation,blood_group from users where user_id = ? and role='${role}'`,
         [id]
       );
       const user = resultu[0];
@@ -557,8 +563,6 @@ export async function getDischargeForm(user_id,visit_id){
 }
 
 export async function handleDischargeForm(formData){
-  console.log('trigger');
-  console.log(formData);
   const isql = "SELECT discharge_id FROM discharge_summary WHERE user_id=? AND visit_id=?"; 
   try{
   const[iresult] = await DB.query(isql,[formData.user_id,formData.visit_id]);
@@ -602,3 +606,89 @@ try {
     return ["failed",'', "Record has not been Inserted or Updated"]
   }
 }
+
+//update patient
+export async function updateUser(user,role='any'){
+let actual_role = user.role
+delete user.role;
+delete user.country_code;
+  try {
+    if(role==='any'){
+    const { error, value } = userUpdateSchema.validate(user, {
+      abortEarly: false,
+    });
+    if (error) {
+      throw new Error(`${error.details.map((d) => d.message).join(", ")}`);
+    }
+  }
+    else{
+      const { error, value } = patientUpdateSchema.validate(user, {
+        abortEarly: false,
+      });
+      if (error) {
+        throw new Error(`${error.details.map((d) => d.message).join(", ")}`);
+      }
+    actual_role = 'patient'
+    }
+
+
+let sql=''
+
+
+const username = user.username;
+const profile_img = user.profile_img;
+const signature = user.signature_img;
+const country = user.country;
+const country_code = country_codes[country];
+let profilePath = "";
+let signaturePath = "";
+
+const userDir = "./assets/users/"+actual_role+"/" + username;
+
+// Create the directory if it doesn't exist
+if (!fs.existsSync(userDir)) {
+  fs.mkdirSync(userDir, { recursive: true });
+}
+
+try {
+  // Save profile image if provided
+  if (profile_img) {
+    const profile_img_name = username + "_profile.png";
+    profilePath = path.join(userDir, profile_img_name); // Adjust file extension as needed
+    await saveBase64Image(profile_img, profilePath);
+  }
+
+  // Save signature image if provided
+  if (signature) {
+    console.log(signature);
+    const signature_img_name = username + "_signature.png";
+    signaturePath = path.join(userDir, signature_img_name); // Adjust file extension as needed
+    await saveBase64Image(signature, signaturePath);
+  }
+} catch (err) {
+  return ["failed", "", "Invalid Image"];
+}
+
+ sql = ` UPDATE users SET username = ?, email = ?, first_name = ?, last_name = ?,role = ?, date_of_birth = ?, phone_no = ?, profile_img = ?, gender = ?, address_line_1 = ?, address_line_2 = ?, state = ?, country = ?, country_code = ?, pincode = ?, signature_img = ?, occupation = ?, blood_group = ? WHERE user_id = ? `;
+
+const values = [username,user.email,user.first_name,user.last_name,actual_role,user.date_of_birth,user.phone_no,profilePath,user.gender,user.address_line_1,user.address_line_2,user.state,user.country,country_code,user.pincode,signaturePath,user.occupation,user.blood_group,user.user_id];
+try {
+  const [result] = await DB.query(sql, values);
+  if(user.password){
+  if(user.password!='' && user.password.length>5){
+    const password = await bcrypt.hash(user.password, 10);
+    let psql = `UPDATE users SET password = ? WHERE user_id = ?`
+    const [result2] = await DB.query(psql, [password,user.user_id]);
+  }}
+  return ['success','',toTitleCase(actual_role)+' Updated Successfully']
+} catch (err) {
+  console.log(err);
+  return ["failed",'', toTitleCase(actual_role)+" has not been Updated"]
+}
+}catch(err){
+  console.log(err);
+  return ["failed", "", err.message];
+}
+}
+
+

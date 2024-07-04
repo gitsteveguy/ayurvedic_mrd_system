@@ -17,10 +17,14 @@ export default function Dashboard() {
   const [mapData,setMapData] = useState({})
 
 
-  if(currentUser.permissions.includes('view_self')){
-    setCurrentPatientID(currentUser.user_id)
-    navigate('/patients/view_patient')
-  }
+  
+
+  useEffect(() => {
+    if(currentUser.permissions.includes('view_self')){
+      setCurrentPatientID(currentUser.user_id)
+      navigate('/patients/view_patient')
+    }
+  }, [currentUser.permissions]);
 
   useEffect(() => {
     fetchMapData(map_data_url)

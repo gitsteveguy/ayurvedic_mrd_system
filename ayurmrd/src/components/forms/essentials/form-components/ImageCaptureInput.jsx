@@ -1,4 +1,4 @@
-import React,{useRef,useState} from 'react'
+import React,{useEffect, useRef,useState} from 'react'
 import ICol from './ICol';
 import IRow from './IRow';
 import ImageFallback from '../../../../assets/ImageFallback.png'
@@ -11,6 +11,14 @@ export default function ImageCaptureInput(props) {
 
   let CameraPreview; 
   let tmagejs;
+
+  const [image,setImage] = useState(props.value)
+
+  useEffect(()=>{
+    if(props.value && props.value!=''){
+      setImage('data:image/png;base64,'+props.value)
+    }
+  },[props.value])
 
   const openCamera = (e) => {
     CameraPreview = CameraPreviewReference.current;
@@ -51,7 +59,7 @@ export default function ImageCaptureInput(props) {
       </ICol>
       <ICol down position='relative'>
         <input ref={imagurifdReference} name={props.name}  onInvalid={(e)=>{e.target.setCustomValidity('Please Capture an Image')}} style={{opacity:0,width:0,position:'absolute'}} required={props.required} value={imageurifdvalue} type="hidden"/>
-        <img ref={tmagejsReference} width="300" height="300" style={{maxWidth:'300px',minWidth:'300px',minHeight:'300px',maxHeight:'300px'}} src={ImageFallback} alt='Preview' className='image-capture-preview-img' />
+        <img ref={tmagejsReference} width="300" height="300" style={{maxWidth:'300px',minWidth:'300px',minHeight:'300px',maxHeight:'300px'}} src={image} alt='Preview' className='image-capture-preview-img' />
         <button type="button" className="primary-btn" onClick={captureImage}>Take Photo</button>
       </ICol>
     </IRow>

@@ -23,6 +23,16 @@ export const imageToBase64 = (filePath)=> {
   return base64Image;
 }
 
+export const toTitleCase = (str)=>{
+  str=  str.split('_').join(' ')
+  return str.replace(
+    /\w\S*/g,
+    function(txt) {
+      return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    }
+  );
+}
+
 export const getMonthName = (dateString) => {
   const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"];
   const date = new Date(dateString);

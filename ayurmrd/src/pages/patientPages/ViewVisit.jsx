@@ -11,6 +11,7 @@ const ViewVisit = () => {
           text : 'Edit Visit',
           className: 'primary-btn',
           icon: <EditIcon/>,
+          permission : 'edit_visit'
         }
       ]
       const doctorForms = [

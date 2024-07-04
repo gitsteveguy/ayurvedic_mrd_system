@@ -1,5 +1,5 @@
 .card-grid{
-    display: flex;
+    display: grid;
     flex-wrap: wrap;
     grid-template-columns: repeat(5, 1fr);
     grid-gap: 1rem;

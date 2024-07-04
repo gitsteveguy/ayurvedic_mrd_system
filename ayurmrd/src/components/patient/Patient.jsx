@@ -89,11 +89,12 @@ const Patient = (props) => {
             </div>
             </div>
              <div className="container-top-btn-grp" style={{margin:'0.5rem'}}>
-            <a className='primary-btn' onClick={() => navigate(-1)} style={{borderRadius:'24px'}}><ArrowBackIosNewIcon/>Go Back</a>
-          {current_user.permissions.includes('edit_visit') && props.hBtns && props.hBtns.map((btn,index)=>{
+            <a className='primary-btn' onClick={() => navigate(-1)} style={{borderRadius:'24px',cursor:'pointer'}}><ArrowBackIosNewIcon/>Go Back</a>
+          {props.hBtns && props.hBtns.map((btn,index)=>{
             let borderRadius='24px';
             if(!btn.text)
               borderRadius='50%'
+            if(current_user.permissions.includes(btn.permission))
               return(
               <a key={index} href={btn.href} className={btn.className} style={{borderRadius:borderRadius}} tooltip={btn.tooltip}>{btn.icon}{btn.text}</a>)
           })
