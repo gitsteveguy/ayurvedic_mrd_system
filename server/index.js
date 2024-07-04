@@ -929,10 +929,7 @@ app.post("/api/update_patient", async (req, res) => {
 
 
 
-//Staff
 
-
-//Patients
 
 
 
