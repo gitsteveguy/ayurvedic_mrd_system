@@ -51,7 +51,8 @@ export default function SignatureCapture(props) {
   const confirmSignature = () =>{
    
     const canvas = canvasReference.current;
-    var du = canvas.toDataURL('image/jpeg', 0.8);
+    var du = canvas.toDataURL('image/png', 0.8);
+    console.log(du);
     var b64du = du.replace(/^data:image\/?[A-z]*;base64,/, "");
     if(blank!==b64du){
     setsignurifdvalue(b64du);

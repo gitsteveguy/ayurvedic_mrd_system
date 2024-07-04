@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import AsyncSelect from 'react-select/async';
 import CreatableSelect from 'react-select/creatable';
+import axios from 'axios';
 
 const toLabel = (str) => {
   let notitlestr = str.split('_').join(' ')
@@ -100,12 +101,13 @@ export default function SingleSelect(props) {
   }
 
   const loadOptions = (searchValue, callback) => {
-    fetch(url).then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      return response.json();
-    }).then((data) => {
+    axios.get(url, {withCredentials: true}).then(response => {
+            if (!response) {
+              throw new Error('Network response was not ok');
+            }
+            return (response.data);
+          }).then((data) => {
+            console.log(data);
       let options = []
       data.forEach((datum) => {
         options.push({ label: datum, value: datum })

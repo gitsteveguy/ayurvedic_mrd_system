@@ -5,10 +5,19 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import fs from "fs";
+import bcrypt from "bcrypt";
 import { imageToBase64 } from "./utils.js";
 import {
+  getPatientCountries,
+  getPatientVisitAnalyticsData,
+  getLatestVisits,
+  getRegularPatients,
+  getVisitByID,
+  updateVisit,
+  updateUser,
+  getStaffRoles,
+  getStaffData,
   getUserbyUsername,
-  getPwdbyUsername,
   verifyUser,
   createUser,
   getPatients,
@@ -17,7 +26,14 @@ import {
   getVisitsByPatientID,
   handleDoctorInitialAssessment,
   getDoctorInitialAssessment,
-  addMedicationRecords
+  addMedicationRecords,
+  getMedicationRecords,
+  addTreatmentProcedureRecords,
+  getTreatmentProcedureRecords,
+  addVitalChartRecords,
+  getVitalChartRecords,
+  getDischargeForm,
+  handleDischargeForm
 } from "./database.js";
 import { log } from "console";
 
@@ -26,7 +42,6 @@ let country_codes = JSON.parse(
   fs.readFileSync("./Jsons/countries.json", "utf8")
 );
 let countries = Object.keys(country_codes);
-
 const corsOptions = {
   origin: "http://localhost:3000",
   method: ["GET", "POST"],
@@ -43,6 +58,26 @@ app.get("/api/select/countries", (req, res) => {
   let select_countries = countries;
   select_countries.unshift("Select a Country");
   res.json(select_countries);
+});
+app.get("/api/select/staff_roles", async(req, res) => {
+  let jwt_token = req.cookies._auth;
+  try {
+    const decode = jwt.verify(jwt_token, process.env.JWT_SECRET);
+    if (decode.User.permissions.includes("edit_staff")) {
+      let roles=[]
+      if (decode.User.permissions.includes("superadmin"))
+       roles = await getStaffRoles(true);
+      else
+        roles = await getStaffRoles();
+  res.json(roles);
+    }}
+    catch (error) {
+      const response = {
+        status: "failed",
+        message: "Authentication failed",
+      };
+      res.json(response);
+    }
 });
 
 app.get("/api/select/blood_group", (req, res) => {
@@ -95,6 +130,49 @@ app.post("/login", async (req, res) => {
       isLoggedIn: false,
       message: "Enter Credentials",
     });
+});
+
+app.post("/api/create_staff/", async (req, res) => {
+  let jwt_token = req.cookies._auth;
+  try {
+    const decode = jwt.verify(jwt_token, process.env.JWT_SECRET);
+    if (decode.User.permissions.includes("edit_staff")) {
+      let formData = req.body;
+      try {
+        const [rstatus, user_id, msg] = await createUser(formData, formData.role);
+        const response = {
+          status: rstatus,
+          id: user_id,
+          message: msg,
+        };
+        console.log(response);
+        res.json(response);
+      } catch (e) {
+        console.log(e);
+        const response = {
+          status: "failed",
+          id: "",
+          message: "Unknown Reason",
+        };
+        res.json(response);
+      }
+    }
+    else{
+      const response = {
+        status: "failed",
+        id:'',
+        message: "You do not have sufficient permissions to perform this action.",
+      };
+      res.json(response);
+    }
+  } catch (error) {
+    const response = {
+      status: "failed",
+      id: "",
+      message: "Authentication failed",
+    };
+    res.json(response);
+  }
 });
 
 //patient
@@ -185,6 +263,14 @@ app.get("/api/get_patients_by_id", async (req, res) => {
       patient["profile_img"] = "data:image/png;base64," + base64img;
       res.json(patient);
     }
+    else if(decode.User.permissions.includes("view_self")){
+      const user_id = decode.User.user_id
+      const patient = await getUserbyID(user_id, "patient");
+      let imageurl = patient["profile_img"];
+      let base64img = imageToBase64("./" + imageurl);
+      patient["profile_img"] = "data:image/png;base64," + base64img;
+      res.json(patient);
+}
     else{
       const response = {
         status: "failed",
@@ -210,6 +296,11 @@ app.get("/api/get_visits_by_patient_ID", async (req, res) => {
     if (decode.User.permissions.includes("edit_visit")) {
   const visits = await getVisitsByPatientID(req.query.patient_id);
   res.json(visits);
+    }
+    else if(decode.User.permissions.includes("view_self")){
+      const user_id = decode.User.user_id
+      const visits = await getVisitsByPatientID(user_id);
+      res.json(visits);
     }
     else{
       const response = {
@@ -309,6 +400,15 @@ app.get("/api/get_doctor_initial_assessment", async (req, res) => {
     patientExists: patientExists
   });
 }
+else if(decode.User.permissions.includes("view_self")){
+  const user_id = decode.User.user_id
+  const [status,formData,patientExists] = await getDoctorInitialAssessment(user_id,req.query.visit_id);
+  res.json({
+    status : status,
+    formData: formData,
+    patientExists: patientExists
+  });
+}
 else{
   const response = {
     status: "failed",
@@ -359,372 +459,481 @@ app.post('/api/add_medication_records',async(req,res)=>{
     }
 })
 
-
-
-
-
-
-//Test APIS
-
-app.post("/test/post/", (req, res) => {
-  const formData = req.body;
-  res.send(
-    `<h1>Form Data Submitted:</h1><pre>${JSON.stringify(
-      formData,
-      null,
-      2
-    )}</pre>`
-  );
-});
-
-app.get("/test/api/select", (req, res) => {
-  let options = ["Option 1", "Option 2", "Option 3", "Option 4", "Option 5"];
-  res.json(options);
-});
-app.get("/test/api/fetchform", (req, res) => {
-  let options = {
-    text: "Text 2",
-    textarea: "Textarea 1",
-    date: "2024-05-15",
-    time: "01:00",
-    tel: "9876543210",
-    number: "12",
-    select: "Option 2",
-    MultiSelect: ["Option 1", "Option 2"],
-    checkbox: "true",
-    Radio: "Option 3",
+app.get("/api/get_medication_records", async (req, res) => {
+  let jwt_token = req.cookies._auth;
+  try {
+    const decode = jwt.verify(jwt_token, process.env.JWT_SECRET);
+    if (decode.User.permissions.includes("view_doctor_form")) {
+  const [status,records,patientExists] = await getMedicationRecords(req.query.user_id,req.query.visit_id);
+  res.json({
+    status : status,
+    records: records,
+    patientExists: patientExists
+  });
+}
+else if(decode.User.permissions.includes("view_self")){
+  const user_id = decode.User.user_id
+  const [status,records,patientExists] = await getMedicationRecords(user_id,req.query.visit_id);
+  res.json({
+    status : status,
+    records: records,
+    patientExists: patientExists
+  });
+}
+else{
+  const response = {
+    status: "failed",
+    message: "You do not have sufficient permissions to view this.",
   };
-  res.json(options);
-});
-
-app.get("/test/api/fetchpatient", (req, res) => {
-  let options = {
-    username: "",
-    email: "",
-    password: "",
-    first_name: "",
-    last_name: "",
-    date_of_birth: "",
-    phone_no: "",
-    profile_img: "",
-    gender: "",
-    address_line_1: "",
-    address_line_2: "",
-    state: "",
-    country: "",
-    pincode: "",
-    signature: "",
-    occupation: "",
-    blood_group: "",
+  res.json(response);
+}
+}
+catch(err){
+  console.log(err);
+  const response = {
+    status: "failed",
+    message: "Authentication failed",
   };
-  res.json(options);
-});
+  res.json(response);
+}
+}
+);
 
-//Dashboard
-app.get("/test/api/charts/visits", (req, res) => {
-  let data = {
-    datasets: [
-      {
-        label: "Visits - 2024",
-        data: [
-          {
-            x: "Jan",
-            y: 5,
-          },
-          {
-            x: "Feb",
-            y: 6,
-          },
-          {
-            x: "Mar",
-            y: 2,
-          },
-          {
-            x: "Apr",
-            y: 1,
-          },
-          {
-            x: "May",
-            y: 20,
-          },
-          {
-            x: "Jun",
-            y: 7,
-          },
-        ],
-        borderColor: "#008500",
-        backgroundColor: "#008500",
-      },
-      {
-        label: "Visits - 2023",
-        data: [
-          {
-            x: "Jan",
-            y: 1,
-          },
-          {
-            x: "Feb",
-            y: 8,
-          },
-          {
-            x: "Mar",
-            y: 4,
-          },
-          {
-            x: "Apr",
-            y: 5,
-          },
-          {
-            x: "May",
-            y: 15,
-          },
-          {
-            x: "Jun",
-            y: 2,
-          },
-          {
-            x: "July",
-            y: 8,
-          },
-          {
-            x: "Aug",
-            y: 5,
-          },
-          {
-            x: "Sept",
-            y: 2,
-          },
-          {
-            x: "Oct",
-            y: 3,
-          },
-          {
-            x: "Nov",
-            y: 7,
-          },
-          {
-            x: "Dec",
-            y: 10,
-          },
-        ],
-        borderColor: "#4B271B",
-        backgroundColor: "#4B271B",
-      },
-    ],
+//treatment_procedure
+app.post('/api/add_treatment_procedure_order_records',async(req,res)=>{
+  let jwt_token = req.cookies._auth;
+  try {
+    const decode = jwt.verify(jwt_token, process.env.JWT_SECRET);
+    if (decode.User.permissions.includes("edit_doctor_form")) {
+      const payload = req.body;
+      const [status,message] = await addTreatmentProcedureRecords(payload);
+      const response = {
+        status: status,
+        message: message,
+      };
+      res.json(response);
+    }
+    else{
+      const response = {
+        status: "failed",
+        message: "You do not have sufficient permissions to view this.",
+      };
+      res.json(response);
+    }}
+    catch(err){
+      console.log(err);
+      const response = {
+        status: "failed",
+        message: "Authentication failed",
+      };
+      res.json(response);
+    }
+})
+
+app.get("/api/get_treatment_procedure_order_records", async (req, res) => {
+  let jwt_token = req.cookies._auth;
+  try {
+    const decode = jwt.verify(jwt_token, process.env.JWT_SECRET);
+    if (decode.User.permissions.includes("view_doctor_form")) {
+  const [status,records,patientExists] = await getTreatmentProcedureRecords(req.query.user_id,req.query.visit_id);
+  res.json({
+    status : status,
+    records: records,
+    patientExists: patientExists
+  });
+}
+else if(decode.User.permissions.includes("view_self")){
+  const user_id = decode.User.user_id
+  const [status,records,patientExists] = await getTreatmentProcedureRecords(user_id,req.query.visit_id);
+  res.json({
+    status : status,
+    records: records,
+    patientExists: patientExists
+  });
+}
+else{
+  const response = {
+    status: "failed",
+    message: "You do not have sufficient permissions to view this.",
   };
-  res.json(data);
-});
+  res.json(response);
+}
+}
+catch(err){
+  console.log(err);
+  const response = {
+    status: "failed",
+    message: "Authentication failed",
+  };
+  res.json(response);
+}
+}
+);
 
-app.get("/test/api/recentvisit", (req, res) => {
-  let recentvisits = [
-    {
-      patient_name: "Patient 1",
-      patient_img: "http://localhost:5000/assets/dummy/patient.jpg",
-      patient_visit: "20-05-2024",
-      btn_url: "/visit?id=1",
-    },
-    {
-      patient_name: "Patient 2",
-      patient_img: "http://localhost:5000/assets/dummy/patient.jpg",
-      patient_visit: "21-05-2024",
-      btn_url: "/visit?id=2",
-    },
-    {
-      patient_name: "Patient 3",
-      patient_img: "http://localhost:5000/assets/dummy/patient.jpg",
-      patient_visit: "22-05-2024",
-      btn_url: "/visit?id=3",
-    },
-    {
-      patient_name: "Patient 4",
-      patient_img: "http://localhost:5000/assets/dummy/patient.jpg",
-      patient_visit: "23-05-2024",
-      btn_url: "/visit?id=4",
-    },
-    {
-      patient_name: "Patient 5",
-      patient_img: "http://localhost:5000/assets/dummy/patient.jpg",
-      patient_visit: "24-05-2024",
-      btn_url: "/visit?id=5",
-    },
-  ];
-  res.json(recentvisits);
-});
+//vital_charts
+app.post('/api/add_vital_chart_records',async(req,res)=>{
+  let jwt_token = req.cookies._auth;
+  try {
+    const decode = jwt.verify(jwt_token, process.env.JWT_SECRET);
+    if (decode.User.permissions.includes("edit_doctor_form")) {
+      const payload = req.body;
+      const [status,message] = await addVitalChartRecords(payload);
+      const response = {
+        status: status,
+        message: message,
+      };
+      res.json(response);
+    }
+    
+    else{
+      const response = {
+        status: "failed",
+        message: "You do not have sufficient permissions to view this.",
+      };
+      res.json(response);
+    }}
+    catch(err){
+      console.log(err);
+      const response = {
+        status: "failed",
+        message: "Authentication failed",
+      };
+      res.json(response);
+    }
+})
 
-//Staff
-app.get("/test/api/staffdata", (req, res) => {
-  let staff = [
-    {
-      staff_name: "Doctor 1",
-      staff_img: "http://localhost:5000/assets/dummy/doctor.jpg",
-      role: "Doctor",
-      btn_url: "/staff_details?id=1",
-    },
-    {
-      staff_name: "Nurse 1",
-      staff_img: "http://localhost:5000/assets/dummy/nurse.jpg",
-      role: "Nurse",
-      btn_url: "/staff_details?id=2",
-    },
-    {
-      staff_name: "Doctor 2",
-      staff_img: "http://localhost:5000/assets/dummy/doctor.jpg",
-      role: "Doctor",
-      btn_url: "/staff_details?id=3",
-    },
-    {
-      staff_name: "Nurse 2",
-      staff_img: "http://localhost:5000/assets/dummy/nurse.jpg",
-      role: "Nurse",
-      btn_url: "/staff_details?id=4",
-    },
-    {
-      staff_name: "Nurse 3",
-      staff_img: "http://localhost:5000/assets/dummy/nurse.jpg",
-      role: "Nurse",
-      btn_url: "/staff_details?id=5",
-    },
-  ];
-  res.json(staff);
-});
+app.get("/api/get_vital_chart_records", async (req, res) => {
+  let jwt_token = req.cookies._auth;
+  try {
+    const decode = jwt.verify(jwt_token, process.env.JWT_SECRET);
+    if (decode.User.permissions.includes("view_doctor_form")) {
+  const [status,records,patientExists] = await getVitalChartRecords(req.query.user_id,req.query.visit_id);
+  res.json({
+    status : status,
+    records: records,
+    patientExists: patientExists
+  });
+}
+else if(decode.User.permissions.includes("view_self")){
+  const user_id = decode.User.user_id
+  const [status,records,patientExists] = await getVitalChartRecords(user_id,req.query.visit_id);
+  res.json({
+    status : status,
+    records: records,
+    patientExists: patientExists
+  });
+}
+else{
+  const response = {
+    status: "failed",
+    message: "You do not have sufficient permissions to view this.",
+  };
+  res.json(response);
+}
+}
+catch(err){
+  console.log(err);
+  const response = {
+    status: "failed",
+    message: "Authentication failed",
+  };
+  res.json(response);
+}
+}
+);
 
-//Patients
-app.get("/test/api/patients", (req, res) => {
-  let patients = [
-    {
-      patient_name: "Patient 1",
-      patient_img: "http://localhost:5000/assets/dummy/patient.jpg",
-      patient_visit: "20-05-2024",
-      btn_url: "/patient?id=1",
-    },
-    {
-      patient_name: "Patient 2",
-      patient_img: "http://localhost:5000/assets/dummy/patient.jpg",
-      patient_visit: "21-05-2024",
-      btn_url: "/patient?id=2",
-    },
-    {
-      patient_name: "Patient 3",
-      patient_img: "http://localhost:5000/assets/dummy/patient.jpg",
-      patient_visit: "22-05-2024",
-      btn_url: "/patient?id=3",
-    },
-    {
-      patient_name: "Patient 4",
-      patient_img: "http://localhost:5000/assets/dummy/patient.jpg",
-      patient_visit: "23-05-2024",
-      btn_url: "/patient?id=4",
-    },
-    {
-      patient_name: "Patient 5",
-      patient_img: "http://localhost:5000/assets/dummy/patient.jpg",
-      patient_visit: "24-05-2024",
-      btn_url: "/patient?id=5",
-    },
-    {
-      patient_name: "Patient 6",
-      patient_img: "http://localhost:5000/assets/dummy/patient.jpg",
-      patient_visit: "25-05-2024",
-      btn_url: "/patient?id=6",
-    },
-    {
-      patient_name: "Patient 7",
-      patient_img: "http://localhost:5000/assets/dummy/patient.jpg",
-      patient_visit: "26-05-2024",
-      btn_url: "/patient?id=7",
-    },
-    {
-      patient_name: "Patient 8",
-      patient_img: "http://localhost:5000/assets/dummy/patient.jpg",
-      patient_visit: "27-05-2024",
-      btn_url: "/patient?id=8",
-    },
-    {
-      patient_name: "Patient 9",
-      patient_img: "http://localhost:5000/assets/dummy/patient.jpg",
-      patient_visit: "28-05-2024",
-      btn_url: "/patient?id=9",
-    },
-    {
-      patient_name: "Patient 10",
-      patient_img: "http://localhost:5000/assets/dummy/patient.jpg",
-      patient_visit: "29-05-2024",
-      btn_url: "/patient?id=10",
-    },
-    {
-      patient_name: "Patient 11",
-      patient_img: "http://localhost:5000/assets/dummy/patient.jpg",
-      patient_visit: "30-05-2024",
-      btn_url: "/patient?id=11",
-    },
-    {
-      patient_name: "Patient 12",
-      patient_img: "http://localhost:5000/assets/dummy/patient.jpg",
-      patient_visit: "31-05-2024",
-      btn_url: "/patient?id=12",
-    },
-    {
-      patient_name: "Patient 13",
-      patient_img: "http://localhost:5000/assets/dummy/patient.jpg",
-      patient_visit: "01-06-2024",
-      btn_url: "/patient?id=13",
-    },
-    {
-      patient_name: "Patient 14",
-      patient_img: "http://localhost:5000/assets/dummy/patient.jpg",
-      patient_visit: "02-06-2024",
-      btn_url: "/patient?id=14",
-    },
-    {
-      patient_name: "Patient 15",
-      patient_img: "http://localhost:5000/assets/dummy/patient.jpg",
-      patient_visit: "03-06-2024",
-      btn_url: "/patient?id=15",
-    },
-  ];
-  res.json(patients);
+//discharge_form
+app.get("/api/get_discharge_form", async (req, res) => {
+  let jwt_token = req.cookies._auth;
+  try {
+    const decode = jwt.verify(jwt_token, process.env.JWT_SECRET);
+    if (decode.User.permissions.includes("edit_doctor_form")) {
+  const [status,formData,patientExists] = await getDischargeForm(req.query.user_id,req.query.visit_id);
+  res.json({
+    status : status,
+    formData: formData,
+    patientExists: patientExists
+  });
+}
+else if(decode.User.permissions.includes("view_self")){
+  const user_id = decode.User.user_id
+  const [status,formData,patientExists] = await getDischargeForm(user_id,req.query.visit_id);
+  res.json({
+    status : status,
+    formData: formData,
+    patientExists: patientExists
+  });
+}
+else{
+  const response = {
+    status: "failed",
+    message: "You do not have sufficient permissions to view this.",
+  };
+  res.json(response);
+}
+}
+catch(err){
+  console.log(err);
+  const response = {
+    status: "failed",
+    message: "Authentication failed",
+  };
+  res.json(response);
+}
+}
+);
+
+app.post("/api/update_discharge_form", async (req, res) => {
+  let jwt_token = req.cookies._auth;
+  try {
+    const decode = jwt.verify(jwt_token, process.env.JWT_SECRET);
+    if (decode.User.permissions.includes("edit_doctor_form")) {
+      const formData = req.body;
+      const [status, id, message] = await handleDischargeForm(formData);
+      res.json({
+        status: status,
+        id: id,
+        message: message,
+      });
+    }
+    else{
+      const response = {
+        status: "failed",
+        id:'',
+        message: "You do not have sufficient permissions to perform this action.",
+      };
+      res.json(response);
+    }
+  } catch (err) {
+    console.log(err);
+    const response = {
+      status: "failed",
+      message: "Authentication failed",
+    };
+    res.json(response);
+  }
 });
 
 //Analytics
-app.get("/test/api/worldmap/patient_country", (req, res) => {
-  let patient_country = { US: 500, IN: 100, GB: 2, RU: 10, AU: 5 };
+app.get("/api/worldmap/patient_country", async (req, res) => {
+  let jwt_token = req.cookies._auth;
+  try {
+    const decode = jwt.verify(jwt_token, process.env.JWT_SECRET);
+    if (decode.User.permissions.includes("view_patient")) {
+  const patient_country = await getPatientCountries()
   res.json(patient_country);
+    }}
+    catch(err){
+      console.log(err);
+      const response = {
+        status: "failed",
+        message: "Authentication failed",
+      };
+      res.json(response);
+    }
 });
-app.get("/test/api/regular_patients", (req, res) => {
-  let patient_country = [
-    {
-      patient_name: "Top Patient 1",
-      patient_img: "http://localhost:5000/assets/dummy/patient.jpg",
-      patient_visit_count: "20",
-      btn_url: "/patient?id=1",
-    },
-    {
-      patient_name: "Top Patient 2",
-      patient_img: "http://localhost:5000/assets/dummy/patient.jpg",
-      patient_visit_count: "18",
-      btn_url: "/patient?id=2",
-    },
-    {
-      patient_name: "Top Patient 3",
-      patient_img: "http://localhost:5000/assets/dummy/patient.jpg",
-      patient_visit_count: "17",
-      btn_url: "/patient?id=3",
-    },
-    {
-      patient_name: "Top Patient 4",
-      patient_img: "http://localhost:5000/assets/dummy/patient.jpg",
-      patient_visit_count: "17",
-      btn_url: "/patient?id=4",
-    },
-    {
-      patient_name: "Top Patient 5",
-      patient_img: "http://localhost:5000/assets/dummy/patient.jpg",
-      patient_visit_count: "15",
-      btn_url: "/patient?id=5",
-    },
-  ];
-  res.json(patient_country);
+
+//Dashboard
+app.get("/api/charts/visits", async(req, res) => {
+  let jwt_token = req.cookies._auth;
+  try {
+    const decode = jwt.verify(jwt_token, process.env.JWT_SECRET);
+    if (decode.User.permissions.includes("view_patient")) {
+  const datasets = await getPatientVisitAnalyticsData()
+  let data = {
+    datasets: datasets
+  };
+  res.json(data);
+}
+  }
+catch(err){
+  console.log(err);
+  const response = {
+    status: "failed",
+    message: "Authentication failed",
+  };
+  res.json(response);
+}
 });
+
+app.get("/api/recentvisit", async(req, res) => {
+  let jwt_token = req.cookies._auth;
+  try {
+    const decode = jwt.verify(jwt_token, process.env.JWT_SECRET);
+    if (decode.User.permissions.includes("view_patient")) {
+  const recentvisits = await getLatestVisits()
+  res.json(recentvisits);
+    }}
+    catch(err){
+      console.log(err);
+      const response = {
+        status: "failed",
+        message: "Authentication failed",
+      };
+      res.json(response);
+    }
+});
+
+app.get("/api/regular_patients", async (req, res) => {
+  let jwt_token = req.cookies._auth;
+  try {
+    const decode = jwt.verify(jwt_token, process.env.JWT_SECRET);
+    if (decode.User.permissions.includes("view_patient")) {
+  const regular_patients = await getRegularPatients()
+  res.json(regular_patients);}
+    }
+    catch(err){
+      console.log(err);
+      const response = {
+        status: "failed",
+        message: "Authentication failed",
+      };
+      res.json(response);
+    }
+});
+
+app.get("/api/get_visit_by_ID", async (req, res) => {
+  let jwt_token = req.cookies._auth;
+  try {
+    const decode = jwt.verify(jwt_token, process.env.JWT_SECRET);
+    if (decode.User.permissions.includes("view_patient")) {
+  const visit = await getVisitByID(req.query.visit_id)
+  res.json(visit);}
+    }
+    catch(err){
+      console.log(err);
+      const response = {
+        status: "failed",
+        message: "Authentication failed",
+      };
+      res.json(response);
+    }
+});
+
+app.post("/api/update_visit", async (req, res) => {
+  let jwt_token = req.cookies._auth;
+  try {
+    const decode = jwt.verify(jwt_token, process.env.JWT_SECRET);
+    if (decode.User.permissions.includes("edit_patient")) {
+      const formData = req.body;
+      const [status, id, message] = await updateVisit(formData);
+      res.json({
+        status: status,
+        id: id,
+        message: message,
+      });
+    }
+    else{
+      const response = {
+        status: "failed",
+        id:'',
+        message: "You do not have sufficient permissions to perform this action.",
+      };
+      res.json(response);
+    }
+  } catch (err) {
+    console.log(err);
+    const response = {
+      status: "failed",
+      message: "Authentication failed",
+    };
+    res.json(response);
+  }
+});
+
+app.get("/api/staffdata", async(req, res) => {
+  let jwt_token = req.cookies._auth;
+  try {
+    const decode = jwt.verify(jwt_token, process.env.JWT_SECRET);
+    if (decode.User.permissions.includes("edit_staff")) {
+  const staff = await getStaffData(req.query.search);
+  res.json(staff);
+}}
+catch (err) {
+  console.log(err);
+  const response = {
+    status: "failed",
+    message: "Authentication failed",
+  };
+  res.json(response);
+
+}});
+
+
+app.get("/api/fetchpatientdetail", async (req, res) => {
+  let jwt_token = req.cookies._auth;
+  try {
+    const decode = jwt.verify(jwt_token, process.env.JWT_SECRET);
+    if (decode.User.permissions.includes("edit_patient")) {
+  let formData = await getUserbyID(req.query.user_id,'patient');
+  formData['profile_img'] = imageToBase64(formData.profile_img).replace(/^data:image\/?[A-z]*;base64,/, "")
+  formData['signature_img'] = imageToBase64(formData.signature_img).replace(/^data:image\/?[A-z]*;base64,/, "")
+  res.json({
+    status : 'success',
+    formData: formData
+  });
+}
+else{
+  const response = {
+    status: "failed",
+    message: "You do not have sufficient permissions to view this.",
+  };
+  res.json(response);
+}
+}
+catch(err){
+  console.log(err);
+  const response = {
+    status: "failed",
+    message: "Authentication failed",
+  };
+  res.json(response);
+}
+}
+);
+
+app.post("/api/update_patient", async (req, res) => {
+  let jwt_token = req.cookies._auth;
+  try {
+    const decode = jwt.verify(jwt_token, process.env.JWT_SECRET);
+    if (decode.User.permissions.includes("edit_patient")) {
+      const formData = req.body;
+      const [status, id, message] = await updateUser(formData,'patient');
+      res.json({
+        status: status,
+        id: id,
+        message: message,
+      });
+    }
+    else{
+      const response = {
+        status: "failed",
+        id:'',
+        message: "You do not have sufficient permissions to perform this action.",
+      };
+      res.json(response);
+    }
+  } catch (err) {
+    console.log(err);
+    const response = {
+      status: "failed",
+      message: "Authentication failed",
+    };
+    res.json(response);
+  }
+});
+
+//Test APIS
+
+
+
+
+
+
+
+
+
+
 
 app.listen(5000, () => {
   console.log("Server Started on Port:5000");

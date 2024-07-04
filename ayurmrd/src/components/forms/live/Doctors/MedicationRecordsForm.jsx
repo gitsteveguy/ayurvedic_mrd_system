@@ -1,28 +1,28 @@
 import React, { useState, useEffect } from 'react'
 import IRow from '../../../../components/forms/essentials/form-components/IRow'
 import ICol from '../../../../components/forms/essentials/form-components/ICol';
-import SingleSelect from '../../../../components/forms/essentials/form-components/SingleSelect';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
-import Checkbox from '../../../../components/forms/essentials/form-components/Checkbox';
-import ITxtInput from '../../../../components/forms/essentials/form-components/ITxtInput';
-import ITextBox from '../../essentials/form-components/ITextBox';
 import { getCurrentPatientID, getCurrentPatientVisitID } from '../../../../hooks/currentPatientnVisit';
 import RepeatingComponent from '../../essentials/form-components/RepeatingComponent';
 import { repeatFormToObject } from '../../essentials/FormContainer';
 import useAuth from '../../../../hooks/useAuth';
 import { Link } from 'react-router-dom';
+import IDate from '../../essentials/form-components/IDate';
 
-const MedicationRecordsForm = () => {
+const MedicationRecordsForm = (props) => {
     const current_patient_id = getCurrentPatientID();
     const current_patient_visit_id = getCurrentPatientVisitID();
-    const fetch_api_url = 'http://localhost:5000/api/get_doctor_initial_assessment'
     const post_api_url = 'http://localhost:5000/api/add_medication_records'
     const currentUser = useAuth()
-    const navigate = useNavigate()
-    const [medicationRecords, setMedicationRecords] = useState([])
 
+    let inert = false;
+    if(props.inert==='true'){
+      inert='true'
+    }
+    else{
+      inert = false
+    }
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -42,8 +42,8 @@ const MedicationRecordsForm = () => {
                     console.log(response)
                     if (response.data.status === 'success') {
                         console.log(response);
+                        props.update_table()
                         resolve(response.data.message);
-                        fetchData(fetch_api_url);
                     }
                     else if (response.data.status === 'failed') {
                         reject(response.data.message)
@@ -82,44 +82,20 @@ const MedicationRecordsForm = () => {
 
 
 
-
-
-
-    useEffect(() => {
-        fetchData(fetch_api_url);
-    }, [fetch_api_url])
-
-    function fetchData(fetch_api_url) {
-        axios.get(fetch_api_url, { params: { user_id: current_patient_id, visit_id: current_patient_visit_id }, withCredentials: true }).then(response => {
-            if (!response) {
-                throw new Error('Network response was not ok');
-            }
-            return (response.data);
-        }).then((data) => {
-            if (typeof data != {}) {
-                console.log(data.records);
-                setMedicationRecords(data.records);
-            }
-        })
-    }
-
     return (
         <>
             <h1>Doctor's Medication Records</h1>
-            <form name='medication_records' id='medication_records' onSubmit={handleSubmit}>
+            <form name='medication_records' id='medication_records' inert={inert} onSubmit={handleSubmit}>
                 <RepeatingComponent subtitle='Text'>
                     <IRow>
                         <ICol>
-                            <input id='date' type="date" name='date[]' />
-                            <label htmlFor="date">Date</label>
+                        <IDate name='date[]' label='Date' max={'today'} />
                         </ICol>
                         <ICol>
                             <input id='time' type="time" name='time[]' />
                             <label htmlFor="time">Time</label>
                         </ICol>
-                    </IRow>
-                    <IRow>
-                    <ICol>
+                        <ICol>
                             <input className='animated_inputs' id='medicine' type="text" name='medicine[]' />
                             <label htmlFor="time">medicine</label>
                         </ICol>
@@ -145,12 +121,12 @@ const MedicationRecordsForm = () => {
                         </ICol>
                     </IRow>
                 </RepeatingComponent>
-                <IRow>
+              {props.inert==='false' && <IRow>
                     <ICol>
                     <Link to='/patients/view_patient_visit'><button type='button' className='danger-btn formbtn' tooltip='Cancel'>Cancel</button></Link> 
                         <button type='submit' form="medication_records" className=' primary-btn formbtn' tooltip='Submit' value="submit">Submit</button>
                     </ICol>
-                </IRow>
+                </IRow>}
             </form>
         </>
 

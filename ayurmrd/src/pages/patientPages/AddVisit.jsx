@@ -19,7 +19,6 @@ const AddVisit = () => {
     })
     const handleSubmit = (e)=>{
         e.preventDefault();
-        console.log('hi');
         const post_api_url = 'http://localhost:5000/api/create_visit'
         const submission = new Promise((resolve,reject) =>{ 
             setTimeout(()=>{

@@ -16,7 +16,7 @@ import { toast,Bounce } from 'react-toastify';
 export default function PatientCreationForm(props) {
 
 
-    const form_api_url = 'http://localhost:5000/test/api/fetchpatient'
+  const form_api_url = 'http://localhost:5000/test/api/fetchpatient'
   const [formData, setFormData] = useState({
     username: '',
     email: '',

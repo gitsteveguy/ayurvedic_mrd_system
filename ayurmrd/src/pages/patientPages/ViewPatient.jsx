@@ -2,7 +2,7 @@ import React from 'react'
 import Patient from '../../components/patient/Patient'
 import Visits from '../../components/card-grids/Visits'
 import AddIcon from '@mui/icons-material/Add';
-import { getCurrentPatientID } from '../../hooks/currentPatientnVisit';
+import EditIcon from '@mui/icons-material/Edit';
 import './viewPatient.css'
 
 const ViewPatient = () => {
@@ -13,6 +13,14 @@ const ViewPatient = () => {
           text : 'Add Visit',
           className: 'primary-btn',
           icon: <AddIcon/>,
+          permission : 'edit_visit'
+        },
+        {
+          href: '/patients/edit_patient',
+          text : 'Edit Patient',
+          className: 'primary-btn',
+          icon: <EditIcon/>,
+          permission : 'edit_patient'
         }
       ]
   return (

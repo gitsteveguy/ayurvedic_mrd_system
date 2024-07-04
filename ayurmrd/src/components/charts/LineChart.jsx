@@ -10,7 +10,7 @@ export default function LineChart(props) {
         position: "bottom",
         labels: {
           boxWidth: 10,
-          color: ['#008500','#4B271B'],
+          color: '#008500',
         },
       },
     },
