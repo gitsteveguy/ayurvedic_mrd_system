@@ -1,7 +1,6 @@
 import React from 'react'
 import './card-grids.css';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { setCurrentPatientID } from '../../hooks/currentPatientnVisit';
 import { useNavigate } from 'react-router-dom';
 
 export default function UserCards(props) {
@@ -28,7 +27,8 @@ export default function UserCards(props) {
             <img src={user_data.img} alt={user_data.name} />
             <h3>{user_data.name}</h3>
             {subheading!=='' && <h5>{subheading}</h5>}
-            <a onClick={()=>{ setCurrentPatientID(user_data.patient_id); navigate('/patients/view_patient')}} className='primary-btn'>View Details <VisibilityIcon/></a>
+            {/*eslint-disable-next-line*/}
+            <a onClick={()=>{ user_data.setIDFn(user_data.id); navigate(user_data.link)}} className='primary-btn'>View Details <VisibilityIcon/></a>
         </div>
         )
     })}

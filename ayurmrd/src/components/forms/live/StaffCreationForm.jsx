@@ -9,6 +9,7 @@ import IDate from '../essentials/form-components/IDate';
 import ITxtInput from '../essentials/form-components/ITxtInput';
 import { GenderSelect } from '../essentials/form-components/SingleSelect';
 import { toast,Bounce } from 'react-toastify';
+import { Link } from 'react-router-dom';
 
 const StaffCreationForm = (props) => {
     const [formData, setFormData] = useState({
@@ -175,7 +176,7 @@ const StaffCreationForm = (props) => {
           </IRow>
           <IRow>
             <ICol>
-              <button type='button' className='danger-btn formbtn' tooltip='Cancel'>Cancel</button>
+            <Link to='/staff'><button type='button' className='danger-btn formbtn' tooltip='Cancel'>Cancel</button></Link>
               <button type='submit' form="StaffCreationForm" className=' primary-btn formbtn' tooltip='Submit' value="submit">Submit</button>
             </ICol>
           </IRow>

@@ -45,7 +45,7 @@ const STable = (props) => {
     
   return (
     <div className="table-container">
-        <h2>{props.title}</h2>
+        <h2 style={{color: 'var(--color-primary)'}}>{props.title}</h2>
         {!tableData.keys && <h3>No Records Found</h3>}
     <table>
         <thead>

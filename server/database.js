@@ -25,6 +25,26 @@ const DB = mysql
   })
   .promise();
 
+  export async function updateColorTheme(colorTheme,user_id){
+    const sql = `UPDATE users SET color_theme = ? WHERE user_id = ?`
+    try{
+      const[result] = await DB.query(sql,[colorTheme,user_id]);
+      return['success',result.insertId,'Succesfully Checkout'];
+    }
+    catch(err){
+      console.log(err);
+      return ['failed','','Checkout was unsuccesfull'];
+    }
+  }
+  getColorTheme
+  export async function getColorTheme(user_id) {
+    const [resultu] = await DB.query(
+      "SELECT color_theme FROM users WHERE user_id = ?",[user_id]
+    );
+    return resultu[0].color_theme;
+  }
+
+
   export async function getPatientCountries() {
     const [resultu] = await DB.query(
       "SELECT country_code, COUNT(user_id) as user_count FROM users WHERE role = 'patient' GROUP BY country_code"
@@ -162,7 +182,7 @@ const formattedData = Object.keys(visits).map(month => ({
 
 export async function getUserbyUsername(username) {
   const [resultu] = await DB.query(
-    "Select user_id,username,email,first_name,last_name,role,date_of_birth,phone_no,profile_img,gender,address_line_1,address_line_2,state,country,country_code,pincode,signature_img,occupation,blood_group from users where username = ?",
+    "Select user_id,username,email,first_name,last_name,role,date_of_birth,phone_no,profile_img,gender,address_line_1,address_line_2,state,country,country_code,pincode,signature_img,occupation,blood_group,color_theme from users where username = ?",
     username
   );
   const user = resultu[0];
@@ -451,7 +471,7 @@ export async function addMedicationRecords(payload){
 }
 
 export async function getMedicationRecords(user_id,visit_id){
-  const sql = `SELECT med_ord_id as id,DATE_FORMAT(date,'%d-%m-%y') AS date,medicine,route_site,dose,time,anupana,remarks,doctor_name,doctors_sign FROM medication_orders WHERE user_id = ? AND visit_id = ?`
+  const sql = `SELECT med_ord_id as id,DATE_FORMAT(date,'%d-%m-%y') AS date,medicine,route_site,dose,time,anupana,remarks,doctor_name,doctors_sign FROM medication_orders WHERE user_id = ? AND visit_id = ?  ORDER BY date DESC`
   try{
    const [results] = await DB.query(sql,[user_id,visit_id]);
    const actual_result = []
@@ -490,7 +510,7 @@ export async function addTreatmentProcedureRecords(payload){
 }
 
 export async function getTreatmentProcedureRecords(user_id,visit_id){
-  const sql = `SELECT treat_proc_id as id,DATE_FORMAT(date,'%d-%m-%y') AS date,time,treatment_procedure,medicine,site_loc,no_of_days,precautions,doctor_name,doctors_sign FROM treat_proc_ord WHERE user_id = ? AND visit_id = ?`
+  const sql = `SELECT treat_proc_id as id,DATE_FORMAT(date,'%d-%m-%y') AS date,time,treatment_procedure,medicine,site_loc,no_of_days,precautions,doctor_name,doctors_sign FROM treat_proc_ord WHERE user_id = ? AND visit_id = ?  ORDER BY date DESC`
   try{
    const [results] = await DB.query(sql,[user_id,visit_id]);
    const actual_result = []
@@ -530,7 +550,7 @@ export async function addVitalChartRecords(payload){
 }
 
 export async function getVitalChartRecords(user_id,visit_id){
-  const sql = `SELECT vital_chart_id as id,DATE_FORMAT(date,'%d-%m-%y') AS date,time,temperature,pulse,bp,weight,remarks,doctor_name,doctors_sign FROM vital_chart_form WHERE user_id = ? AND visit_id = ?`
+  const sql = `SELECT vital_chart_id as id,DATE_FORMAT(date,'%d-%m-%y') AS date,time,temperature,pulse,bp,weight,remarks,doctor_name,doctors_sign FROM vital_chart_form WHERE user_id = ? AND visit_id = ?  ORDER BY date DESC`
   try{
    const [results] = await DB.query(sql,[user_id,visit_id]);
    const actual_result = []
@@ -545,6 +565,8 @@ export async function getVitalChartRecords(user_id,visit_id){
     return ["failed", '', "Error Fetching Records"];
   }
 }
+
+
 
 //discharge_form
 export async function getDischargeForm(user_id,visit_id){
@@ -604,6 +626,85 @@ try {
   catch(err){
     console.log(err);
     return ["failed",'', "Record has not been Inserted or Updated"]
+  }
+}
+
+//nurse forms
+//nursing_care_plan_records
+export async function addNursingCarePlanRecords(payload){
+  const user_id = payload.user_id;
+  const visit_id = payload.visit_id;
+  const nurse_id = payload.nurse_id;
+  const nurse_name = payload.nurse_name;
+  const nurse_sign = payload.nurses_sign;
+
+  const records = payload.formData;
+    const sql = 'INSERT INTO nursing_care_plan(visit_id,user_id,date,time,problem_identified,suggestions,nurse_id,nurse_name,nurses_sign) VALUES(?,?,?,?,?,?,?,?,?)'
+    for (const record of records) {
+    try{
+      const[result] = await DB.query(sql,[visit_id,user_id,record.date,record.time,record.problem_identified,record.suggestions,nurse_id,nurse_name,nurse_sign]);
+    }
+    catch(err){
+      console.log(err);
+      return ['failed',''];
+    }
+  }
+  return['success','Inserted '+records.length+' records'];
+}
+
+export async function getNursingCarePlanRecords(user_id,visit_id){
+  const sql = `SELECT nurse_care_plan_id as id,DATE_FORMAT(date,'%d-%m-%y') AS date,time,problem_identified,suggestions,nurse_name,nurses_sign FROM nursing_care_plan WHERE user_id = ? AND visit_id = ? ORDER BY date DESC`
+  try{
+   const [results] = await DB.query(sql,[user_id,visit_id]);
+   const actual_result = []
+   results.forEach((result)=>{
+    result['nurses_sign']= 'data:image/png;base64,'+imageToBase64(result['nurses_sign'])
+    actual_result.push(result)
+   })
+    return ['success',actual_result,'Successfully Fetched Records'];
+  }
+  catch(err){
+    console.log(err);
+    return ["failed", '', "Error Fetching Records"];
+  }
+}
+
+//medication_administration_records
+export async function addMedicationAdministrationRecords(payload){
+  const user_id = payload.user_id;
+  const visit_id = payload.visit_id;
+  const nurse_id = payload.nurse_id;
+  const nurse_name = payload.nurse_name;
+  const nurse_sign = payload.nurses_sign;
+
+  const records = payload.formData;
+    const sql = 'INSERT INTO medication_administration_records(visit_id,user_id,date,time,medication_name,dose,frequency,anupanam,nurse_id,nurse_name,nurses_sign) VALUES(?,?,?,?,?,?,?,?,?,?,?)'
+    for (const record of records) {
+    try{
+      const[result] = await DB.query(sql,[visit_id,user_id,record.date,record.time,record.medication_name,record.dose,record.frequency,record.anupanam,nurse_id,nurse_name,nurse_sign]);
+    }
+    catch(err){
+      console.log(err);
+      return ['failed',''];
+    }
+  }
+  return['success','Inserted '+records.length+' records'];
+}
+
+export async function getMedicationAdministrationRecords(user_id,visit_id){
+  const sql = `SELECT med_adm_chart_id as id,DATE_FORMAT(date,'%d-%m-%y') AS date,time,medication_name,dose,frequency,anupanam,nurse_name,nurses_sign FROM medication_administration_records WHERE user_id = ? AND visit_id = ? ORDER BY date DESC`
+  try{
+   const [results] = await DB.query(sql,[user_id,visit_id]);
+   const actual_result = []
+   results.forEach((result)=>{
+    result['nurses_sign']= 'data:image/png;base64,'+imageToBase64(result['nurses_sign'])
+    actual_result.push(result)
+   })
+    return ['success',actual_result,'Successfully Fetched Records'];
+  }
+  catch(err){
+    console.log(err);
+    return ["failed", '', "Error Fetching Records"];
   }
 }
 

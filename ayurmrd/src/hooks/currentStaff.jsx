@@ -1,7 +1,7 @@
-export const setCurrentStafftID = (id)=>{
+export const setCurrentStaffID = (id)=>{
     window.localStorage.setItem('current_staff_id',id);
    }
-   export const getCurrentStafftID = ()=>{
+export const getCurrentStaffID = ()=>{
        try{
        return window.localStorage.getItem('current_staff_id');
        }

@@ -9,6 +9,7 @@ import IDate from '../essentials/form-components/IDate';
 import ITxtInput from '../essentials/form-components/ITxtInput';
 import { GenderSelect } from '../essentials/form-components/SingleSelect';
 import { toast,Bounce } from 'react-toastify';
+import { Link } from 'react-router-dom';
 
 
 
@@ -16,7 +17,6 @@ import { toast,Bounce } from 'react-toastify';
 export default function PatientCreationForm(props) {
 
 
-  const form_api_url = 'http://localhost:5000/test/api/fetchpatient'
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -83,22 +83,8 @@ export default function PatientCreationForm(props) {
   }
 
   let animated_inputs_label_class = 'input_has_value'
-  useEffect((e) => {
-    fetchData(form_api_url)
-  }, [form_api_url]);
 
-  function fetchData(api_url) {
-    fetch(api_url).then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      return response.json();
-    }).then((data) => {
-      if (typeof data != {}) {
-        setFormData(data);
-      }
-    })
-  }
+
 
 
   function onChange(e) {
@@ -179,7 +165,7 @@ export default function PatientCreationForm(props) {
         </IRow>
         <IRow>
           <ICol>
-            <button type='button' className='danger-btn formbtn' tooltip='Cancel'>Cancel</button>
+          <Link to='/patients'><button type='button' className='danger-btn formbtn' tooltip='Cancel'>Cancel</button></Link>
             <button type='submit' form="PatientCreationForm" className=' primary-btn formbtn' tooltip='Submit' value="submit">Submit</button>
           </ICol>
         </IRow>

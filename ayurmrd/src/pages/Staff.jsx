@@ -5,6 +5,7 @@ import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 import SearchIcon from '@mui/icons-material/Search';
 import { useState,useEffect } from 'react'
 import axios from 'axios';
+import { setCurrentStaffID } from '../hooks/currentStaff';
 
 export default function Staff() {
     const staff_data_api_url = 'http://localhost:5000/api/staffdata'
@@ -52,7 +53,9 @@ export default function Staff() {
                   name : datum.staff_name,
                   img : datum.staff_img,
                   role : datum.role,
-                  id : datum.btn_url
+                  id : datum.user_id,
+                  setIDFn : setCurrentStaffID,
+                  link : '/staff/edit_staff'
                 })
               })
               set_staff_data(user_data)

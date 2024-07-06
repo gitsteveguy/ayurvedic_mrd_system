@@ -47,7 +47,6 @@ export default function Dashboard() {
   
   return (
     <Container page_name='Dashboard' active_menu='Dashboard' type='flex'>
-      <h5></h5>
         <WorldMap height='40vh' title='Patients by Country' mapData={mapData}/>
       <h2>Recent Visits</h2>
       <RecentVisits  recent_visit_api_url={recent_visit_api_url}/>

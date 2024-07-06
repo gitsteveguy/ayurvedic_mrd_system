@@ -12,7 +12,7 @@ const FormCards = (props) => {
     if(props.formType==='nurse_forms' && current_user.permissions.includes('edit_nurse_form'))
       btn_text='View/Edit Details'
   return (
-    <div className="card-grid">
+    <div className="card-grid2">
     {props.forms.map((form,index)=>{
         return(
             <div className="card" key={index}>

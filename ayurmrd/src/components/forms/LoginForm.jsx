@@ -2,8 +2,7 @@ import React from 'react'
 import axios from 'axios'
 import useSignIn from 'react-auth-kit/hooks/useSignIn';
 import { useNavigate } from "react-router-dom";
-import { useState } from 'react';
-import { toast,Bounce } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 
 
@@ -11,7 +10,6 @@ export default function LoginForm() {
   const navigate = useNavigate();
   const signIn = useSignIn();
 
-  const [loginMessage,setLoginMessage] = useState('')
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -31,7 +29,8 @@ export default function LoginForm() {
         })){
           navigate("/dashboard");}
           else{
-          setLoginMessage('Error Validating')
+            toast.error('Error Validating',{
+            })
           console.log('Error Validating');}
       }
       else{
@@ -41,12 +40,14 @@ export default function LoginForm() {
     }).catch(err => console.log(err))
   }
   const handleAutofill = (e) => {
-    console.log(e.animationName);
+    /*eslint-disable-next-line*/
     switch (e.animationName) {
       case 'onAutoFillStart':
         e.target.classList.add('input_has_value');
+        break;
       case 'onAutoFillCancel':
         e.target.classList.remove('input_has_value');
+        break;
     }
   }
 

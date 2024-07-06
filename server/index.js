@@ -18,6 +18,8 @@ import {
   getStaffRoles,
   getStaffData,
   getUserbyUsername,
+  updateColorTheme,
+  getColorTheme,
   verifyUser,
   createUser,
   getPatients,
@@ -33,7 +35,11 @@ import {
   addVitalChartRecords,
   getVitalChartRecords,
   getDischargeForm,
-  handleDischargeForm
+  handleDischargeForm,
+  addNursingCarePlanRecords,
+  getNursingCarePlanRecords,
+  addMedicationAdministrationRecords,
+  getMedicationAdministrationRecords
 } from "./database.js";
 import { log } from "console";
 
@@ -55,6 +61,7 @@ dotenv.config({ path: "./.env" });
 
 // Select API's
 app.get("/api/select/countries", (req, res) => {
+  let countries = Object.keys(country_codes);
   let select_countries = countries;
   select_countries.unshift("Select a Country");
   res.json(select_countries);
@@ -132,6 +139,57 @@ app.post("/login", async (req, res) => {
     });
 });
 
+
+//Color Theme Update
+app.post("/api/update_color_theme/", async (req, res) => {
+  let jwt_token = req.cookies._auth;
+  try {
+    const decode = jwt.verify(jwt_token, process.env.JWT_SECRET);
+      let request = req.body;
+      try {
+        const [rstatus, user_id, msg] = await updateColorTheme(request.colorTheme,decode.User.user_id);
+        const response = {
+          status: rstatus,
+          id: user_id,
+          message: msg,
+        };
+        console.log(response);
+        res.json(response);
+      } catch (e) {
+        console.log(e);
+        const response = {
+          status: "failed",
+          id: "",
+          message: "Unknown Reason",
+        };
+        res.json(response);
+      }} catch (error) {
+        const response = {
+          status: "failed",
+          id: "",
+          message: "Authentication failed",
+        };
+        res.json(response);
+      }})
+
+app.get("/api/get_color_theme", async (req, res) => {
+        let jwt_token = req.cookies._auth;
+        try {
+          const decode = jwt.verify(jwt_token, process.env.JWT_SECRET);
+            let formData = req.body;
+            const theme = await getColorTheme(decode.User.user_id);
+            res.json({colorTheme : theme});
+          
+          }catch (err) {
+            console.log(err);
+            const response = {
+              status: "failed",
+              message: "Authentication failed",
+            };
+            res.json(response);
+          }})
+
+//Create Staff
 app.post("/api/create_staff/", async (req, res) => {
   let jwt_token = req.cookies._auth;
   try {
@@ -714,6 +772,151 @@ app.post("/api/update_discharge_form", async (req, res) => {
   }
 });
 
+//nurses forms
+//nursing care plan
+app.post('/api/add_nursing_care_plan_records',async(req,res)=>{
+  let jwt_token = req.cookies._auth;
+  try {
+    const decode = jwt.verify(jwt_token, process.env.JWT_SECRET);
+    if (decode.User.permissions.includes("edit_nurse_form")) {
+      const payload = req.body;
+      const [status,message] = await addNursingCarePlanRecords(payload);
+      const response = {
+        status: status,
+        message: message,
+      };
+      res.json(response);
+    }
+    
+    else{
+      const response = {
+        status: "failed",
+        message: "You do not have sufficient permissions to view this.",
+      };
+      res.json(response);
+    }}
+    catch(err){
+      console.log(err);
+      const response = {
+        status: "failed",
+        message: "Authentication failed",
+      };
+      res.json(response);
+    }
+})
+
+app.get("/api/get_nursing_care_plan_records", async (req, res) => {
+  let jwt_token = req.cookies._auth;
+  try {
+    const decode = jwt.verify(jwt_token, process.env.JWT_SECRET);
+    if (decode.User.permissions.includes("view_nurse_form")) {
+  const [status,records,patientExists] = await getNursingCarePlanRecords(req.query.user_id,req.query.visit_id);
+  res.json({
+    status : status,
+    records: records,
+    patientExists: patientExists
+  });
+}
+else if(decode.User.permissions.includes("view_self")){
+  const user_id = decode.User.user_id
+  const [status,records,patientExists] = await getVitalChartRecords(user_id,req.query.visit_id);
+  res.json({
+    status : status,
+    records: records,
+    patientExists: patientExists
+  });
+}
+else{
+  const response = {
+    status: "failed",
+    message: "You do not have sufficient permissions to view this.",
+  };
+  res.json(response);
+}
+}
+catch(err){
+  console.log(err);
+  const response = {
+    status: "failed",
+    message: "Authentication failed",
+  };
+  res.json(response);
+}
+}
+);
+
+//medication_admistration_records
+app.post('/api/add_medication_admistration_records',async(req,res)=>{
+  let jwt_token = req.cookies._auth;
+  try {
+    const decode = jwt.verify(jwt_token, process.env.JWT_SECRET);
+    if (decode.User.permissions.includes("edit_nurse_form")) {
+      const payload = req.body;
+      const [status,message] = await addMedicationAdministrationRecords(payload);
+      const response = {
+        status: status,
+        message: message,
+      };
+      res.json(response);
+    }
+    
+    else{
+      const response = {
+        status: "failed",
+        message: "You do not have sufficient permissions to view this.",
+      };
+      res.json(response);
+    }}
+    catch(err){
+      console.log(err);
+      const response = {
+        status: "failed",
+        message: "Authentication failed",
+      };
+      res.json(response);
+    }
+})
+
+app.get("/api/get_medication_admistration_records", async (req, res) => {
+  let jwt_token = req.cookies._auth;
+  try {
+    const decode = jwt.verify(jwt_token, process.env.JWT_SECRET);
+    if (decode.User.permissions.includes("view_nurse_form")) {
+  const [status,records,patientExists] = await getMedicationAdministrationRecords(req.query.user_id,req.query.visit_id);
+  res.json({
+    status : status,
+    records: records,
+    patientExists: patientExists
+  });
+}
+else if(decode.User.permissions.includes("view_self")){
+  const user_id = decode.User.user_id
+  const [status,records,patientExists] = await getVitalChartRecords(user_id,req.query.visit_id);
+  res.json({
+    status : status,
+    records: records,
+    patientExists: patientExists
+  });
+}
+else{
+  const response = {
+    status: "failed",
+    message: "You do not have sufficient permissions to view this.",
+  };
+  res.json(response);
+}
+}
+catch(err){
+  console.log(err);
+  const response = {
+    status: "failed",
+    message: "Authentication failed",
+  };
+  res.json(response);
+}
+}
+);
+
 //Analytics
 app.get("/api/worldmap/patient_country", async (req, res) => {
   let jwt_token = req.cookies._auth;
@@ -859,7 +1062,7 @@ catch (err) {
 
 }});
 
-
+//Patient Edit
 app.get("/api/fetchpatientdetail", async (req, res) => {
   let jwt_token = req.cookies._auth;
   try {
@@ -923,6 +1126,69 @@ app.post("/api/update_patient", async (req, res) => {
   }
 });
 
+//Staff Edit
+app.get("/api/fetchstaffdetail", async (req, res) => {
+  let jwt_token = req.cookies._auth;
+  try {
+    const decode = jwt.verify(jwt_token, process.env.JWT_SECRET);
+    if (decode.User.permissions.includes("edit_staff")) {
+  let formData = await getUserbyID(req.query.user_id);
+  formData['profile_img'] = imageToBase64(formData.profile_img).replace(/^data:image\/?[A-z]*;base64,/, "")
+  formData['signature_img'] = imageToBase64(formData.signature_img).replace(/^data:image\/?[A-z]*;base64,/, "")
+  res.json({
+    status : 'success',
+    formData: formData
+  });
+}
+else{
+  const response = {
+    status: "failed",
+    message: "You do not have sufficient permissions to view this.",
+  };
+  res.json(response);
+}
+}
+catch(err){
+  console.log(err);
+  const response = {
+    status: "failed",
+    message: "Authentication failed",
+  };
+  res.json(response);
+}
+}
+);
+
+app.post("/api/update_staff", async (req, res) => {
+  let jwt_token = req.cookies._auth;
+  try {
+    const decode = jwt.verify(jwt_token, process.env.JWT_SECRET);
+    if (decode.User.permissions.includes("edit_staff")) {
+      const formData = req.body;
+      const [status, id, message] = await updateUser(formData);
+      res.json({
+        status: status,
+        id: id,
+        message: message,
+      });
+    }
+    else{
+      const response = {
+        status: "failed",
+        id:'',
+        message: "You do not have sufficient permissions to perform this action.",
+      };
+      res.json(response);
+    }
+  } catch (err) {
+    console.log(err);
+    const response = {
+      status: "failed",
+      message: "Authentication failed",
+    };
+    res.json(response);
+  }
+});
 //Test APIS
 
 
