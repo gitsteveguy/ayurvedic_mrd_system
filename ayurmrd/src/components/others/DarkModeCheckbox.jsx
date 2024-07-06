@@ -20,7 +20,7 @@ const DarkModeCheckbox = () => {
     }
 
   return (
-    <div style={{display:'flex',justifyContent:'start',alignContent:'center',gap:'1rem'}}>
+    <div style={{display:'flex',justifyContent:'start',alignContent:'center',gap:'1rem',marginTop: '2rem'}}>
     <h2>Dark Mode</h2>
     <ReactSwitch onChange={()=>{toggleTheme('light')}} checked={colorTheme==='dark'} />
     </div>

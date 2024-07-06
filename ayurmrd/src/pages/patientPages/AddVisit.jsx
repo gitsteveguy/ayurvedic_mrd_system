@@ -9,6 +9,7 @@ import { toast } from 'react-toastify';
 import axios from 'axios'
 import { getCurrentPatientID } from '../../hooks/currentPatientnVisit'
 import { useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 const AddVisit = () => {
   const navigate = useNavigate()
@@ -81,7 +82,7 @@ function onChange(e) {
             </IRow>
             <IRow>
             <ICol>
-            <button type='button' className='danger-btn formbtn' tooltip='Cancel'>Cancel</button>
+            <Link to='/patients/view_patient'><button type='button' className='danger-btn formbtn' tooltip='Cancel'>Cancel</button></Link>
             <button type='submit' form='add_visit' className='primary-btn formbtn' tooltip='Create Visit' value="submit">Create Visit</button>
           </ICol>
             </IRow>

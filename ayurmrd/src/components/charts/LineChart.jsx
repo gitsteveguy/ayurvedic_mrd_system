@@ -18,12 +18,16 @@ export default function LineChart(props) {
       },
     },
     scales: {
+      
       x: {
         grid: {
           display: false,
         },
       },
       y: {
+        ticks: {
+          precision: 0
+        },
         grid: {
           color : chart_line_color,
           display: true,
