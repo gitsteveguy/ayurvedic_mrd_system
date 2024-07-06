@@ -1,8 +1,11 @@
 import React from 'react'
 import { VectorMap } from "react-jvectormap";
 import { useRef } from "react";
+import useAuth from '../../hooks/useAuth';
 
 export default function WorldMap(props) {
+  const current_user = useAuth();
+  const map_color = current_user.color_theme==='light'? '#D1D5DB' : 'white'
     const mapRef = useRef();
     const countries = props.mapData;
   return (
@@ -14,7 +17,7 @@ export default function WorldMap(props) {
           // zoomOnScroll={false}
           // zoomButtons={false}
           map={"world_mill"}
-          backgroundColor="white"
+          backgroundColor="var(--color-white)"
           containerStyle={{
             width: "100%",
             height: "100%",
@@ -41,15 +44,15 @@ export default function WorldMap(props) {
           }}
           regionStyle={{
             initial: {
-              fill: "#D1D5DB",
+              fill: map_color,
               "fill-opacity": 1,
-              stroke: "#265cff",
+              stroke: map_color,
               "stroke-width": 0,
               "stroke-opacity": 0,
             },
             hover: {
               "fill-opacity": 0.8,
-              fill: "",
+              fill: "var(--color-complementary)",
               stroke: "#2b2b2b",
             },
             selected: {

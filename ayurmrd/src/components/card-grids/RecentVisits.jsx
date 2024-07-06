@@ -36,6 +36,7 @@ export default function RecentVisits(props) {
             <img src={recent_visit_data.patient_img} alt={recent_visit_data.patient_name} />
             <h3>{recent_visit_data.patient_name}</h3>
             <h5>Visited on <br/>{recent_visit_data.patient_visit}</h5>
+            {/*eslint-disable-next-line*/}
             <a onClick={()=>{setCurrentPatientID(recent_visit_data.user_id);setCurrentPatientVisitID(recent_visit_data.visit_id);navigate('/patients/view_patient_visit')}} className='primary-btn'>View Details <VisibilityIcon/></a>
         </div>
         )

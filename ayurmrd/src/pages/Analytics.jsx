@@ -5,6 +5,7 @@ import UserCards from '../components/card-grids/UserCards';
 import WorldMap from '../components/maps/WorldMap';
 import axios from 'axios';
 import { useState,useEffect } from 'react'
+import { setCurrentPatientID } from '../hooks/currentPatientnVisit';
 
 export default function Analytics() {
     const chart_api_url = 'http://localhost:5000/api/charts/visits'
@@ -90,7 +91,9 @@ export default function Analytics() {
                       name : datum.patient_name,
                       img : datum.patient_img,
                       visit_count : datum.patient_visit_count,
-                      patient_id : datum.patient_id
+                      id : datum.patient_id,
+                      setIDFn : setCurrentPatientID,
+                      link: '/patients/view_patient'
                     })
                   })
                     setRegularPatients(user_data)

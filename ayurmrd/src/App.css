@@ -8,6 +8,8 @@
     --color-white : #fff;
     --color-background: hsl(240, 24%, 96%);
     --dark-color-background : #161617;
+    --btn-text: white;
+    --chart-lines: #747373;
 
     --color-danger: hsl(355, 91%, 45%);
     --color-success: hsl(145, 95%, 33%);
@@ -45,6 +47,14 @@
     list-style: none;
     box-sizing: border-box;
 }
+[data-theme='dark']{
+    --color-background: var(--dark-color-background);
+    --chart-lines : #747373;
+    --color-white : var(--color-black);
+    --color-dark : white;
+}
+
+
 
 html{
     font-size: 14px;
@@ -55,7 +65,7 @@ body{
     height: 100vh;
     font-family: poppins,sans-serif;
     font-size: 0.88rem;
-    background-color: var(--color-background);
+    background-color: var(--dark-color-background);
     /* background-image: url('./assets/login_bg.jpeg') ;
     background-repeat: no-repeat;
     background-size: 100% 100%; */
@@ -90,7 +100,7 @@ button:hover{
     border-radius: var(--border-radius-1);
     border: 1px solid var(--color-primary);
     background-color: var(--color-primary);
-    color: var(--color-white);
+    color: var(--btn-text);
     transition: all 300ms ease;
 }
 .primary-btn:hover{
@@ -119,6 +129,9 @@ button:hover{
     text-align: center;
     box-shadow: var(--box-shadow);
     transition: all 300ms ease;
+}
+.card.dark{
+    background-color: var(--color-black);
 }
 
 .card.card-full{
@@ -222,7 +235,7 @@ b{
     border-radius: var(--border-radius-1);
     border: 1px solid var(--color-secondary);
     background-color: var(--color-secondary);
-    color: var(--color-white);
+    color: var(--btn-text);
     transition: all 300ms ease;
 }
 .secondary-btn:hover{

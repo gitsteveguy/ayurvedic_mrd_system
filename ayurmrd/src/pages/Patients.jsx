@@ -5,6 +5,7 @@ import UserCards from '../components/card-grids/UserCards'
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 import SearchIcon from '@mui/icons-material/Search'
 import { useState,useEffect } from 'react'
+import { setCurrentPatientID } from '../hooks/currentPatientnVisit';
 export default function Patients() {
     const patients_data_api_url = 'http://localhost:5000/api/patients';
     const [search,setSearch] = useState('')
@@ -51,8 +52,9 @@ export default function Patients() {
               user_data.push({
                 name : datum.first_name+" "+datum.last_name,
                 img : datum.profile_img,
-                last_visit : datum.patient_visit,
-                patient_id : datum.user_id
+                id : datum.user_id,
+                setIDFn : setCurrentPatientID,
+                link: '/patients/view_patient'
               })
             })
             set_patients_data(user_data)

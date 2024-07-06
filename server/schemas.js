@@ -133,7 +133,7 @@ export const userUpdateSchema = Joi.object({
   pincode: Joi.string()
     .pattern(/^[0-9]{5,10}$/)
     .required(),
-    signature: Joi.string().required(),
+    signature_img: Joi.string().required(),
   occupation: Joi.string().max(50).optional().allow(""),
   blood_group: Joi.string()
     .valid("A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-")

@@ -10,6 +10,7 @@ import ITxtInput from '../essentials/form-components/ITxtInput';
 import { GenderSelect } from '../essentials/form-components/SingleSelect';
 import { toast,Bounce } from 'react-toastify';
 import { getCurrentPatientID } from '../../../hooks/currentPatientnVisit';
+import { Link } from 'react-router-dom';
 
 export default function PatientEditForm(props){
     const form_api_url = 'http://localhost:5000/api/fetchpatientdetail'
@@ -187,7 +188,7 @@ export default function PatientEditForm(props){
           </IRow>
           <IRow>
             <ICol>
-              <button type='button' className='danger-btn formbtn' tooltip='Cancel'>Cancel</button>
+            <Link to='/patients'><button type='button' className='danger-btn formbtn' tooltip='Cancel'>Cancel</button></Link>
               <button type='submit' form="PatientEditForm" className=' primary-btn formbtn' tooltip='Submit' value="submit">Submit</button>
             </ICol>
           </IRow>

@@ -31,7 +31,7 @@ export default function Visits(props) {
       
  
   return (
-<div className="card-grid">
+<div className="card-grid2">
     {visits_data.map((visit_data,index)=>{
         let checkout = visit_data.checkout===null ? 'Present' : visit_data.checkout;
         return(

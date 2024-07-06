@@ -1,11 +1,14 @@
 .container{
     display: grid;
-    width: 99%;
+    width: 100%;
     height: fit-content;
     margin : 0 auto;
     gap:1.8rem;
     grid-template-columns: 16.5rem auto;
     overflow: hidden;
+    background-color: var(--color-background);
+    min-height: 100vh;
+    color: var(--color-dark);
 }
 .container-top-btn-grp{
     display: flex;
@@ -32,7 +35,7 @@ main{
 }
 
 h1{
-    color: var(--color-complementary);
+    color: var(--color-primary);
 }
 
 @media screen and (max-width: 1000px) {

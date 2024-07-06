@@ -67,7 +67,7 @@ export default function Sidebar(props) {
           </span>
           <h3>Analytics</h3>
         </a>}
-        <a href="/dashboard" className={props.active_menu==='Settings'?'active':''}>
+        <a href="/settings" className={props.active_menu==='Settings'?'active':''}>
         <span>
           <SettingsRoundedIcon/>
           </span>

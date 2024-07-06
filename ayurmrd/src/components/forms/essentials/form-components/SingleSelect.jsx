@@ -2,6 +2,10 @@ import React, { useEffect, useState } from 'react'
 import AsyncSelect from 'react-select/async';
 import CreatableSelect from 'react-select/creatable';
 import axios from 'axios';
+import { getColorThemeLS } from '../../../../hooks/ColorTheme';
+
+const backgroundColor = getColorThemeLS()==='light'?'white':'#161617';
+const color = getColorThemeLS()==='light'?'black':'var(--color-secondary)';
 
 const toLabel = (str) => {
   let notitlestr = str.split('_').join(' ')
@@ -36,6 +40,18 @@ export function GenderSelect(props) {
    }
 
   const colorStyles = {
+    control: (styles) => ({
+      ...styles,
+      backgroundColor: backgroundColor,
+    }),
+    singleValue: (styles) => ({
+      ...styles,
+      color: color,
+    }),
+    menu: (styles) => ({
+      ...styles,
+      backgroundColor: backgroundColor,
+    }),
     option: (styles, { data, isDisabled, isFocused, isSelected }) => {
       return {
         ...styles, color: isFocused ? 'var(--color-white)' : isSelected ? 'var(--color-white)' : 'var(--color-secondary)',
@@ -85,16 +101,29 @@ export default function SingleSelect(props) {
   let url = props.api_url;
 
   const colorStyles = {
+    control: (styles) => ({
+      ...styles,
+      backgroundColor: backgroundColor,
+    }),
+    singleValue: (styles) => ({
+      ...styles,
+      color: color,
+    }),
+    menu: (styles) => ({
+      ...styles,
+      backgroundColor: backgroundColor,
+    }),
     option: (styles, { data, isDisabled, isFocused, isSelected }) => {
       return {
-        ...styles, color: isFocused ? 'var(--color-white)' : isSelected ? 'var(--color-white)' : 'var(--color-secondary)',
+        ...styles, color: isFocused ? color : isSelected ? color : 'var(--color-secondary)',
+        
         ':active': {
           ...styles[':active'],
           backgroundColor: !isDisabled
             ? isSelected
               ? 'var(--color-primary)'
               : 'var(--color-primary)'
-            : undefined,
+            : backgroundColor,
         }
       }
     }
