@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jul 06, 2024 at 10:44 PM
+-- Generation Time: Jul 07, 2024 at 08:00 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.0.28
 
@@ -87,38 +87,6 @@ CREATE TABLE `doctor_initial_assessment_form` (
 INSERT INTO `doctor_initial_assessment_form` (`record_id`, `visit_id`, `user_id`, `temperature`, `pulse`, `blood_pressure`, `height`, `pain_assessment`, `weight`, `bmi`, `present_complaints`, `sleep_hours`, `unconscious`, `disoriented`, `bedridden`, `others`, `addictions`, `allergies`, `existing_medicines`, `doctor_id`, `doctor_name`, `doctors_sign`) VALUES
 (1, 1, 3, '45', '56', '120', '172', 'Medium', '80', '27', 'prc', '8', 'false', 'false', 'true', 'oth', 'addi', 'allergies', 'exm', 1, 'Super Admin', 'assets/users/patient/testguy3/testguy3_signature.png'),
 (2, 6, 8, '54', '69', '', '169', '', '70', '24', '', '', 'false', 'false', 'false', '', '', '', '', 1, 'Super Admin', 'assets/users/patient/testguy3/testguy3_signature.png');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `forms`
---
-
-CREATE TABLE `forms` (
-  `form_id` int(11) NOT NULL,
-  `php_code_file` varchar(250) NOT NULL,
-  `table_name` varchar(100) NOT NULL,
-  `mod_roles` varchar(500) NOT NULL,
-  `submit_perm_roles` varchar(500) NOT NULL,
-  `primary_key` varchar(150) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `forms`
---
-
-INSERT INTO `forms` (`form_id`, `php_code_file`, `table_name`, `mod_roles`, `submit_perm_roles`, `primary_key`) VALUES
-(1, 'medication_orders.php', 'medication_orders', 'superadmin,Admin,Doctor', 'Doctor', 'med_ord_id'),
-(3, 'treatment_procedure.php', 'treat_proc_ord', 'superadmin,Admin,Doctor', 'Doctor', 'treat_proc_id'),
-(4, 'vital_chart_form.php', 'vital_chart_form', 'superadmin,Admin,Doctor', 'Doctor', 'vital_chart_id'),
-(7, 'nursing_care_plan_form.php', 'nursing_care_plan', 'superadmin,Admin,Doctor', 'Doctor,Nurse', 'nurse_care_plan'),
-(8, 'medication_administration_chart_form.php', 'medication_adm_chart_form', 'superadmin,Admin', 'Doctor,Nurse', 'med_adm_chart_id'),
-(12, 'ip_initial_assessment.php', 'initial_assesment_form', 'superadmin,Admin', 'Doctor', 'ip_form_id'),
-(15, 'discharge_form.php', 'discharge_summary', 'superadmin,Admin', 'Doctor', 'discharge_id'),
-(16, 'fall_risk_assessment_form.php', 'fall_risk_assesments', 'superadmin,Admin', 'Doctor,Nurse', 'fall_risk_assesment_id'),
-(18, 'createstaff.php', 'user_data', 'superadmin,Admin', '', 'user_id'),
-(19, 'edit_core_visit.php', 'visits', 'superadmin,Admin', 'Receptionist', 'visit_id'),
-(20, 'edit_core_visit_submission.php', 'visits', 'superadmin,Admin', 'Receptionist', 'visit_id');
 
 -- --------------------------------------------------------
 
@@ -237,25 +205,6 @@ INSERT INTO `roles` (`id`, `name`, `permissions`) VALUES
 (3, 'doctor', '[\"view_patient\",\"edit_doctor_form\",\"edit_nurse_form\",\"view_doctor_form\",\"view_nurse_form\"]'),
 (4, 'nurse', '[\"view_patient\",\"edit_nurse_form\",\"view_doctor_form\",\"view_nurse_form\"]'),
 (5, 'patient', '[\"view_self\"]');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `super_constants`
---
-
-CREATE TABLE `super_constants` (
-  `const_id` int(11) NOT NULL,
-  `name` varchar(150) NOT NULL,
-  `value` varchar(500) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `super_constants`
---
-
-INSERT INTO `super_constants` (`const_id`, `name`, `value`) VALUES
-(1, 'super_roles', 'superadmin,Admin');
 
 -- --------------------------------------------------------
 
@@ -416,12 +365,6 @@ ALTER TABLE `doctor_initial_assessment_form`
   ADD KEY `ia_patient_relation` (`user_id`);
 
 --
--- Indexes for table `forms`
---
-ALTER TABLE `forms`
-  ADD PRIMARY KEY (`form_id`);
-
---
 -- Indexes for table `medication_administration_records`
 --
 ALTER TABLE `medication_administration_records`
@@ -451,12 +394,6 @@ ALTER TABLE `nursing_care_plan`
 ALTER TABLE `roles`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `name` (`name`);
-
---
--- Indexes for table `super_constants`
---
-ALTER TABLE `super_constants`
-  ADD PRIMARY KEY (`const_id`);
 
 --
 -- Indexes for table `treat_proc_ord`
@@ -507,12 +444,6 @@ ALTER TABLE `doctor_initial_assessment_form`
   MODIFY `record_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT for table `forms`
---
-ALTER TABLE `forms`
-  MODIFY `form_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
-
---
 -- AUTO_INCREMENT for table `medication_administration_records`
 --
 ALTER TABLE `medication_administration_records`
@@ -535,12 +466,6 @@ ALTER TABLE `nursing_care_plan`
 --
 ALTER TABLE `roles`
   MODIFY `id` int(2) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- AUTO_INCREMENT for table `super_constants`
---
-ALTER TABLE `super_constants`
-  MODIFY `const_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `treat_proc_ord`

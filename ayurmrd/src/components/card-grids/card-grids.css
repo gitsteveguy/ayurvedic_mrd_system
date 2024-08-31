@@ -16,7 +16,7 @@
 
     img{
         border-radius: var(--card-border-radius);
-        height: 6rem;
+        height: 10rem;
     }
 }
 .card:nth-child(5n) {

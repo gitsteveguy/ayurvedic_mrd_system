@@ -351,7 +351,7 @@ app.get("/api/get_visits_by_patient_ID", async (req, res) => {
   let jwt_token = req.cookies._auth;
   try {
     const decode = jwt.verify(jwt_token, process.env.JWT_SECRET);
-    if (decode.User.permissions.includes("edit_visit")) {
+    if (decode.User.permissions.includes("edit_visit")||decode.User.permissions.includes("view_visit")) {
   const visits = await getVisitsByPatientID(req.query.patient_id);
   res.json(visits);
     }

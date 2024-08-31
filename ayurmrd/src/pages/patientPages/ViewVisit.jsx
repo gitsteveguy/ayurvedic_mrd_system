@@ -43,7 +43,7 @@ const ViewVisit = () => {
           href: '/patients/view_patient_visit/nursing_care_plan'
         },
         {
-          name: 'Medication Administration Chat ',
+          name: 'Medication Administration Chart ',
           href: '/patients/view_patient_visit/medication_administration_chart'
         },
         
