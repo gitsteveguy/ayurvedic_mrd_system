@@ -9,6 +9,7 @@ import ViewPatient from "./pages/patientPages/ViewPatient";
 import ViewVisit from "./pages/patientPages/ViewVisit";
 import AddVisit from "./pages/patientPages/AddVisit";
 import EditVisit from "./pages/patientPages/EditVisit";
+import ExportVisit from "./pages/patientPages/ExportVisit";
 
 // Doctor Forms
 import DoctorsInitialAssessmentFormPage from "./pages/patientPages/Forms/Doctors/DoctorsInitialAssessmentFormPage";
@@ -31,7 +32,6 @@ import PatientEditFormPage from "./pages/formpages/PatientEditFormPage";
 import StaffCreationPage from "./pages/formpages/StaffCreationPage";
 import StaffEditFormPage from "./pages/formpages/StaffEditFormPage";
 
-
 import "./App.css";
 
 function App() {
@@ -40,7 +40,6 @@ function App() {
       <Route index element={<Welcome />} />
       <Route path="/login" element={<Login />} />
       <Route element={<AuthOutlet fallbackPath="/login" />}>
-        
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/staff" element={<Staff />} />
         <Route
@@ -63,7 +62,6 @@ function App() {
             />
           }
         />
-
         <Route path="/patients" element={<Patients />} />
         <Route
           path="/patients/create_patient"
@@ -89,6 +87,7 @@ function App() {
         <Route path="/patients/view_patient_visit" element={<ViewVisit />} />
         <Route path="/patients/add_visit" element={<AddVisit />} />
         <Route path="/patients/edit_visit" element={<EditVisit />} />
+        <Route path="/patients/export_visit" element={<ExportVisit />} />
 
         {/* Doctor Forms */}
         <Route
@@ -111,7 +110,6 @@ function App() {
           path="/patients/view_patient_visit/discharge_form"
           element={<DischargeFormPage />}
         />
-
         {/* Nurse Forms */}
         <Route
           path="/patients/view_patient_visit/nursing_care_plan"
@@ -121,13 +119,10 @@ function App() {
           path="/patients/view_patient_visit/medication_administration_chart"
           element={<MedicationAdministrationFormPage />}
         />
-
         <Route path="/analytics" element={<Analytics />} />
         <Route path="/settings" element={<Settings />} />
-       
       </Route>
     </Routes>
-  
   );
 }
 

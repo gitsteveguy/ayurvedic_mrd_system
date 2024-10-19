@@ -5,7 +5,7 @@ import useAuth from '../../hooks/useAuth';
 
 export default function WorldMap(props) {
   const current_user = useAuth();
-  const map_color = current_user.color_theme==='light'? '#D1D5DB' : 'white'
+  const map_color = current_user.color_theme==='light'? '#D1D5DB' : '#D1D5DB'
     const mapRef = useRef();
     const countries = props.mapData;
   return (

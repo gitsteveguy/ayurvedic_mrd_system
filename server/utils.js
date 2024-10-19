@@ -1,4 +1,5 @@
 // Helper function to save a base64 image
+import { log } from 'console';
 import fs from 'fs'
 
 export const saveBase64Image = (base64Image, filePath) => {
@@ -15,12 +16,18 @@ export const saveBase64Image = (base64Image, filePath) => {
   };
 
 export const imageToBase64 = (filePath)=> {
+  try{
   // Read the file from the given filePath
   const imageBuffer = fs.readFileSync(filePath);
   // Convert the buffer to a Base64 string
   const base64Image = imageBuffer.toString('base64');
   // Return the Base64 string
   return base64Image;
+  }
+  catch(err){
+    console.log(err);
+    return '';
+  }
 }
 
 export const toTitleCase = (str)=>{
