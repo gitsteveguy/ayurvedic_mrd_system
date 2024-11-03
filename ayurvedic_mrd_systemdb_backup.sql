@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jul 07, 2024 at 08:00 AM
+-- Generation Time: Oct 23, 2024 at 04:35 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.0.28
 
@@ -85,7 +85,7 @@ CREATE TABLE `doctor_initial_assessment_form` (
 --
 
 INSERT INTO `doctor_initial_assessment_form` (`record_id`, `visit_id`, `user_id`, `temperature`, `pulse`, `blood_pressure`, `height`, `pain_assessment`, `weight`, `bmi`, `present_complaints`, `sleep_hours`, `unconscious`, `disoriented`, `bedridden`, `others`, `addictions`, `allergies`, `existing_medicines`, `doctor_id`, `doctor_name`, `doctors_sign`) VALUES
-(1, 1, 3, '45', '56', '120', '172', 'Medium', '80', '27', 'prc', '8', 'false', 'false', 'true', 'oth', 'addi', 'allergies', 'exm', 1, 'Super Admin', 'assets/users/patient/testguy3/testguy3_signature.png'),
+(1, 1, 3, '45', '56', '120', '172', 'Medium', '80', '27', 'Headache and fatigue', '8', 'false', 'false', 'false', 'None', 'None', 'None', 'Paracetamol as needed', 1, 'Super Admin', 'assets/users/patient/testguy3/testguy3_signature.png'),
 (2, 6, 8, '54', '69', '', '169', '', '70', '24', '', '', 'false', 'false', 'false', '', '', '', '', 1, 'Super Admin', 'assets/users/patient/testguy3/testguy3_signature.png');
 
 -- --------------------------------------------------------
@@ -145,15 +145,11 @@ CREATE TABLE `medication_orders` (
 --
 
 INSERT INTO `medication_orders` (`med_ord_id`, `visit_id`, `user_id`, `date`, `medicine`, `route_site`, `dose`, `time`, `anupana`, `remarks`, `doctor_id`, `doctor_name`, `doctors_sign`) VALUES
-(1, 1, 3, '2024-07-30', 'test med 1', 'Oral', 'test dose 1', '02:48:00', 'test anu 1', 'test rem 1', 1, 'Super Admin', 'assets/users/patient/anotherguy/anotherguy_signature.png'),
-(2, 1, 3, '2024-07-02', 'test med 2', 'Oral', 'test dose 2', '03:48:00', 'test anu 2', 'test rem 2', 1, 'Super Admin', 'assets/users/patient/anotherguy/anotherguy_signature.png'),
-(3, 1, 3, '2024-07-23', 'test med 3', 'Skin', 'thrice per day', '16:26:00', 'test anu 3', 'test remarks', 1, 'Super Admin', 'assets/users/patient/anotherguy/anotherguy_signature.png'),
-(4, 1, 3, '2024-07-17', 'test med 15', 'Skin', 'test dose 4', '20:45:00', 'test anu 5', 'test rem', 1, 'Super Admin', 'assets/users/patient/anotherguy/anotherguy_signature.png'),
-(5, 1, 3, '2024-06-26', 'test med 16', 'Skin', 'test dose ', '20:45:00', 'test anu 5', 'test after date modification', 1, 'Super Admin', 'assets/users/patient/anotherguy/anotherguy_signature.png'),
-(6, 10, 9, '2024-07-01', 'test med 15', 'Skin', 'test dose', '01:31:00', 'test anu', 'test rem', 1, 'Super Admin', 'assets/users/patient/testguy3/testguy3_signature.png'),
-(7, 10, 9, '2024-07-02', 'test med 3', 'Skin', 'test does', '02:31:00', 'test anupana', 'test remarks', 1, 'Super Admin', 'assets/users/superadmin/superadmin/superadmin_signature.png'),
-(8, 10, 9, '2024-07-02', 'test med 3', 'Skin', 'test does', '02:31:00', 'test anupana', 'test remarks', 1, 'Super Admin', 'assets/users/superadmin/superadmin/superadmin_signature.png'),
-(9, 10, 9, '2024-07-01', 'test med 3', 'Skin', 'test dose', '02:32:00', 'test anupana', 'test rem', 1, 'Super Admin', 'assets/users/superadmin/superadmin/superadmin_signature.png');
+(1, 1, 3, '2024-01-11', 'Brahmi', 'Oral', '300 mg', '02:48:00', 'Water', 'Good for memory and cognition', 1, 'Dr. Sharma', 'assets/users/doctor/actualdoctor/actualdoctor_signature.png'),
+(2, 1, 3, '2024-01-12', 'Tulsi (Holy Basil)', 'Oral', '1000 mg', '03:48:00', 'Honey', 'Take in the morning for immunity', 1, 'Dr. Sharma', 'assets/users/doctor/actualdoctor/actualdoctor_signature.png'),
+(3, 1, 3, '2024-01-13', 'Amla', 'Oral', '	500 mg', '17:26:00', 'Warm Water', 'Water	Boosts Vitamin C intake', 1, 'Dr. Sharma', 'assets/users/doctor/actualdoctor/actualdoctor_signature.png'),
+(4, 1, 3, '2024-01-14', 'Guggulu', 'Oral', '500 mg', '20:45:00', 'Warm Water', 'For joint health, take daily', 1, 'Dr. Sharma', 'assets/users/doctor/actualdoctor/actualdoctor_signature.png'),
+(5, 1, 3, '2024-01-15', 'Triphala', 'Oral', '1 tsp', '20:50:00', 'Warm Water', 'Take after dinner for digestion', 1, 'Dr. Sharma', 'assets/users/doctor/actualdoctor/actualdoctor_signature.png');
 
 -- --------------------------------------------------------
 
@@ -202,8 +198,8 @@ CREATE TABLE `roles` (
 INSERT INTO `roles` (`id`, `name`, `permissions`) VALUES
 (1, 'superadmin', '[\"view_patient\",\"edit_patient\",\"edit_visit\",\"edit_doctor_form\",\"edit_nurse_form\",\"view_doctor_form\",\"view_nurse_form\",\"edit_staff\",\"view_analytics\",\"superadmin\"]'),
 (2, 'admin', '[\"view_patient\",\"edit_patient\",\"edit_visit\",\"edit_doctor_form\",\"edit_nurse_form\",\"view_doctor_form\",\"view_nurse_form\",\"edit_staff\",\"view_analytics\"]'),
-(3, 'doctor', '[\"view_patient\",\"edit_doctor_form\",\"edit_nurse_form\",\"view_doctor_form\",\"view_nurse_form\"]'),
-(4, 'nurse', '[\"view_patient\",\"edit_nurse_form\",\"view_doctor_form\",\"view_nurse_form\"]'),
+(3, 'doctor', '[\"view_patient\",\"edit_doctor_form\",\"edit_nurse_form\",\"view_doctor_form\",\"view_nurse_form\",\"view_visit\"]'),
+(4, 'nurse', '[\"view_patient\",\"edit_nurse_form\",\"view_doctor_form\",\"view_nurse_form\",\"view_visit\"]'),
 (5, 'patient', '[\"view_self\"]');
 
 -- --------------------------------------------------------
@@ -271,18 +267,18 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `username`, `email`, `password`, `first_name`, `last_name`, `role`, `date_of_birth`, `phone_no`, `profile_img`, `gender`, `address_line_1`, `address_line_2`, `state`, `country`, `country_code`, `pincode`, `signature_img`, `occupation`, `blood_group`, `color_theme`) VALUES
-(1, 'superadmin', 'N.A', '$2b$11$GlcUkyBVGz4xpkvIIvwICe5/QhphrIERkE22xJoq0obSRAWJdOOe2', 'Super', 'Admin', 'superadmin', NULL, NULL, 'assets/users/superadmin/superadmin/superadmin_profile.png', 'N.A', 'N.A', 'N.A', 'N.A', NULL, 'IN', NULL, 'assets/users/superadmin/superadmin/superadmin_signature.png', 'N.A', 'N.A', 'dark'),
-(3, 'testguy', 'testguy3@gmail.com', '$2b$10$6uHLTE21eyOQeVyLc3/59eE1hxSJmTDoG6zs65HcE363IF3KWSkcW', 'test', 'guy', 'patient', '2020-06-03', '9876543210', 'assets/users/patient/testguy3/testguy3_profile.png', 'Male', 'address1', 'address2', 'Kerala', 'India', 'IN', '695023', 'assets/users/patient/testguy3/testguy3_signature.png', 'test occupation', 'B+', 'light'),
+(1, 'superadmin', 'N.A', '$2b$11$GlcUkyBVGz4xpkvIIvwICe5/QhphrIERkE22xJoq0obSRAWJdOOe2', 'Super', 'Admin', 'superadmin', NULL, NULL, 'assets/users/superadmin/superadmin/superadmin_profile.png', 'N.A', 'N.A', 'N.A', 'N.A', NULL, 'IN', NULL, 'assets/users/superadmin/superadmin/superadmin_signature.png', 'N.A', 'N.A', 'light'),
+(3, 'testguy', 'stevesajanjacobkallunkal04@gmail.com', '$2b$10$6uHLTE21eyOQeVyLc3/59eE1hxSJmTDoG6zs65HcE363IF3KWSkcW', 'Steve Sajan', 'Jacob', 'patient', '2004-08-23', '6238936248', 'assets/users/patient/testguy3/testguy3_profile.png', 'Male', 'address1', 'address2', 'Kerala', 'India', 'IN', '695023', 'assets/users/patient/testguy3/testguy3_signature.png', 'test occupation', 'B+', 'light'),
 (4, 'jaith', 'jaithj@gmail.com', '$2b$10$Fj4.K/uENmme.XV5TB3Sj.8I3k0SRejqbNhV83GzhVswFI.mmPzJO', 'Jaith', 'J', 'patient', '2003-06-11', '9876543210', 'assets/users/patient/jaith/jaith_profile.png', 'Male', 'Address 1', 'Kazhakootam', 'Kerala', 'India', 'IN', '695581', 'assets/users/patient/jaith/jaith_signature.png', 'testocc', 'AB-', 'light'),
-(5, 'lekshmiv', 'lekshmiv@gmail.com', '$2b$10$3sfVdnylh0FLAtRwMWdC5OOA/ZMyjfQmxR2Gz90NjIE6L9sAeXq6.', 'Lekshmi', 'V', 'patient', '1989-06-07', '9876543211', 'assets/users/patient/lekshmiv/lekshmiv_profile.png', 'Female', 'test 1', 'test 2', 'Kerala', 'India', 'IN', '765678', 'assets/users/patient/lekshmiv/lekshmiv_signature.png', 'professor', 'A-', 'light'),
-(6, 'abhays', 'abhays@gmail.com', '$2b$10$Lkkl3Hu3/Shly6oUzYSwwu3xeSB5NSYC/3IdnczuKMtYdz5v3F5k2', 'Abhay', 'S Babu', 'patient', '2024-05-09', '9876543212', 'assets/users/patient/abhays/abhays_profile.png', 'Male', 'addre1', 'addre2', 'Kerala', 'India', 'IN', '698789', 'assets/users/patient/abhays/abhays_signature.png', 'Student', 'B+', 'light'),
-(8, 'aby', 'abythomas@gmail.com', '$2b$10$4IzYNygEl1gKW8GMGZuO5udlKnYOM0m6h.p0dqd5jC7VoRjhTRTAO', 'ABY', 'THOMAS', 'patient', '2024-06-28', '9090909090909', 'assets/users/patient/aby/aby_profile.png', 'Male', 'kjbkd', 'ksd ', 'kerala', 'Afghanistan', 'AF', '695003', 'assets/users/patient/aby/aby_signature.png', 'unknown', 'A+', 'light'),
-(9, 'anotherguy', 'anotherguy@gmail.com', '$2b$10$bIvQrfrwtloOEWTiuxj8q.3/XdM3DvsJWuYW9zkPwxbcWeT8H5Jvi', 'Another', 'Guy', 'patient', '2024-07-01', '9876543213', 'assets/users/patient/anotherguy/anotherguy_profile.png', 'Male', 'addre1', 'addre2new', 'Kerala', 'India', 'IN', '695012', 'assets/users/patient/anotherguy/anotherguy_signature.png', 'Student', 'AB+', 'light'),
-(10, 'doctorstrange', 'doctor@gmail.com', '$2b$10$2lCLKpMwBTwIsqCS1mhrsuU0i5H5FKatqo6BVWxS6sghuECl5IsZK', 'Doctor', 'Strange', 'doctor', '1992-06-03', '9876543214', 'assets/users/doctor/doctorstrange/doctorstrange_profile.png', 'Male', 'addre1', 'addre2', 'Kerala', 'India', 'IN', '697012', 'assets/users/doctor/doctorstrange/doctorstrange_signature.png', 'Doctor', 'B+', 'light'),
-(11, 'nurse', 'urse@gmail.com', '$2b$10$HnVWuo92imbkDyWjifaG5./YpSSapY9hwPapE5aeN6soIWc6PSRg2', 'Nurse', 'Test', 'nurse', '2000-04-08', '9876543217', 'assets/users/nurse/nurse/nurse_profile.png', 'Female', 'addre1', 'addre2', 'Kerala', 'India', 'IN', '678098', 'assets/users/nurse/nurse/nurse_signature.png', 'Nurse', 'AB-', 'light'),
+(8, 'aby', 'abythomas@gmail.com', '$2b$10$4IzYNygEl1gKW8GMGZuO5udlKnYOM0m6h.p0dqd5jC7VoRjhTRTAO', 'ABY', 'THOMAS', 'patient', '2024-06-28', '9090909090909', 'assets/users/patient/aby/aby_profile.jpeg', 'Male', 'kjbkd', 'ksd ', 'kerala', 'Afghanistan', 'AF', '695003', 'assets/users/patient/aby/aby_signature.png', 'unknown', 'A+', 'light'),
+(10, 'doctorstrange', 'doctor@gmail.com', '$2b$10$.GxPcCbUmqmmXN3qIFsP.eKJLkM7G1dp9FjmdIi0lL3c4fWp1h4Za', 'Doctor', 'Strange', 'doctor', '1992-06-03', '9876543214', 'assets/users/doctor/doctorstrange/doctorstrange_profile.png', 'Male', 'addre1', 'addre2', 'Kerala', 'India', 'IN', '697012', 'assets/users/doctor/doctorstrange/doctorstrange_signature.png', 'Doctor', 'B+', 'light'),
+(11, 'nurse', 'nurse@gmail.com', '$2b$10$HnVWuo92imbkDyWjifaG5./YpSSapY9hwPapE5aeN6soIWc6PSRg2', 'Nurse', 'Test', 'nurse', '2000-04-08', '9876543217', 'assets/users/nurse/nurse/nurse_profile.png', 'Female', 'addre1', 'addre2', 'Kerala', 'India', 'IN', '678098', 'assets/users/nurse/nurse/nurse_signature.png', 'Nurse', 'AB-', 'light'),
 (12, 'actualdoctor', 'actualdoctor@gmail.com', '$2b$10$fAqRccU3f/MsDRuZoTXgmuGoVRIqTAm9RqhFJakDDjYOLs1tYkisi', 'Actual', 'Doctor', 'doctor', '1980-03-08', '98765433213', 'assets/users/doctor/actualdoctor/actualdoctor_profile.png', 'Male', 'addre1', 'addre2', 'Kerala', 'India', 'IN', '678098', 'assets/users/doctor/actualdoctor/actualdoctor_signature.png', 'Doctor', 'A-', 'light'),
 (13, 'doctorwho', 'doctorwho@gmail.com', '$2b$10$zzPuq6vWqeXpfR9nTyfhQe7S7Qu/f5Ai8ikhze9T7tGt9EDMUpHYe', 'Doctor', 'Who', 'doctor', '1980-08-07', '9876543214', 'assets/users/doctor/doctorwho/doctorwho_profile.png', 'Male', 'addre1', 'addre2', 'Kerala', 'India', 'IN', '678098', 'assets/users/doctor/doctorwho/doctorwho_signature.png', 'Doctor', 'B-', 'light'),
-(14, 'stevesajanjacob', 'steve@stevesajanjacob.com', '$2b$10$bbLXOoy9P.7Tob7wIl.RvOj1hNvbpNtQrOMuN6kRn9CqezKq3CJy.', 'Steve Sajan', 'Jacob', 'patient', '2004-08-23', '06238936248', 'assets/users/patient/stevesajanjacob/stevesajanjacob_profile.png', 'Male', 'test Address 1', 'test Address 2', 'Kerala', 'United States', 'US', '695581', 'assets/users/patient/stevesajanjacob/stevesajanjacob_signature.png', 'Student', 'B+', 'light');
+(17, 'antobgeorge', 'antobgeorge@gmail.com', '$2b$10$Ij20PcEoipSVNPLBXf0JuO7VVYLZQO8SL2yOS3UhJjOsjx.fIryzC', 'Anto B', 'George', 'patient', '2004-02-03', '9876543210', 'assets/users/patient/antobgeorge/antobgeorge_profile.png', 'Male', 'addre1', 'addre2', 'Kerala', 'Russia', 'RU', '697654321', 'assets/users/patient/antobgeorge/antobgeorge_signature.png', 'Student', 'B+', 'light'),
+(18, 'abhaysbabu', 'abhaysbabu@gmail.com', '$2b$10$Ij20PcEoipSVNPLBXf0JuO7VVYLZQO8SL2yOS3UhJjOsjx.fIryzC', 'Abhay ', 'S Babu', 'patient', '2004-02-03', '9876543210', 'assets/users/patient/abhaysbabu/abhaysbabu_profile.png', 'Male', 'addre1', 'addre2', 'Kerala', 'India', 'IN', '697654321', 'assets/users/patient/antobgeorge/antobgeorge_signature.png', 'Student', 'B+', 'light'),
+(19, 'aiswaryaligin', 'aiswaryaligin@gmail.com', '$2b$10$Ij20PcEoipSVNPLBXf0JuO7VVYLZQO8SL2yOS3UhJjOsjx.fIryzC', 'Aiswarya ', 'Ligin', 'patient', '2004-02-03', '9876543210', 'assets/users/patient/aishwaryaligin/aishwaryaligin_profile.png', 'Female', 'addre1', 'addre2', 'Kerala', 'India', 'IN', '697654321', 'assets/users/patient/antobgeorge/antobgeorge_signature.png', 'Student', 'B+', 'light'),
+(20, 'devikasuresh', 'devikasuresh@gmail.com', '$2b$10$Ij20PcEoipSVNPLBXf0JuO7VVYLZQO8SL2yOS3UhJjOsjx.fIryzC', 'Devika ', 'Suresh', 'patient', '2004-02-03', '9876543210', 'assets/users/patient/devikasuresh/devikasuresh_profile.png', 'Female', 'addre1', 'addre2', 'Kerala', 'India', 'IN', '697654321', 'assets/users/patient/antobgeorge/antobgeorge_signature.png', 'Student', 'B+', 'light');
 
 -- --------------------------------------------------------
 
@@ -303,16 +299,17 @@ CREATE TABLE `visits` (
 --
 
 INSERT INTO `visits` (`visit_id`, `user_id`, `staff_editable`, `date_of_admission`, `date_of_discharge`) VALUES
-(1, 3, 1, '2024-01-11', '2024-07-03'),
+(1, 3, 1, '2024-01-11', '2024-01-18'),
 (2, 3, 1, '2024-02-11', '2024-07-01'),
 (3, 4, 1, '2024-02-10', NULL),
 (4, 4, 1, '2024-02-22', NULL),
 (5, 4, 1, '2024-05-13', NULL),
-(6, 8, 1, '2024-06-18', NULL),
-(7, 5, 1, '2024-07-01', NULL),
-(8, 6, 1, '2024-06-30', NULL),
+(6, 8, 1, '2024-06-18', '2024-07-28'),
 (9, 3, 1, '2024-07-03', NULL),
-(10, 9, 1, '2024-07-03', NULL);
+(12, 17, 1, '2024-07-02', '2024-07-24'),
+(13, 18, 1, '2024-07-01', NULL),
+(14, 20, 1, '2024-06-30', NULL),
+(15, 19, 1, '2024-06-29', NULL);
 
 -- --------------------------------------------------------
 
@@ -441,7 +438,7 @@ ALTER TABLE `discharge_summary`
 -- AUTO_INCREMENT for table `doctor_initial_assessment_form`
 --
 ALTER TABLE `doctor_initial_assessment_form`
-  MODIFY `record_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `record_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `medication_administration_records`
@@ -477,13 +474,13 @@ ALTER TABLE `treat_proc_ord`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `user_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `visits`
 --
 ALTER TABLE `visits`
-  MODIFY `visit_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `visit_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `vital_chart_form`

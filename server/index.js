@@ -53,7 +53,9 @@ const corsOptions = {
   method: ["GET", "POST"],
   credentials: true,
 };
-app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({ limit: "10mb" }));
+app.use(bodyParser.urlencoded({ limit: "10mb", extended: true }));
 app.use(cors(corsOptions));
 app.use(cookieParser());
 
@@ -458,7 +460,10 @@ app.get("/api/get_doctor_initial_assessment", async (req, res) => {
   let jwt_token = req.cookies._auth;
   try {
     const decode = jwt.verify(jwt_token, process.env.JWT_SECRET);
-    if (decode.User.permissions.includes("edit_doctor_form")) {
+    if (
+      decode.User.permissions.includes("edit_doctor_form") ||
+      decode.User.permissions.includes("view_patient")
+    ) {
       const [status, formData, patientExists] =
         await getDoctorInitialAssessment(req.query.user_id, req.query.visit_id);
       res.json({
@@ -712,7 +717,10 @@ app.get("/api/get_discharge_form", async (req, res) => {
   let jwt_token = req.cookies._auth;
   try {
     const decode = jwt.verify(jwt_token, process.env.JWT_SECRET);
-    if (decode.User.permissions.includes("edit_doctor_form")) {
+    if (
+      decode.User.permissions.includes("edit_doctor_form") ||
+      decode.User.permissions.includes("view_patient")
+    ) {
       const [status, formData, patientExists] = await getDischargeForm(
         req.query.user_id,
         req.query.visit_id
@@ -1123,6 +1131,7 @@ app.get("/api/fetchpatientdetail", async (req, res) => {
 
 app.post("/api/update_patient", async (req, res) => {
   let jwt_token = req.cookies._auth;
+
   try {
     const decode = jwt.verify(jwt_token, process.env.JWT_SECRET);
     if (decode.User.permissions.includes("edit_patient")) {

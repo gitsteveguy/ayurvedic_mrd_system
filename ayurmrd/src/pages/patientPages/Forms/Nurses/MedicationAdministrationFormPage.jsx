@@ -8,18 +8,19 @@ import useAuth from '../../../../hooks/useAuth';
 
 const MedicationAdministrationFormPage = () => {
   const current_user = useAuth();
-    const table_api = 'http://localhost:5000/api/get_medication_admistration_records'
-const [update,setUpdate] = useState(0);
-const updater = ()=>{
-  setUpdate(update => update + 1);
-}
+  const table_api = 'http://localhost:5000/api/get_medication_admistration_records'
+  const [update, setUpdate] = useState(0);
+  const updater = () => {
+    setUpdate(update => update + 1);
+  }
   return (
     <Patient>
-  <div className="card">
-  <FormContainer form={<MedicationAdministrationForm update_table={updater} inert={current_user.permissions.includes('edit_nurse_form')? 'false' : 'true'}/>}/>
-  </div>
-  <STable title='Medication Administration Records' update={update} api_url={table_api}></STable>
-  </Patient>
+
+      {current_user.permissions.includes('edit_nurse_form') && <div className="card">
+        <FormContainer form={<MedicationAdministrationForm update_table={updater} inert={current_user.permissions.includes('edit_nurse_form') ? 'false' : 'true'} />} />
+      </div>}
+      <STable title='Medication Administration Records' update={update} api_url={table_api}></STable>
+    </Patient>
   )
 }
 
