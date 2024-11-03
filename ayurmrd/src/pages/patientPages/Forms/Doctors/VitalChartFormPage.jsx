@@ -8,18 +8,18 @@ import useAuth from '../../../../hooks/useAuth';
 
 const VitalChartFormPage = () => {
   const current_user = useAuth();
-    const table_api = 'http://localhost:5000/api/get_vital_chart_records'
-const [update,setUpdate] = useState(0);
-const updater = ()=>{
-  setUpdate(update => update + 1);
-}
+  const table_api = 'http://localhost:5000/api/get_vital_chart_records'
+  const [update, setUpdate] = useState(0);
+  const updater = () => {
+    setUpdate(update => update + 1);
+  }
   return (
     <Patient>
-  <div className="card">
-  <FormContainer form={<VitalChartForm update_table={updater} inert={current_user.permissions.includes('edit_doctor_form')? 'false' : 'true'}/>}/>
-  </div>
-  <STable title='Vital Chart Records' update={update} api_url={table_api}></STable>
-  </Patient>
+      {current_user.permissions.includes('edit_doctor_form') && <div className="card">
+        <FormContainer form={<VitalChartForm update_table={updater} inert={current_user.permissions.includes('edit_doctor_form') ? 'false' : 'true'} />} />
+      </div>}
+      <STable title='Vital Chart Records' update={update} api_url={table_api}></STable>
+    </Patient>
   )
 }
 

@@ -359,6 +359,9 @@ dialog {
   opacity: 0.75;
 }
 
+textarea {
+  background: transparent;
+}
 /*Responsive Mobile*/
 
 @media print {

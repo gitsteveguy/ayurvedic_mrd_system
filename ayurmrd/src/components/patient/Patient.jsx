@@ -89,7 +89,7 @@ const Patient = (props) => {
           </div>
         </div>
         <div className="container-top-btn-grp" style={{ margin: '0.5rem' }}>
-          <a className='primary-btn' onClick={() => navigate(-1)} style={{ borderRadius: '24px', cursor: 'pointer' }}><ArrowBackIosNewIcon />Go Back</a>
+          < a className='primary-btn' onClick={() => navigate(-1)} style={{ borderRadius: '24px', cursor: 'pointer' }}><ArrowBackIosNewIcon />Go Back</a>
           {props.hBtns && props.hBtns.map((btn, index) => {
             let borderRadius = '24px';
             if (!btn.text)
@@ -109,7 +109,7 @@ const Patient = (props) => {
 
 
 
-    </Container>
+    </Container >
   )
 }
 
