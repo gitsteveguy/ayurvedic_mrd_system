@@ -28,10 +28,22 @@ const countries = Object.keys(country_codes);
 
 const DB = mysql
   .createPool({
-    host: process.env.MYSQL_HOST,
-    user: process.env.MYSQL_USER,
-    password: process.env.MYSQL_PASSWORD,
-    database: process.env.MYSQL_DATABASE,
+    host:
+      process.env.NODE_ENV === "production"
+        ? process.env.PRO_MYSQL_HOST
+        : process.env.MYSQL_HOST,
+    user:
+      process.env.NODE_ENV === "production"
+        ? process.env.PRO_MYSQL_USER
+        : process.env.MYSQL_USER,
+    password:
+      process.env.NODE_ENV === "production"
+        ? process.env.PRO_MYSQL_PASSWORD
+        : process.env.MYSQL_PASSWORD,
+    database:
+      process.env.NODE_ENV === "production"
+        ? process.env.PRO_MYSQL_DATABASE
+        : process.env.MYSQL_DATABASE,
   })
   .promise();
 
