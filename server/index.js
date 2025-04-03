@@ -49,8 +49,11 @@ let country_codes = JSON.parse(
 );
 let countries = Object.keys(country_codes);
 const corsOptions = {
-  origin: "http://localhost:3000",
-  method: ["GET", "POST"],
+  origin:
+    process.env.NODE_ENV === "production"
+      ? "https://portfolio.stevesajanjacob.com"
+      : "http://localhost:3000",
+  methods: ["GET", "POST"],
   credentials: true,
 };
 // app.use(bodyParser.urlencoded({ extended: true }));
@@ -1229,6 +1232,7 @@ app.post("/api/update_staff", async (req, res) => {
 });
 //Test APIS
 
-app.listen(5000, () => {
-  console.log("Server Started on Port:5000");
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server started on port: ${PORT}`);
 });
