@@ -25,7 +25,7 @@ Watching this [video](https://youtu.be/HbSjyU2vf6Y?si=7EdEVJLy_OkPk-60) will giv
 ```
   git clone https://github.com/gitsteveguy/ayurvedic_mrd_system.git
 ```
-5. Open the folder ayurvedic_mrd_system in VS code , open a terminal in it and move to the server directory and install the dependencies
+5. Open the folder ayurvedic_mrd_system in VS code , open a terminal in it and move to the server directory and install the dependencies. Do make sure to create your own env file with the DB environment variables on the server for this to connect to the given database use exampleEnv.txt in ther server directory as a reference.
 ``` 
   cd server
   npm i
