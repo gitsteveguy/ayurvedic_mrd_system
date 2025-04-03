@@ -1,0 +1,13 @@
+NODE_ENV = testing
+# production
+PRO_MYSQL_HOST = 
+PRO_MYSQL_DATABASE = ayurvedic_mrd_system
+PRO_MYSQL_USER = 
+PRO_MYSQL_PASSWORD = 
+JWT_SECRET = 
+
+# testing
+MYSQL_HOST = localhost
+MYSQL_DATABASE = ayurvedic_mrd_system
+MYSQL_USER = root
+MYSQL_PASSWORD =
