@@ -3,7 +3,7 @@
 </p>
 
 # Ayurvedic mrd system
-A mini project as part of our academics built on react that focuses on managing patient records of an Ayurvedic hospital.
+A project built on Node, React, Express and MySQL that focuses on managing patient records of an Ayurvedic hospital.
 
 
 ## Contributing
